@@ -1,0 +1,10 @@
+title: My First Java Program
+author: Frédéric Delorme
+description: This is a first demonstration project proposing a some simple java code to run a platform like game.
+tags: |
+  development
+  java
+  JDK20
+  script
+  junit-test
+  checkstyle
