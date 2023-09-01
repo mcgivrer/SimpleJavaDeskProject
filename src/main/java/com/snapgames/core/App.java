@@ -1,4 +1,6 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
+
+import com.snapgames.demo.test001.scenes.DemoScene;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -20,7 +22,7 @@ import javax.swing.WindowConstants;
  */
 public class App extends JPanel implements KeyListener {
     private Properties config = new Properties();
-    private static final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
+    public static final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
     static final int FPS = 60;
 
     // internal attributes
@@ -34,24 +36,23 @@ public class App extends JPanel implements KeyListener {
     private Rectangle2D screenResolution;
     private Dimension windowSize;
 
-    private Rectangle2D playArea;
+    public Rectangle2D playArea;
 
     // Graphics Properties
     JFrame frame;
-    BufferedImage screenBuffer;
-    private Camera currentCamera;
+    public BufferedImage screenBuffer;
 
-    private Map<String, Entity> entities = new HashMap<>();
     boolean pause;
 
     // I/O attributes
     boolean[] keys = new boolean[1024];
     boolean[] prevKeys = new boolean[1024];
-    private World world;
+    public World world;
     boolean testMode;
 
     // main GameLoop implemntation
     GameLoop gameLoop;
+    private SceneManager sceneManager;
 
     /**
      * This is the {@link App} class.
@@ -88,6 +89,7 @@ public class App extends JPanel implements KeyListener {
             System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
         }
         gameLoop = new StandardGameLoop();
+        sceneManager = new SceneManager(this);
     }
 
     private void setConfigValueFrom(String key, String value) {
@@ -173,75 +175,21 @@ public class App extends JPanel implements KeyListener {
 
     private void loop() {
         createScene();
+        sceneManager.activate();
         gameLoop.loop(this);
     }
 
     private void createScene() {
-        this.world = new World(-0.981);
-        Entity player = new Entity("player")
-                .setColor(Color.GREEN.darker())
-                .setFillColor(Color.GREEN)
-                .setPosition(screenBuffer.getWidth() * 0.5, screenBuffer.getHeight() * 0.5)
-                .setSize(16, 16)
-                .setPriority(1)
-                .setMass(50.0)
-                .setMaterial(new Material("body", 0.9, 0.78, 0.97));
-
-        addEntity(player);
-
-        addEnemies(100);
-
-        Camera cam01 = new Camera("cam01")
-                .setViewport(new Rectangle2D.Double(0, 0, 300, 200))
-                .setTarget(player)
-                .setTweenfactor(0.002);
-        addEntity(cam01);
-
+        sceneManager.add(new DemoScene());
     }
 
-    private void addEnemies(int nbEnemies) {
-        for (int i = 0; i < nbEnemies; i++) {
-            Entity enemy = new Entity("enemy_" + i)
-                    .setColor(Color.RED.darker())
-                    .setFillColor(Color.RED)
-                    .setPosition(playArea.getWidth() * Math.random(), playArea.getHeight() * Math.random() * 0.4)
-                    .setSize(8, 8)
-                    .setPriority(i + 10)
-                    .setMass(10.0)
-                    .setMaterial(new Material("enemy", 1.0, 0.98, 0.99));
-
-            addEntity(enemy);
-        }
-    }
-
-    private void addEntity(Entity entity) {
-        entities.put(entity.getName(), entity);
-        if (entity instanceof Camera) {
-            this.currentCamera = (Camera) entity;
-        }
-    }
 
     void input() {
-        Entity player = entities.get("player");
-
-        double speed = 0.5;
-        if (keys[KeyEvent.VK_UP]) {
-            player.dy = -speed;
-        }
-        if (keys[KeyEvent.VK_DOWN]) {
-            player.dy = speed;
-        }
-        if (keys[KeyEvent.VK_LEFT]) {
-            player.dx = -speed;
-        }
-        if (keys[KeyEvent.VK_RIGHT]) {
-            player.dx = speed;
-        }
-
+        sceneManager.getCurrent().input(this);
     }
 
     void update(long elapsed, Map<String, Object> stats) {
-        entities.values().stream()
+        sceneManager.getCurrent().getEntities().stream()
                 .filter(Entity::isActive)
                 .sorted(Comparator.comparingInt(Entity::getPriority).reversed())
                 .forEach(e -> {
@@ -250,6 +198,7 @@ public class App extends JPanel implements KeyListener {
                     if (!(e instanceof Camera || e.isStickToCamera()))
                         constrainsEntityToPlayArea(e);
                 });
+        sceneManager.getCurrent().update(this, elapsed, stats);
     }
 
     private void applyWorldConstrains(Entity e, long elapsed) {
@@ -298,32 +247,14 @@ public class App extends JPanel implements KeyListener {
         // draw camera viewport
         drawCameraViewport(g);
 
-        // display pause message if required
-        drawHUD(g);
+        // render scene specific things
+        sceneManager.getCurrent().render(this, g, stats);
 
         g.dispose();
 
         // copy rendering buffer to Window.
         copyBufferToWindow(stats);
 
-    }
-
-    private void drawHUD(Graphics2D g) {
-        Font pauseFont = g.getFont().deriveFont(Font.BOLD, 16.0f);
-        int score = 0, lives = 3;
-        // draw Score
-        drawText(g, pauseFont, String.format("%06d", score), screenBuffer.getWidth() - 40, 20, Color.WHITE, Color.BLACK,
-                2);
-        // draw life counter
-        drawText(g, pauseFont.deriveFont(20.0f), "❦", 24, 22, Color.RED, Color.RED.darker(), 1);
-        drawText(g, pauseFont, String.format("%d", lives), 32, 24, Color.WHITE, Color.BLACK, 2);
-        // draw "paused" message if required
-        if (isPaused()) {
-            g.setColor(new Color(0.1f, 0.3f, 0.6f, 0.6f));
-            g.fillRect(0, (int) ((screenBuffer.getHeight() - 14) * 0.5), screenBuffer.getWidth(), 20);
-            String pauseText = messages.getString("game.pause.text");
-            drawText(g, pauseFont, pauseText);
-        }
     }
 
     private void copyBufferToWindow(Map<String, Object> stats) {
@@ -343,6 +274,7 @@ public class App extends JPanel implements KeyListener {
     }
 
     private void drawCameraViewport(Graphics2D g) {
+        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
         moveToCameraPointOfView(g, currentCamera, -1);
         g.setColor(Color.BLUE);
         g.draw(currentCamera.viewport);
@@ -350,7 +282,10 @@ public class App extends JPanel implements KeyListener {
     }
 
     private void drawPlayAreaLimits(Graphics2D g) {
+
         if (Optional.ofNullable(playArea).isPresent()) {
+
+            Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
             moveToCameraPointOfView(g, currentCamera, -1);
             g.setColor(Color.DARK_GRAY);
             g.draw(playArea);
@@ -365,15 +300,19 @@ public class App extends JPanel implements KeyListener {
     }
 
     private void drawEntities(Graphics2D g, Map<String, Object> stats) {
-        long count = entities.values().stream()
+        Scene scn = sceneManager.getCurrent();
+        long count = scn.getEntities().stream()
                 .count();
-        long rendererObj = entities.values().stream()
+        long rendererObj = scn.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
                 .count();
         stats.put("5_objCount", count);
         stats.put("6_objRendered", rendererObj);
-        entities.values().stream()
+
+        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
+
+        scn.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
                 .sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
@@ -395,8 +334,8 @@ public class App extends JPanel implements KeyListener {
         }
     }
 
-    private void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
-            Color shadowColor, int shadowDepth) {
+    public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
+                         Color shadowColor, int shadowDepth) {
         Font bckf = g.getFont();
         g.setFont(pauseFont);
         int offset = g.getFontMetrics().stringWidth(pauseText);
@@ -417,7 +356,7 @@ public class App extends JPanel implements KeyListener {
         g.setFont(bckf);
     }
 
-    private void drawText(Graphics2D g, Font pauseFont, String pauseText) {
+    public void drawText(Graphics2D g, Font pauseFont, String pauseText) {
         int fontHeight = g.getFontMetrics().getHeight();
         drawText(g,
                 pauseFont,
@@ -433,6 +372,9 @@ public class App extends JPanel implements KeyListener {
     }
 
     private void dispose() {
+        if (sceneManager != null) {
+            sceneManager.dispose();
+        }
         if (frame != null) {
             frame.dispose();
         }
@@ -484,7 +426,7 @@ public class App extends JPanel implements KeyListener {
         this.pause = p;
     }
 
-    private boolean isPaused() {
+    public boolean isPaused() {
         return this.pause;
     }
 
@@ -529,5 +471,9 @@ public class App extends JPanel implements KeyListener {
 
     private boolean isKeyPressed(int keyCode) {
         return !prevKeys[keyCode] && keys[keyCode];
+    }
+
+    public boolean getKeys(int keyCode) {
+        return keys[keyCode];
     }
 }

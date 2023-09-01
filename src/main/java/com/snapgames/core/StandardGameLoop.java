@@ -1,4 +1,4 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 import java.util.HashMap;
 import java.util.Map;

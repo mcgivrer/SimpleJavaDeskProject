@@ -1,4 +1,4 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 public class Material {
     String name;

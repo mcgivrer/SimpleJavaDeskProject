@@ -1,4 +1,4 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 import java.awt.Dimension;
 import java.util.Map;

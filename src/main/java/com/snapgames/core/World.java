@@ -1,4 +1,4 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 /**
  * A {@link World} object to describe the contextual environment in which the {@link Entity} evolves in.

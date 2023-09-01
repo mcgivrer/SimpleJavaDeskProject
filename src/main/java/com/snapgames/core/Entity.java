@@ -1,4 +1,4 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
@@ -18,8 +18,8 @@ public class Entity {
     int w;
     int h;
 
-    double dx;
-    double dy;
+    public double dx;
+    public double dy;
 
     Color color;
     Color fillColor;
