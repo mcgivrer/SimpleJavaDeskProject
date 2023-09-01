@@ -170,7 +170,7 @@ function createJar() {
     echo 'No compiled class files'
   else
     # Build JAR
-    jar -cfmv $TARGET/$JAR_NAME $TARGET/manifest.mf -C $CLASSES . -C $RESOURCES .
+    jar -cfmv $TARGET/$JAR_NAME $TARGET/MANIFEST.MF -C $CLASSES . -C $RESOURCES .
   fi
 
   echo "   |_ done."
