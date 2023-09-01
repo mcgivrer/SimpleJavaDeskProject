@@ -24,8 +24,8 @@ public class App extends JPanel implements KeyListener {
     private static final int FPS = 60;
 
     // internal attributes
-    private final String name = "Application Test001";
-    private final String version = "1.0.0";
+    private String name = "Application Test001";
+    private String version = "1.0.0";
     private boolean exit;
 
     // Configuration attribute values.
@@ -73,23 +73,31 @@ public class App extends JPanel implements KeyListener {
      * @param configurationFilepath path to the configuration file to be loaded.
      */
     private void initialize(String configurationFilepath) {
-        System.out.printf("%s (%s)%n", name, version);
-        System.out.printf("%s%n", messages.getString("app.title"));
-        System.out.printf("running on JRE %s%n", System.getProperty("java.version"));
+
         try {
             config.load(App.class.getResourceAsStream(configurationFilepath));
             config.forEach((k, v) -> setConfigValueFrom((String) k, (String) v));
         } catch (IOException e) {
             System.err.printf(">> <!> Unable to read confguration file %s%n", e.getMessage());
+        } finally {
+            System.out.printf(">> %s (%s)%n", name, version);
+            System.out.printf(">> Window %s%n", messages.getString("app.title"));
+            System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
         }
-
     }
 
     private void setConfigValueFrom(String key, String value) {
         switch (key) {
+            case "app.main.name" -> {
+                this.name = value;
+            }
+            case "app.main.version" -> {
+                this.version = value;
+            }
             case "app.debug", "d", "debug" -> {
                 this.debug = Boolean.valueOf(value);
-                System.out.printf(">> <#> configuration debug set to %s%n", debug ? "true" : "false");
+                System.out.printf(">> <#> configuration debug set to %s%n",
+                        this.debug ? "true" : "false");
             }
             case "app.debug.level", "dl", "debugLevel" -> {
                 this.debugLevel = Integer.parseInt(value);
@@ -143,7 +151,7 @@ public class App extends JPanel implements KeyListener {
     }
 
     private void createWindow() {
-        frame = new JFrame(name);
+        frame = new JFrame(String.format("%s(%s) - %s", name, version, messages.getString("app.title")));
         this.setPreferredSize(windowSize);
         frame.setPreferredSize(windowSize);
         frame.setLayout(new GridLayout());
