@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is testing out Gitea Actions 🚀
 on: [push]
 
 jobs:
-  Explore-Gitea-Actions:
+  Build-Java-Project:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,9 +13,9 @@ jobs:
           java-version: "20"
       - name: Build project with custom script and Xvfb
         run: |
-         sudo apt-get install xvfb
-         export DISPLAY=":99.0"
-         export AUDIODEV=null
-         xvfb-run :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-         chmod +x ./build.sh
-         ./build.sh a
+          sudo apt-get install xvfb
+          export DISPLAY=":99.0"
+          export AUDIODEV=null
+          xvfb-run :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          chmod +x ./build.sh
+          ./build.sh a
