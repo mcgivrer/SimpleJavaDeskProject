@@ -21,16 +21,16 @@ import javax.swing.WindowConstants;
 public class App extends JPanel implements KeyListener {
     private Properties config = new Properties();
     private static final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
-    private static final int FPS = 60;
+    static final int FPS = 60;
 
     // internal attributes
     private String name = "Application Test001";
     private String version = "1.0.0";
-    private boolean exit;
+    boolean exit;
 
     // Configuration attribute values.
-    private Boolean debug;
-    private int debugLevel;
+    Boolean debug;
+    int debugLevel;
     private Rectangle2D screenResolution;
     private Dimension windowSize;
 
@@ -42,13 +42,16 @@ public class App extends JPanel implements KeyListener {
     private Camera currentCamera;
 
     private Map<String, Entity> entities = new HashMap<>();
-    private boolean pause;
+    boolean pause;
 
     // I/O attributes
     boolean[] keys = new boolean[1024];
     boolean[] prevKeys = new boolean[1024];
     private World world;
-    private boolean testMode;
+    boolean testMode;
+
+    // main GameLoop implemntation
+    GameLoop gameLoop;
 
     /**
      * This is the {@link App} class.
@@ -84,6 +87,7 @@ public class App extends JPanel implements KeyListener {
             System.out.printf(">> Window %s%n", messages.getString("app.title"));
             System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
         }
+        gameLoop = new StandardGameLoop();
     }
 
     private void setConfigValueFrom(String key, String value) {
@@ -169,50 +173,7 @@ public class App extends JPanel implements KeyListener {
 
     private void loop() {
         createScene();
-        long start = System.currentTimeMillis();
-        long current;
-        long previous = start;
-        long internalTime = 0;
-        long elapsed = 0;
-        int frames = 0;
-        int updates = 0;
-        int fps = 0;
-        int ups = 0;
-        int cumulatedTime = 0;
-        Map<String, Object> stats = new HashMap<>();
-        while (!exit && !testMode) {
-            current = System.currentTimeMillis();
-
-            input();
-            if (!pause) {
-                update(elapsed, stats);
-                internalTime += elapsed;
-                updates++;
-            }
-            render(stats);
-            frames++;
-            elapsed = System.currentTimeMillis() - previous;
-            cumulatedTime += elapsed;
-            if (cumulatedTime > 1000) {
-                fps = frames;
-                ups = updates;
-                updates = 0;
-                frames = 0;
-                cumulatedTime = 0;
-            }
-            int wait = (int) ((FPS / 1000) - elapsed > 0 ? (FPS / 1000) - elapsed : 1);
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                System.err.println("unable to wait for some milliseconds");
-            }
-            previous = current;
-            stats.put("1_debug", debug ? "ON" : "off");
-            stats.put("2_debugLevel", debugLevel);
-            stats.put("3_ups", ups);
-            stats.put("3_fps", fps);
-            stats.put("4_time", StringUtils.formatDuration(internalTime));
-        }
+        gameLoop.loop(this);
     }
 
     private void createScene() {
@@ -260,7 +221,7 @@ public class App extends JPanel implements KeyListener {
         }
     }
 
-    private void input() {
+    void input() {
         Entity player = entities.get("player");
 
         double speed = 0.5;
@@ -279,7 +240,7 @@ public class App extends JPanel implements KeyListener {
 
     }
 
-    private void update(long elapsed, Map<String, Object> stats) {
+    void update(long elapsed, Map<String, Object> stats) {
         entities.values().stream()
                 .filter(Entity::isActive)
                 .sorted(Comparator.comparingInt(Entity::getPriority).reversed())
@@ -317,7 +278,7 @@ public class App extends JPanel implements KeyListener {
         }
     }
 
-    private void render(Map<String, Object> stats) {
+    void render(Map<String, Object> stats) {
 
         Graphics2D g = screenBuffer.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
