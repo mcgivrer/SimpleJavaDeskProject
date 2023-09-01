@@ -55,6 +55,7 @@ export TESTCLASSES=$TARGET/test-classes
 export RESOURCES=$SRC/main/resources
 export TESTRESOURCES=$SRC/test/resources
 export JAR_NAME=$PROGRAM_NAME-$PROGRAM_VERSION.jar
+export JAR_JAVADOC_NAME=$PROGRAM_NAME-$PROGRAM_VERSION-javadoc.jar
 # ---- to enforce preview compatibility use the --enable-preview mode,
 # ---- for more information, see https://docs.oracle.com/en/java/javase/18/language/preview-language-and-vm-features.html
 export COMPILATION_OPTS="--enable-preview"
@@ -142,6 +143,9 @@ function generatedoc() {
     -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
     -overview $TARGET/javadoc/overview.html \
     -group $JAVADOC_GROUPS
+  cd $TARGET/javadoc  
+  jar cvf ../$JAR_JAVADOC_NAME *
+  cd ../../
   echo "   done." >>target/build.log
 }
 
