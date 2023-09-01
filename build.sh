@@ -13,14 +13,14 @@ export PROGRAM_NAME=$(prop project.name)
 export PROGRAM_VERSION=$(prop project.version)
 export PROGRAM_TITLE=$(prop project.title)
 export MAIN_CLASS=$(prop project.mainclass)
-export PACKAGES_LIST=$(prop project.javadoc.packages)
+export JAVADOC_CLASSPATH=$(prop project.javadoc.classpath)
+export JAVADOC_GROUPS=$(prop project.javadoc.packages)
 export VENDOR_NAME=$(prop project.author.name)
 export AUTHOR_NAME=$(prop project.author.email)
 export JAVA_VERSION=$(prop project.build.jdk.version)
 
 # A dirty list of package to be build (TODO add automation on package detection)
-export JAVADOC_CLASSPATH="$PACKAGES_LIST"
-export JAVADOC_GROUPS=$PACKAGES_LIST
+#export JAVADOC_CLASSPATH="$PACKAGES_LIST"
 
 # paths
 export SRC=./src
@@ -126,7 +126,7 @@ function generatedoc() {
   mkdir -p $SRC/main/javadoc
   # Compile class files
   rm -Rf $TARGET/javadoc/*
-  echo "|_ 2-5. generate javadoc from '$JAVADOC_CLASSPATH' ..."
+  echo "|_ 2-5. generate javadoc from '$JAVADOC_GROUPS' ..."
   java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$TARGET/javadoc/overview.html
   echo "javadoc $JAR_OPTS -source $SOURCE_VERSION \
   -author -use -version \
@@ -134,14 +134,14 @@ function generatedoc() {
   -d $TARGET/javadoc \
   -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
   -overview $TARGET/javadoc/overview.html \
-  $JAVADOC_GROUPS"
+  -group $JAVADOC_GROUPS"
   javadoc $JAR_OPTS -source $SOURCE_VERSION \
     -author -use -version \
-    -doctitle "$PROGRAM_TITLE" \
+    -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
     -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
     -overview $TARGET/javadoc/overview.html \
-    $JAVADOC_GROUPS
+    -group $JAVADOC_GROUPS
   echo "   done." >>target/build.log
 }
 
