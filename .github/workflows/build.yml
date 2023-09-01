@@ -27,7 +27,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-#    - name: install desktop dependencies
-#      run: apt install -y x
+    - name: install desktop dependencies
+      run: apt install -y pandoc
     - name: Build with custom script
       run: ./build.sh a
