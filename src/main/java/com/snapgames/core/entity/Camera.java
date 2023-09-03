@@ -1,5 +1,6 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core.entity;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class Camera extends Entity {
@@ -36,9 +37,12 @@ public class Camera extends Entity {
         return this;
     }
 
-    public Camera setTweenfactor(double tf) {
+    public Camera setTweenFactor(double tf) {
         this.tf = tf;
         return this;
     }
 
+    public Shape getViewport() {
+        return viewport;
+    }
 }
