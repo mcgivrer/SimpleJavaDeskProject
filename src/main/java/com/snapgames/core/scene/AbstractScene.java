@@ -1,4 +1,7 @@
-package com.snapgames.core;
+package com.snapgames.core.scene;
+
+import com.snapgames.core.entity.Camera;
+import com.snapgames.core.entity.Entity;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package com.snapgames.core;
+package com.snapgames.core.physic;
 
 public class Material {
     String name;
     double density;
-    double elasticity;
-    double roughness;
+    public double elasticity;
+    public double roughness;
 
     public Material(String name, double d, double e, double r) {
         this.name = name;

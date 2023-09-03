@@ -17,7 +17,7 @@ public class AppConfigTest {
     @BeforeEach
     public void setup() {
         app = new App("/test-config.properties");
-        app.run(new String[] {});
+        app.run(new String[]{});
     }
 
     @AfterEach
@@ -37,11 +37,11 @@ public class AppConfigTest {
 
     @Test
     public void testIfConfigurationScreenResolutionSet() {
-        assertEquals(new Rectangle2D.Double(0, 0, 320, 200), app.getScreenResolution());
+        assertEquals(new Rectangle2D.Double(0, 0, 320, 200), app.getRenderer().getScreenResolution());
     }
 
     @Test
     public void testIfConfigurationWindowSize() {
-        assertEquals(new Dimension(640, 480), app.getWindowSize());
+        assertEquals(new Dimension(640, 480), app.getRenderer().getWindowSize());
     }
 }

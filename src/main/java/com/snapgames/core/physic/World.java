@@ -1,4 +1,6 @@
-package com.snapgames.core;
+package com.snapgames.core.physic;
+
+import com.snapgames.core.entity.Entity;
 
 /**
  * A {@link World} object to describe the contextual environment in which the {@link Entity} evolves in.

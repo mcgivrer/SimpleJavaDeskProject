@@ -1,4 +1,6 @@
-package com.snapgames.core;
+package com.snapgames.core.scene;
+
+import com.snapgames.core.App;
 
 import java.util.HashMap;
 import java.util.Map;
