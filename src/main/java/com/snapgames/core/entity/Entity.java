@@ -1,10 +1,14 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core.entity;
+
+import com.snapgames.core.physic.Material;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity {
 
@@ -12,20 +16,20 @@ public class Entity {
     int id = index++;
 
     String name = "entity_" + id;
-    double x;
-    double y;
+    public double x;
+    public double y;
 
-    int w;
-    int h;
+    public int w;
+    public int h;
 
-    double dx;
-    double dy;
+    public double dx;
+    public double dy;
 
-    Color color;
-    Color fillColor;
-    BufferedImage image;
+    public Color color;
+    public Color fillColor;
+    public BufferedImage image;
 
-    boolean active;
+    public boolean active;
 
     public int priority;
 
@@ -37,6 +41,7 @@ public class Entity {
 
     private Double bbox;
     private boolean stickToCamera;
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     private Entity() {
         this.active = true;
@@ -140,5 +145,14 @@ public class Entity {
     public Entity setPriority(int p) {
         this.priority = p;
         return this;
+    }
+
+    public <T> Entity addAttribute(String attrName, T attrValue) {
+        attributes.put(attrName, attrValue);
+        return this;
+    }
+
+    public <T> T getAttribute(String attrName, T v) {
+        return (T) attributes.get(attrName);
     }
 }
