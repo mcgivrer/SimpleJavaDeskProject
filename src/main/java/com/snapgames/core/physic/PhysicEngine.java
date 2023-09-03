@@ -4,6 +4,7 @@ import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.scene.Scene;
+import com.snapgames.core.service.Service;
 import com.snapgames.core.utils.Configuration;
 
 import java.awt.geom.Rectangle2D;
@@ -11,14 +12,14 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
-public class PhysicEngine {
-    public Rectangle2D playArea;
+public class PhysicEngine implements Service {
     public World world;
 
     private final App app;
 
     public PhysicEngine(App app) {
         this.app = app;
+        this.world = new World(-0.981, new Rectangle2D.Double(0, 0, 600, 600));
     }
 
     public void update(App app, Scene scene, double elapsed, Map<String, Object> stats) {
@@ -40,6 +41,7 @@ public class PhysicEngine {
     }
 
     private void constrainsEntityToPlayArea(Entity e) {
+        Rectangle2D playArea = world.getPlayArea();
         if (Optional.ofNullable(playArea).isPresent() && !playArea.contains(e.getBBox())) {
             if (e.x < playArea.getMinX() || e.x + e.w > playArea.getMaxX()) {
                 if (e.x < playArea.getMinX())
@@ -60,24 +62,22 @@ public class PhysicEngine {
         }
     }
 
-    public void setPlayArea(Rectangle2D pa) {
-        this.playArea = pa;
-    }
-
-    public Rectangle2D getPlayArea() {
-        return this.playArea;
-    }
 
     public World getWorld() {
         return world;
     }
 
-    public PhysicEngine setWorld(World world) {
+    public void setWorld(World world) {
         this.world = world;
-        return this;
     }
 
     public void initialize(Configuration configuration) {
-        setPlayArea(configuration.playArea);
+        world.setPlayArea(configuration.playArea);
+    }
+
+
+    @Override
+    public void dispose() {
+
     }
 }

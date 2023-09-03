@@ -7,6 +7,7 @@ import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.scene.Scene;
 import com.snapgames.core.scene.SceneManager;
+import com.snapgames.core.service.Service;
 import com.snapgames.core.utils.Configuration;
 import com.snapgames.core.utils.StringUtils;
 
@@ -17,7 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Optional;
 
-public class Renderer extends JPanel {
+public class Renderer extends JPanel implements Service {
 
     private final App app;
 
@@ -113,7 +114,7 @@ public class Renderer extends JPanel {
 
         SceneManager sceneManager = app.getSceneManager();
         PhysicEngine pe = app.getPhysicEngine();
-        Rectangle2D playArea = pe.getPlayArea();
+        Rectangle2D playArea = pe.getWorld().getPlayArea();
 
         if (Optional.ofNullable(playArea).isPresent()) {
             Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
@@ -226,7 +227,6 @@ public class Renderer extends JPanel {
     }
 
     public void dispose() {
-
         frame.dispose();
     }
 

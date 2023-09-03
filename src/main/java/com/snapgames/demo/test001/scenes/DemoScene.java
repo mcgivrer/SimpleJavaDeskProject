@@ -27,7 +27,7 @@ public class DemoScene extends AbstractScene {
 
         World world = new World(-0.981);
         physicEngine.setWorld(world);
-        Rectangle2D playArea = physicEngine.getPlayArea();
+        Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
 
         Entity player = new Entity("player")
                 .setColor(Color.GREEN.darker())
@@ -52,7 +52,7 @@ public class DemoScene extends AbstractScene {
 
 
     private void addEnemies(App app, int nbEnemies) {
-        Rectangle2D playArea = app.getPhysicEngine().getPlayArea();
+        Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
         for (int i = 0; i < nbEnemies; i++) {
             Entity enemy = new Entity("enemy_" + i)
                     .setColor(Color.RED.darker())

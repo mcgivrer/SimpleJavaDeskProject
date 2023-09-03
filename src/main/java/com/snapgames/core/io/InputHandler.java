@@ -1,11 +1,13 @@
 package com.snapgames.core.io;
 
 import com.snapgames.core.App;
+import com.snapgames.core.service.Service;
+import com.snapgames.core.utils.Configuration;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class InputHandler implements KeyListener {
+public class InputHandler implements Service, KeyListener {
 
     private final App app;
     // I/O attributes
@@ -57,4 +59,13 @@ public class InputHandler implements KeyListener {
         return keys[keyCode];
     }
 
+    @Override
+    public void initialize(Configuration app) {
+        // nothing to initialize (maybe later a Key mapping)
+    }
+
+    @Override
+    public void dispose() {
+        // nothing to release.
+    }
 }

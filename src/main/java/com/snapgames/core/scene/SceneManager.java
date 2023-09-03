@@ -1,12 +1,14 @@
 package com.snapgames.core.scene;
 
 import com.snapgames.core.App;
+import com.snapgames.core.service.Service;
+import com.snapgames.core.utils.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class SceneManager {
+public class SceneManager implements Service {
 
     private final App app;
     private Map<String, Scene> scenes = new HashMap<>();
@@ -16,8 +18,9 @@ public class SceneManager {
         this.app = app;
     }
 
-    public Scene getCurrent() {
-        return currentScene;
+    @Override
+    public void initialize(Configuration app) {
+        // may be implements later a Scene loader.
     }
 
     public void add(Scene scene) {
@@ -27,11 +30,10 @@ public class SceneManager {
         }
     }
 
-    public Scene activate() {
+    public void activate() {
         if (Optional.ofNullable(currentScene).isPresent()) {
             this.currentScene.create(app);
         }
-        return currentScene;
     }
 
     public Scene activate(String sceneName) {
@@ -39,12 +41,21 @@ public class SceneManager {
             if (Optional.ofNullable(currentScene).isPresent()) {
                 currentScene.dispose(app);
             }
-            Scene scn = scenes.get(sceneName);
-            scn.create(app);
-            this.currentScene = scn;
+            setCurrentScene(scenes.get(sceneName));
+            activate();
         }
         return currentScene;
     }
+
+    public void setCurrentScene(Scene scene) {
+        this.currentScene = scene;
+    }
+
+
+    public Scene getCurrent() {
+        return currentScene;
+    }
+
 
     public void dispose() {
         for (Scene scn : scenes.values()) {

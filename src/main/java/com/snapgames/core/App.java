@@ -9,6 +9,7 @@ import com.snapgames.core.loop.StandardGameLoop;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.SceneManager;
+import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
 import com.snapgames.demo.test001.scenes.DemoScene;
 
@@ -32,15 +33,12 @@ public class App {
     // internal attributes
     public String name = "Application Test001";
     public String version = "1.0.0";
-    boolean exit;
-    public boolean testMode;
-
+    private boolean exit;
+    private boolean testMode;
     // Configuration attribute values.
-    Boolean debug;
-    int debugLevel;
-
-    boolean pause;
-
+    private Boolean debug;
+    private int debugLevel;
+    private boolean pause;
 
     private Configuration configuration;
     // main GameLoop implementation
@@ -79,17 +77,21 @@ public class App {
     private void initialize(String configurationFilepath) {
         // create services
         gameLoop = new StandardGameLoop();
-
         sceneManager = new SceneManager(this);
         inputHandler = new InputHandler(this);
         physicEngine = new PhysicEngine(this);
         renderer = new Renderer(this);
 
+        ServiceManager.get()
+                .add(sceneManager)
+                .add(renderer)
+                .add(physicEngine)
+                .add(inputHandler);
+
         // load configuration
         configuration = new Configuration(this, configurationFilepath);
         // initialize service against configuration
-        physicEngine.initialize(configuration);
-        renderer.initialize(configuration);
+        ServiceManager.get().initialize(configuration);
 
         System.out.printf(">> Window %s%n", messages.getString("app.title"));
         System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
@@ -139,10 +141,7 @@ public class App {
     }
 
     private void dispose() {
-        if (sceneManager != null) {
-            sceneManager.dispose();
-        }
-        renderer.dispose();
+        ServiceManager.get().dispose();
     }
 
     /**
