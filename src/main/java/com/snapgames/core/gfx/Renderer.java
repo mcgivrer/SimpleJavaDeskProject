@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -136,8 +137,7 @@ public class Renderer extends JPanel implements Service {
         SceneManager sceneManager = app.getSceneManager();
         Scene scn = sceneManager.getCurrent();
 
-        long count = scn.getEntities().stream()
-                .count();
+        long count = scn.getEntities().size();
         long rendererObj = scn.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
@@ -150,7 +150,7 @@ public class Renderer extends JPanel implements Service {
         scn.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
-                .sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
+                .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
                     moveToCameraPointOfView(g, currentCamera, -1);
                     drawEntity(g, e);
@@ -159,13 +159,33 @@ public class Renderer extends JPanel implements Service {
     }
 
     private void drawEntity(Graphics2D g, Entity e) {
-        if (e.fillColor != null) {
-            g.setColor(e.fillColor);
-            g.fillRect((int) e.x, (int) e.y, e.w, e.h);
-        }
-        if (e.color != null) {
-            g.setColor(e.color);
-            g.drawRect((int) e.x, (int) e.y, e.w, e.h);
+        switch (e.getType()) {
+            case DOT, RECTANGLE -> {
+                if (e.fillColor != null) {
+                    g.setColor(e.fillColor);
+                    g.fillRect((int) e.x, (int) e.y, e.w, e.h);
+                }
+                if (e.color != null) {
+                    g.setColor(e.color);
+                    g.drawRect((int) e.x, (int) e.y, e.w, e.h);
+                }
+            }
+            case ELLIPSE -> {
+                if (e.fillColor != null) {
+                    g.setColor(e.fillColor);
+                    g.fillArc((int) e.x, (int) e.y, e.w, e.h, 0, 360);
+                }
+                if (e.color != null) {
+                    g.setColor(e.color);
+                    g.drawArc((int) e.x, (int) e.y, e.w, e.h, 0, 360);
+                }
+            }
+            case LINE -> {
+                if (e.color != null) {
+                    g.setColor(e.color);
+                    g.drawLine((int) e.x, (int) e.y, e.w, e.h);
+                }
+            }
         }
     }
 

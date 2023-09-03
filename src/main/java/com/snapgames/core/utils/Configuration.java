@@ -22,7 +22,9 @@ public class Configuration {
     public Configuration(App app, String configFilePath) {
         try {
             config.load(App.class.getResourceAsStream(configFilePath));
-            config.forEach((k, v) -> setConfigValueFrom((String) k, (String) v));
+            config.entrySet().stream()
+                    .filter(e -> e.getKey() != null)
+                    .forEach(e -> setConfigValueFrom((String) e.getKey(), (String) e.getValue()));
         } catch (IOException e) {
             System.err.printf(">> <!> Unable to read confguration file %s%n", e.getMessage());
         } finally {
@@ -34,24 +36,29 @@ public class Configuration {
         switch (key) {
             case "app.main.name" -> {
                 this.name = value;
+                System.out.printf(">> <#> configuration Application name set to %s%n",
+                        this.name);
             }
             case "app.main.version" -> {
                 this.version = value;
+                System.out.printf(">> <#> configuration Application Version set to %s%n",
+                        this.version);
             }
             case "app.debug", "d", "debug" -> {
                 this.debug = Boolean.valueOf(value);
-                System.out.printf(">> <#> configuration debug set to %s%n",
+                System.out.printf(">> <#> configuration Debug set to %s%n",
                         this.debug ? "true" : "false");
             }
             case "app.debug.level", "dl", "debugLevel" -> {
                 this.debugLevel = Integer.parseInt(value);
-                System.out.printf(">> <#> configuration debuglevel set to %d%n", debugLevel);
+                System.out.printf(">> <#> configuration Debug Level set to %d%n", debugLevel);
             }
             case "app.window.size" -> {
                 String[] dim = value.split("x");
                 this.windowSize = new Dimension(
                         Integer.parseInt(dim[0]),
                         Integer.parseInt(dim[1]));
+                System.out.printf(">> <#> configuration Window Size set to %.2fx%.2f%n", windowSize.getWidth(), windowSize.getHeight());
             }
             case "app.screen.resolution" -> {
                 String[] dim = value.split("x");
@@ -59,6 +66,7 @@ public class Configuration {
                         0, 0,
                         Double.parseDouble(dim[0]),
                         Double.parseDouble(dim[1]));
+                System.out.printf(">> <#> configuration Screen Resolution set to %.2fx%.2f%n", bufferResolution.getWidth(), bufferResolution.getHeight());
             }
             case "app.physic.play.area" -> {
                 String[] dim = value.split("x");
@@ -66,14 +74,16 @@ public class Configuration {
                         0, 0,
                         Double.parseDouble(dim[0]),
                         Double.parseDouble(dim[1]));
+                System.out.printf(">> <#> configuration Play Area set to %.2fx%2f%n", playArea.getWidth(), playArea.getHeight());
             }
             case "app.test.mode" -> {
                 this.testMode = Boolean.parseBoolean(value);
+                System.out.printf(">> <#> configuration Test Mode set to %s%n",
+                        this.debug ? "true" : "false");
             }
             default -> System.err.printf("argument/confguration key '%s' unknown%n", key);
         }
     }
-
 
     public void parseCLIArguments(String[] args) {
         for (String arg : args) {

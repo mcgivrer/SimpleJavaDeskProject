@@ -3,6 +3,7 @@ package com.snapgames.demo.test001.scenes;
 import com.snapgames.core.*;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.EntityType;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.Material;
@@ -12,11 +13,11 @@ import com.snapgames.core.scene.AbstractScene;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
 public class DemoScene extends AbstractScene {
-
 
     int score = 0, lives = 3;
     int energy = 100;
@@ -55,6 +56,7 @@ public class DemoScene extends AbstractScene {
         Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
         for (int i = 0; i < nbEnemies; i++) {
             Entity enemy = new Entity("enemy_" + i)
+                    .setEntityType(EntityType.ELLIPSE)
                     .setColor(Color.RED.darker())
                     .setFillColor(Color.RED)
                     .setPosition(playArea.getWidth() * Math.random(), playArea.getHeight() * Math.random() * 0.4)

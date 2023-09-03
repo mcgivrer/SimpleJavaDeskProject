@@ -31,6 +31,10 @@ public class PhysicEngine implements Service {
                     applyWorldConstrains(e, elapsed);
                     if (!(e instanceof Camera || e.isStickToCamera()))
                         constrainsEntityToPlayArea(e);
+                    if (e.material != null) {
+                        e.dx = e.dx * e.material.roughness;
+                        e.dy = e.dy * e.material.roughness;
+                    }
                 });
         scene.update(app, elapsed, stats);
     }

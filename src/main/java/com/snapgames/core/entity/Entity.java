@@ -15,7 +15,9 @@ public class Entity {
     private static int index = 0;
     int id = index++;
 
-    String name = "entity_" + id;
+    private String name = "entity_" + id;
+
+    private EntityType type = EntityType.RECTANGLE;
     public double x;
     public double y;
 
@@ -33,7 +35,7 @@ public class Entity {
 
     public int priority;
 
-    public long life;
+    public double life;
     public long duration = -1;
 
     public Material material;
@@ -111,7 +113,7 @@ public class Entity {
         y += Math.signum(dy) * Math.max(Math.abs(dy), 0.0);
 
         if (Optional.ofNullable(material).isPresent()) {
-            dx *= material.roughness;
+            dx *= material.roughness / mass;
             dy *= material.roughness / mass;
         }
         if (duration != -1 && life > duration) {
@@ -154,5 +156,14 @@ public class Entity {
 
     public <T> T getAttribute(String attrName, T v) {
         return (T) attributes.get(attrName);
+    }
+
+    public EntityType getType() {
+        return this.type;
+    }
+
+    public Entity setEntityType(EntityType t) {
+        this.type = t;
+        return this;
     }
 }
