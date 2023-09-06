@@ -81,16 +81,16 @@ public class DemoScene extends AbstractScene {
 
         double speed = player.getAttribute("speed", 0.5);
         if (ih.getKeys(KeyEvent.VK_UP)) {
-            player.dy = -speed;
+            player.getVelocity().y = -speed;
         }
         if (ih.getKeys(KeyEvent.VK_DOWN)) {
-            player.dy = speed;
+            player.getVelocity().y = speed;
         }
         if (ih.getKeys(KeyEvent.VK_LEFT)) {
-            player.dx = -speed;
+            player.getVelocity().x = -speed;
         }
         if (ih.getKeys(KeyEvent.VK_RIGHT)) {
-            player.dx = speed;
+            player.getVelocity().x = speed;
         }
     }
 

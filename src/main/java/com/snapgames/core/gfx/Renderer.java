@@ -93,10 +93,13 @@ public class Renderer extends JPanel implements Service {
         g2.setColor(Color.ORANGE);
         g2.setFont(getFont().deriveFont(11.0f));
         g2.drawImage(screenBuffer,
-                0, frame.getInsets().top, windowSize.width, windowSize.height,
+                0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
-        g2.drawString(StringUtils.prepareStatsString(stats, "[ ", " ]", " | "), 4, (int) windowSize.getHeight() - 10);
+        g2.drawString(
+                StringUtils.prepareStatsString(stats,
+                        "[ ", " ]", " | "),
+                4, (int) frame.getHeight() - 10);
         frame.getBufferStrategy().show();
         g2.dispose();
     }
@@ -163,27 +166,27 @@ public class Renderer extends JPanel implements Service {
             case DOT, RECTANGLE -> {
                 if (e.fillColor != null) {
                     g.setColor(e.fillColor);
-                    g.fillRect((int) e.x, (int) e.y, e.w, e.h);
+                    g.fillRect((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
                 }
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawRect((int) e.x, (int) e.y, e.w, e.h);
+                    g.drawRect((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
                 }
             }
             case ELLIPSE -> {
                 if (e.fillColor != null) {
                     g.setColor(e.fillColor);
-                    g.fillArc((int) e.x, (int) e.y, e.w, e.h, 0, 360);
+                    g.fillArc((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h, 0, 360);
                 }
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawArc((int) e.x, (int) e.y, e.w, e.h, 0, 360);
+                    g.drawArc((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h, 0, 360);
                 }
             }
             case LINE -> {
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawLine((int) e.x, (int) e.y, e.w, e.h);
+                    g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
                 }
             }
         }
@@ -223,7 +226,7 @@ public class Renderer extends JPanel implements Service {
     }
 
     private void moveToCameraPointOfView(Graphics2D g, Entity cam, double i) {
-        g.translate(cam.x * i, cam.y * i);
+        g.translate(cam.getPosition().x * i, cam.getPosition().y * i);
     }
 
     public void setWindowSize(Dimension dimension) {

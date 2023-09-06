@@ -1,11 +1,14 @@
 package com.snapgames.core.entity;
 
 import com.snapgames.core.physic.Material;
+import com.snapgames.core.physic.Vector2D;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,14 +21,17 @@ public class Entity {
     private String name = "entity_" + id;
 
     private EntityType type = EntityType.RECTANGLE;
-    public double x;
-    public double y;
+
+    private Vector2D pos = new Vector2D();
+
+    private Vector2D vel = new Vector2D();
+
+    private Vector2D acc = new Vector2D();
+
+    List<Vector2D> forces = new ArrayList<>();
 
     public int w;
     public int h;
-
-    public double dx;
-    public double dy;
 
     public Color color;
     public Color fillColor;
@@ -54,9 +60,18 @@ public class Entity {
         this.name = name;
     }
 
+    public Entity addForce(Vector2D f) {
+        this.forces.add(f);
+        return this;
+    }
+
     public Entity setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
+        this.pos = new Vector2D(x, y);
+        return this;
+    }
+
+    public Entity setPosition(Vector2D p) {
+        this.pos = p;
         return this;
     }
 
@@ -67,8 +82,12 @@ public class Entity {
     }
 
     public Entity setSpeed(double dx, double dy) {
-        this.dx = dx;
-        this.dy = dy;
+        this.vel = new Vector2D(dx, dy);
+        return this;
+    }
+
+    public Entity setAcceleration(double ax, double ay) {
+        this.acc = new Vector2D(ax, ay);
         return this;
     }
 
@@ -109,20 +128,25 @@ public class Entity {
     }
 
     public void update(double elapsed) {
-        x += Math.signum(dx) * Math.max(Math.abs(dx), 0.0);
-        y += Math.signum(dy) * Math.max(Math.abs(dy), 0.0);
+        acc.addAll(forces);
+
+        vel = vel.add(acc).multiply(elapsed);
 
         if (Optional.ofNullable(material).isPresent()) {
-            dx *= material.roughness / mass;
-            dy *= material.roughness / mass;
+            vel = vel.multiply(material.roughness / mass);
         }
+
+        pos = vel.multiply(elapsed);
+
         if (duration != -1 && life > duration) {
             setActive(false);
         } else {
             life += elapsed;
         }
 
-        this.bbox = new Rectangle2D.Double(this.x, this.y, this.w, this.h);
+        this.bbox = new Rectangle2D.Double(pos.x, pos.y, this.w, this.h);
+
+        forces.clear();
     }
 
     public Entity setMaterial(Material m) {
@@ -165,5 +189,23 @@ public class Entity {
     public Entity setEntityType(EntityType t) {
         this.type = t;
         return this;
+    }
+
+    public Vector2D getVelocity() {
+        return vel;
+    }
+
+
+    public Vector2D getPosition() {
+        return pos;
+    }
+
+    public Entity setVelocity(Vector2D v) {
+        this.vel = v;
+        return this;
+    }
+
+    protected Vector2D getSize() {
+        return new Vector2D(w, h);
     }
 }
