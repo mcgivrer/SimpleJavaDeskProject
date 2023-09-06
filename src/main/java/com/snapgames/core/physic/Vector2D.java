@@ -132,4 +132,10 @@ public class Vector2D {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    public Vector2D reset() {
+        this.x = 0.0;
+        this.y = 0.0;
+        return this;
+    }
 }

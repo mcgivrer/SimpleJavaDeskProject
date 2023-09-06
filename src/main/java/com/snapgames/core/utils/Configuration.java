@@ -14,6 +14,7 @@ public class Configuration {
     private Properties config = new Properties();
     public boolean debug;
     public int debugLevel;
+    public String debugFilter="";
     public boolean testMode;
     public Dimension windowSize;
     public Rectangle2D bufferResolution;
@@ -53,6 +54,10 @@ public class Configuration {
                 this.debugLevel = Integer.parseInt(value);
                 System.out.printf(">> <#> configuration Debug Level set to %d%n", debugLevel);
             }
+            case "app.debug.filter", "df", "debugFilter" -> {
+                this.debugFilter = value;
+                System.out.printf(">> <#> configuration Debug entity filter set to %s%n", debugFilter);
+            }
             case "app.window.size" -> {
                 String[] dim = value.split("x");
                 this.windowSize = new Dimension(
@@ -81,7 +86,7 @@ public class Configuration {
                 System.out.printf(">> <#> configuration Test Mode set to %s%n",
                         this.debug ? "true" : "false");
             }
-            default -> System.err.printf("argument/confguration key '%s' unknown%n", key);
+            default -> System.err.printf("argument/configuration key '%s' unknown%n", key);
         }
     }
 

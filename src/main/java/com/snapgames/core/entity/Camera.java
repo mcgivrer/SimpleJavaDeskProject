@@ -18,18 +18,14 @@ public class Camera extends Entity {
     @Override
     public void update(double elapsed) {
 
-        setPosition(getPosition().add(target.getPosition().substract(target.getSize().multiply(0.5)).substract(new Vector2D(viewport.getWidth() * 0.5, viewport.getHeight() * 0.5).substract(this.getPosition()))));
-
-        /**
-         this.pos.x += (target.pos.x - (target.w * 0.5) - ((viewport.getWidth()) * 0.5) - this.pos.x)
-         * tf * Math.min(elapsed, 10);
-         this.pos.y += (target.pos.y - (target.h * 0.5) - ((viewport.getHeight()) * 0.5) - this.pos.y)
-         * tf * Math.min(elapsed, 10);
-         **/
+        this.getPosition().x += (target.getPosition().x - (target.getSize().x * 0.5) - ((viewport.getWidth()) * 0.5) - this.getPosition().x)
+                * tf * Math.min(elapsed, 10);
+        this.getPosition().y += (target.getPosition().y - (target.getSize().y * 0.5) - ((viewport.getHeight()) * 0.5) - this.getPosition().y)
+                * tf * Math.min(elapsed, 10);
 
         this.viewport.setRect(
-                this.getPosition().x + target.w * 0.5,
-                this.getPosition().y + target.h * 0.5,
+                this.getPosition().x + target.getSize().x * 0.5,
+                this.getPosition().y + target.getSize().y * 0.5,
                 this.viewport.getWidth(),
                 this.viewport.getHeight());
     }

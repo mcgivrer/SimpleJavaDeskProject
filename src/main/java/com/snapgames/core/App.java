@@ -1,6 +1,7 @@
 package com.snapgames.core;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.snapgames.core.gfx.Renderer;
@@ -28,11 +29,14 @@ public class App {
     public String version = "1.0.0";
     private boolean exit;
     private boolean testMode;
-    // Configuration attribute values.
+    // debug mode
     private Boolean debug;
     private int debugLevel;
+    private String debugFilter;
+
     private boolean pause;
 
+    // Configuration
     private Configuration configuration;
     // main GameLoop implementation
     GameLoop gameLoop;
@@ -98,9 +102,11 @@ public class App {
      */
     public void run(String[] args) {
         configuration.parseCLIArguments(args);
+        // retrieve App attributes value from Configuration.
         this.debug = configuration.debug;
         this.debugLevel = configuration.debugLevel;
         this.testMode = configuration.testMode;
+        this.debugFilter = configuration.debugFilter;
 
         // create window to display game
         renderer.createWindow(this, inputHandler);
@@ -162,7 +168,6 @@ public class App {
     public int getDebugLevel() {
         return this.debugLevel;
     }
-
 
     public void setExit(boolean e) {
         this.exit = e;
@@ -228,5 +233,13 @@ public class App {
 
     public InputHandler getInputHandler() {
         return this.inputHandler;
+    }
+
+    public boolean isDebugLevelMin(int minimumDebugLevelRequired) {
+        return debugLevel >= minimumDebugLevelRequired;
+    }
+
+    public boolean isDebugFiltered(String name) {
+        return debugFilter.contains(name);
     }
 }

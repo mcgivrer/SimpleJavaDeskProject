@@ -15,6 +15,7 @@ import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.Material;
 import com.snapgames.core.physic.PhysicEngine;
+import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
 
@@ -38,23 +39,24 @@ public class DemoScene extends AbstractScene {
                 .setSize(16, 16)
                 .setPriority(1)
                 .setMass(1.0)
-                .setMaterial(new Material("body", 0.9, 0.78, 0.97))
-                .addAttribute("speed", 0.8);
+                .setMaterial(new Material("body", 1.2, 0.78, 0.97))
+                .addAttribute("speed", 5.0);
 
         addEntity(player);
 
-        addEnemies(app, 100);
+        addEnemies(app, 10, 10.0);
 
         Camera cam01 = new Camera("cam01")
                 .setViewport(new Rectangle2D.Double(0, 0, 300, 200))
                 .setTarget(player)
-                .setTweenFactor(0.002);
+                .setTweenFactor(0.02);
         addEntity(cam01);
     }
 
 
-    private void addEnemies(App app, int nbEnemies) {
+    private void addEnemies(App app, int nbEnemies, double maxMass) {
         Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
+        Material enemyMat = new Material("enemy", 0.5, 0.8, 1.0);
         for (int i = 0; i < nbEnemies; i++) {
             Entity enemy = new Entity("enemy_" + i)
                     .setEntityType(EntityType.ELLIPSE)
@@ -63,8 +65,8 @@ public class DemoScene extends AbstractScene {
                     .setPosition(playArea.getWidth() * Math.random(), playArea.getHeight() * Math.random() * 0.4)
                     .setSize(8, 8)
                     .setPriority(i + 10)
-                    .setMass(1.0)
-                    .setMaterial(new Material("enemy", 1.0, 0.98, 0.99));
+                    .setMass(Math.random() * maxMass)
+                    .setMaterial(enemyMat);
 
             addEntity(enemy);
         }
@@ -80,17 +82,21 @@ public class DemoScene extends AbstractScene {
         Entity player = getEntity("player");
 
         double speed = player.getAttribute("speed", 0.5);
+        if (ih.isControlKeyPressed()) {
+            speed *= 2.0;
+        }
+
         if (ih.getKeys(KeyEvent.VK_UP)) {
-            player.getVelocity().y = -speed;
+            player.getForces().add(new Vector2D(0, -speed));
         }
         if (ih.getKeys(KeyEvent.VK_DOWN)) {
-            player.getVelocity().y = speed;
+            player.getForces().add(new Vector2D(0, speed));
         }
         if (ih.getKeys(KeyEvent.VK_LEFT)) {
-            player.getVelocity().x = -speed;
+            player.getForces().add(new Vector2D(-speed, 0));
         }
         if (ih.getKeys(KeyEvent.VK_RIGHT)) {
-            player.getVelocity().x = speed;
+            player.getForces().add(new Vector2D(speed, 0));
         }
     }
 

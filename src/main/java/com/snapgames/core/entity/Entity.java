@@ -23,15 +23,11 @@ public class Entity {
     private EntityType type = EntityType.RECTANGLE;
 
     private Vector2D pos = new Vector2D();
+    private Vector2D size = new Vector2D();
 
     private Vector2D vel = new Vector2D();
-
     private Vector2D acc = new Vector2D();
-
     List<Vector2D> forces = new ArrayList<>();
-
-    public int w;
-    public int h;
 
     public Color color;
     public Color fillColor;
@@ -76,8 +72,7 @@ public class Entity {
     }
 
     public Entity setSize(int w, int h) {
-        this.w = w;
-        this.h = h;
+        this.size = new Vector2D(w, h);
         return this;
     }
 
@@ -88,6 +83,11 @@ public class Entity {
 
     public Entity setAcceleration(double ax, double ay) {
         this.acc = new Vector2D(ax, ay);
+        return this;
+    }
+
+    public Entity setAcceleration(Vector2D acc) {
+        this.acc = acc;
         return this;
     }
 
@@ -128,25 +128,13 @@ public class Entity {
     }
 
     public void update(double elapsed) {
-        acc.addAll(forces);
-
-        vel = vel.add(acc).multiply(elapsed);
-
-        if (Optional.ofNullable(material).isPresent()) {
-            vel = vel.multiply(material.roughness / mass);
-        }
-
-        pos = vel.multiply(elapsed);
 
         if (duration != -1 && life > duration) {
             setActive(false);
         } else {
             life += elapsed;
         }
-
-        this.bbox = new Rectangle2D.Double(pos.x, pos.y, this.w, this.h);
-
-        forces.clear();
+        updateBBox();
     }
 
     public Entity setMaterial(Material m) {
@@ -205,7 +193,38 @@ public class Entity {
         return this;
     }
 
-    protected Vector2D getSize() {
-        return new Vector2D(w, h);
+    public Vector2D getSize() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", pos=" + pos +
+                ", vel=" + vel +
+                ", acc=" + acc +
+                ", active=" + active +
+                ", mass=" + mass +
+                ", material=" + material +
+                ", forces=" + forces +
+                '}';
+    }
+
+    public List<Vector2D> getForces() {
+        return this.forces;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public Vector2D getAcceleration() {
+        return acc;
+    }
+
+    public void updateBBox() {
+        bbox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
     }
 }

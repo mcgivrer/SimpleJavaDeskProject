@@ -13,6 +13,7 @@ public class InputHandler implements Service, KeyListener {
     // I/O attributes
     boolean[] keys = new boolean[1024];
     boolean[] prevKeys = new boolean[1024];
+    private boolean ctrlKeyPressed;
 
     public InputHandler(App app) {
         this.app = app;
@@ -26,6 +27,7 @@ public class InputHandler implements Service, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         prevKeys[e.getKeyCode()] = keys[e.getKeyCode()];
+        ctrlKeyPressed = e.isControlDown();
         keys[e.getKeyCode()] = true;
     }
 
@@ -33,6 +35,7 @@ public class InputHandler implements Service, KeyListener {
     public void keyReleased(KeyEvent e) {
         prevKeys[e.getKeyCode()] = keys[e.getKeyCode()];
         keys[e.getKeyCode()] = false;
+        ctrlKeyPressed = e.isControlDown();
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ESCAPE -> {
                 app.setExit(true);
@@ -67,5 +70,9 @@ public class InputHandler implements Service, KeyListener {
     @Override
     public void dispose() {
         // nothing to release.
+    }
+
+    public boolean isControlKeyPressed() {
+        return this.ctrlKeyPressed;
     }
 }

@@ -12,7 +12,7 @@ function prop {
 export PROGRAM_NAME=$(prop project.name)
 export PROGRAM_VERSION=$(prop project.version)
 export PROGRAM_TITLE=$(prop project.title)
-export MAIN_CLASS=$(prop project.mainclass)
+export MAIN_CLASS=$(prop project.main.class)
 export JAVADOC_CLASSPATH=$(prop project.javadoc.classpath)
 export JAVADOC_GROUPS=$(prop project.javadoc.packages)
 export VENDOR_NAME=$(prop project.author.name)

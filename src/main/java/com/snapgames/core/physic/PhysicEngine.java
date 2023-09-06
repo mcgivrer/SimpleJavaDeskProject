@@ -23,41 +23,70 @@ public class PhysicEngine implements Service {
     }
 
     public void update(App app, Scene scene, double elapsed, Map<String, Object> stats) {
+        double time = elapsed * 0.025;
+
+        if (app.isDebugLevelMin(9)) {
+            System.out.printf("=> Start Update --- %n = Elapsed: %fs%n", time);
+        }
         scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .sorted(Comparator.comparingInt(Entity::getPriority).reversed())
                 .forEach(e -> {
-                    e.update(elapsed);
-                    applyWorldConstrains(e, elapsed);
-                    if (!(e instanceof Camera || e.isStickToCamera()))
+                    if (!(e instanceof Camera) && !e.isStickToCamera()) {
+                        applyWorldConstrains(e, time);
+                        updateEntity(e, time);
                         constrainsEntityToPlayArea(e);
-                    if (e.material != null) {
-                        e.setVelocity(e.getVelocity().multiply(e.material.roughness));
                     }
+                    e.update(elapsed);
+                    if (app.isDebugLevelMin(9) && app.isDebugFiltered(e.getName())) {
+                        System.out.printf("|  -> entity: %s%n", e.toString());
+                    }
+
                 });
-        scene.update(app, elapsed, stats);
+        scene.update(app, time, stats);
+        if (app.isDebugLevelMin(4)) {
+            System.out.println("|_ End Update ---");
+        }
+    }
+
+    private void updateEntity(Entity entity, double elapsed) {
+        // apply gravity
+        applyWorldConstrains(entity, elapsed);
+        // compute acceleration
+        entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));
+        entity.setAcceleration(entity.getAcceleration().multiply(
+                (entity.getMaterial() != null ? entity.getMaterial().density : 1.0) * entity.mass));
+        // compute velocity
+        double roughness = (entity.getMaterial() != null) ? entity.getMaterial().roughness : 1.0;
+        entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(elapsed * elapsed * 0.5)).multiply(roughness));
+
+        // compute position
+        entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
+        entity.getForces().clear();
+        entity.updateBBox();
+
     }
 
     private void applyWorldConstrains(Entity e, double elapsed) {
-        e.setVelocity(e.getVelocity().add(new Vector2D(0, -world.getGravity() * elapsed * 0.005 * e.mass)));
+        e.addForce(new Vector2D(0, -world.getGravity()));
     }
 
     private void constrainsEntityToPlayArea(Entity e) {
         Rectangle2D playArea = world.getPlayArea();
         if (Optional.ofNullable(playArea).isPresent() && !playArea.contains(e.getBBox())) {
-            if (e.getPosition().x < playArea.getMinX() || e.getPosition().x + e.w > playArea.getMaxX()) {
+            if (e.getPosition().x < playArea.getMinX() || e.getPosition().x + (int) e.getSize().x > playArea.getMaxX()) {
                 if (e.getPosition().x < playArea.getMinX())
                     e.getPosition().x = playArea.getMinX();
-                if (e.getPosition().x + e.w > playArea.getMaxX())
-                    e.getPosition().x = playArea.getMaxX() - e.w;
+                if (e.getPosition().x + (int) e.getSize().x > playArea.getMaxX())
+                    e.getPosition().x = playArea.getMaxX() - (int) e.getSize().x;
 
                 e.getVelocity().x = -e.getVelocity().x * e.material.elasticity;
             }
-            if (e.getPosition().y < playArea.getMinY() || e.getPosition().y + e.h > playArea.getMaxY()) {
+            if (e.getPosition().y < playArea.getMinY() || e.getPosition().y + (int) e.getSize().y > playArea.getMaxY()) {
                 if (e.getPosition().y < playArea.getMinY())
                     e.getPosition().y = playArea.getMinY();
-                if (e.getPosition().y + e.h > playArea.getMaxY())
-                    e.getPosition().y = playArea.getMaxY() - e.h;
+                if (e.getPosition().y + (int) e.getSize().y > playArea.getMaxY())
+                    e.getPosition().y = playArea.getMaxY() - (int) e.getSize().y;
 
                 e.getVelocity().y = -e.getVelocity().y * e.material.elasticity;
             }

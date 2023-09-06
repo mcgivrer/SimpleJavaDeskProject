@@ -2,7 +2,7 @@ package com.snapgames.core.physic;
 
 public class Material {
     String name;
-    double density;
+    public double density;
     public double elasticity;
     public double roughness;
 
@@ -11,5 +11,15 @@ public class Material {
         this.density = d;
         this.elasticity = e;
         this.roughness = r;
+    }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "name='" + name + '\'' +
+                ", density=" + density +
+                ", elasticity=" + elasticity +
+                ", roughness=" + roughness +
+                '}';
     }
 }

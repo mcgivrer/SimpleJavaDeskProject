@@ -166,27 +166,27 @@ public class Renderer extends JPanel implements Service {
             case DOT, RECTANGLE -> {
                 if (e.fillColor != null) {
                     g.setColor(e.fillColor);
-                    g.fillRect((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
+                    g.fillRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
                 }
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawRect((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
+                    g.drawRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
                 }
             }
             case ELLIPSE -> {
                 if (e.fillColor != null) {
                     g.setColor(e.fillColor);
-                    g.fillArc((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h, 0, 360);
+                    g.fillArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
                 }
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawArc((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h, 0, 360);
+                    g.drawArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
                 }
             }
             case LINE -> {
                 if (e.color != null) {
                     g.setColor(e.color);
-                    g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, e.w, e.h);
+                    g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
                 }
             }
         }

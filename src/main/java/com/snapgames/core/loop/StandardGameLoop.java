@@ -23,7 +23,7 @@ public class StandardGameLoop implements GameLoop {
         Map<String, Object> stats = new HashMap<>();
         while (!app.isExit() && !app.isTestMode()) {
             current = System.currentTimeMillis();
-
+            elapsed = System.currentTimeMillis() - previous;
             app.input();
             if (!app.isPaused()) {
                 app.update(elapsed, stats);
@@ -32,7 +32,7 @@ public class StandardGameLoop implements GameLoop {
             }
             app.render(stats);
             frames++;
-            elapsed = System.currentTimeMillis() - previous;
+
             cumulatedTime += elapsed;
             if (cumulatedTime > 1000) {
                 fps = frames;
@@ -41,7 +41,8 @@ public class StandardGameLoop implements GameLoop {
                 frames = 0;
                 cumulatedTime = 0;
             }
-            int wait = (int) ((app.getFPS() / 1000) - elapsed > 0 ? (app.getFPS() / 1000) - elapsed : 1);
+            double timeFrame = 1000.0 / app.getFPS();
+            int wait = (int) (timeFrame - elapsed > 0 ? timeFrame - elapsed : 1);
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
@@ -52,6 +53,7 @@ public class StandardGameLoop implements GameLoop {
             stats.put("2_debugLevel", app.getDebugLevel());
             stats.put("3_ups", ups);
             stats.put("3_fps", fps);
+            stats.put("3_tf", timeFrame);
             stats.put("4_time", StringUtils.formatDuration(internalTime));
         }
     }
