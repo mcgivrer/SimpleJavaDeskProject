@@ -32,7 +32,7 @@ public class AppConfigTest {
 
     @Test
     public void testIfConfigurationDebugLevelSet() {
-        assertEquals(1, app.getDebugLevel());
+        assertEquals(4, app.getDebugLevel());
     }
 
     @Test

@@ -85,14 +85,13 @@ function manifest() {
 }
 #
 function compile() {
-  echo "compile sources "
+  echo "|_ 2. Compile sources from '$SRC/main' ..."
   echo "> from : $SRC"
   echo "> to   : $CLASSES"
   # prepare target
   mkdir -p $CLASSES
   # Compile class files
   rm -Rf $CLASSES/*
-  echo "|_ 2. compile sources from '$SRC/main' ..."
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   # Compilation via JavaC with some debug options to add source, lines and vars in the compiled classes.
   javac $COMPILATION_OPTS \
@@ -104,7 +103,7 @@ function compile() {
   echo "   done."
 }
 function checkCodeStyleQA() {
-  echo "check code quality against rules $CHECK_RULES"
+  echo "|_ 3. Check code quality against rules $CHECK_RULES"
   echo "> explore sources at : $SRC"
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$CLASSES:." \
@@ -115,9 +114,8 @@ function checkCodeStyleQA() {
     @$TARGET/sources.lst
   echo "   done."
 }
-#
 function generatedoc() {
-  echo "generate Javadoc "
+  echo "|_ 4. Generate Javadoc "
   echo "> from : $SRC"
   echo "> to   : $TARGET/javadoc"
   # prepare target
@@ -125,31 +123,31 @@ function generatedoc() {
   mkdir -p $SRC/main/javadoc
   # Compile class files
   rm -Rf $TARGET/javadoc/*
-  echo "|_ 2-5. generate javadoc from '$JAVADOC_GROUPS' ..."
   java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$TARGET/javadoc/overview.html
-  echo "javadoc $JAR_OPTS -source $SOURCE_VERSION \
-  -author -use -version \
-  -doctitle \"$PROGRAM_TITLE\" \
-  -d $TARGET/javadoc \
-  -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
-  -overview $TARGET/javadoc/overview.html \
-  -group $JAVADOC_GROUPS"
   javadoc $JAR_OPTS -source $SOURCE_VERSION \
     -author -use -version \
     -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
-    -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
     -overview $TARGET/javadoc/overview.html \
-    -group $JAVADOC_GROUPS
-  cd $TARGET/javadoc  
+    $JAVADOC_GROUPS \
+    -sourcepath $SRC/main/java \
+    -subpackages $JAVADOC_CLASSPATH
+  cd $TARGET/javadoc
   jar cvf ../$JAR_JAVADOC_NAME *
   cd ../../
   echo "   done." >>target/build.log
 }
-
+#
+function generateSourceJar() {
+  echo "|_ 5. Generate JAR sources $TARGET/${PROGRAM_NAME}-sources-${PROGRAM_VERSION}.jar"
+  echo "> from : $SRC"
+  echo "> to   : $TARGET/"
+  jar cvf ${TARGET}/${PROGRAM_NAME}-${PROGRAM_VERSION}-sources.jar -C src .
+  echo "   JAR containing sources generation done." >>target/build.log
+}
 #
 function executeTests() {
-  echo "execute tests"
+  echo "|_ 6. Execute tests"
   echo "> from : $SRC/test"
   echo "> to   : $TARGET/test-classes"
   mkdir -p $TARGET/test-classes
@@ -167,7 +165,7 @@ function executeTests() {
 }
 #
 function createJar() {
-  echo "|_ 3. package jar file '$TARGET/$JAR_NAME'..."
+  echo "|_ 7. package jar file '$TARGET/$JAR_NAME'..."
   if ([ $(ls $CLASSES | wc -l | grep -w "0") ]); then
     echo 'No compiled class files'
   else
@@ -180,7 +178,7 @@ function createJar() {
 #
 function wrapJar() {
   # create runnable program
-  echo "|_ 4. create run file '$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run'..."
+  echo "|_ 8. create run file '$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run'..."
   mkdir -p $BUILD
   cat $LIBS/stub.sh $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar >$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run
   chmod +x $BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run
@@ -191,11 +189,12 @@ function executeJar() {
   manifest
   compile
   createJar
-  echo "|_ 5.Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
+  echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
   java $JAR_OPTS -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
 }
 #
 function generateEpub() {
+  echo "|_ 9. Generate documentation as E-PUB from '/docs'"
   rm -Rf $TARGET/book
   mkdir $TARGET/book
   cat docs/*.yml >$TARGET/book/book.mdo
@@ -207,6 +206,7 @@ function generateEpub() {
 }
 # TODO https://www.toptal.com/docker/pandoc-docker-publication-chain
 function generatePDF() {
+  echo "|_ 10. Generate documentation as PDF from '/docs'"
   rm -Rf $TARGET/book/
   mkdir $TARGET/book
   cat docs/*.yml >$TARGET/book/book.mdo
@@ -251,6 +251,7 @@ function run() {
     checkCodeStyleQA
     executeTests
     generatedoc
+    generateSourceJar
     createJar
     wrapJar
     ;;
@@ -286,8 +287,8 @@ function run() {
   r | R | run)
     executeJar
     ;;
-  s | S | sign)
-    sign $2
+  s | S | sources)
+    generateSourceJar $2
     ;;
   h | H | ? | *)
     help
