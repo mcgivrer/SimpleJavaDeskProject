@@ -109,14 +109,13 @@ function checkCodeStyleQA() {
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$CLASSES:." \
     -jar $LIB_CHECKSTYLES \
-    java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$CLASSES:." \
-    -jar $LIB_CHECKSTYLES \
     -c $CHECK_RULES_FILE \
     -f xml \
     -o $TARGET/checkstyle_errors.xml \
     @$TARGET/sources.lst
   echo "   done."
 }
+#
 function generatedoc() {
   echo "generate Javadoc "
   echo "> from : $SRC"
@@ -132,8 +131,7 @@ function generatedoc() {
   -author -use -version \
   -doctitle \"$PROGRAM_TITLE\" \
   -d $TARGET/javadoc \
-  -sourcepath $SRC/main/java \
-  -subpackages $JAVADOC_CLASSPATH \
+  -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
   -overview $TARGET/javadoc/overview.html \
   -group $JAVADOC_GROUPS"
   javadoc $JAR_OPTS -source $SOURCE_VERSION \
@@ -142,8 +140,8 @@ function generatedoc() {
     -d $TARGET/javadoc \
     -sourcepath $SRC/main/java $JAVADOC_CLASSPATH \
     -overview $TARGET/javadoc/overview.html \
-    $JAVADOC_GROUPS
-  cd $TARGET/javadoc
+    -group $JAVADOC_GROUPS
+  cd $TARGET/javadoc  
   jar cvf ../$JAR_JAVADOC_NAME *
   cd ../../
   echo "   done." >>target/build.log
