@@ -1,24 +1,17 @@
 package com.snapgames.core;
 
-import com.snapgames.core.entity.Camera;
-import com.snapgames.core.entity.Entity;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.loop.GameLoop;
 import com.snapgames.core.loop.StandardGameLoop;
 import com.snapgames.core.physic.PhysicEngine;
-import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.SceneManager;
 import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
 import com.snapgames.demo.test001.scenes.DemoScene;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * A basic CLI java application.
