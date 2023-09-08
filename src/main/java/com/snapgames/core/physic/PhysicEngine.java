@@ -44,7 +44,7 @@ public class PhysicEngine implements Service {
 
                 });
         scene.update(app, time, stats);
-        if (app.isDebugLevelMin(4)) {
+        if (app.isDebugLevelMin(9)) {
             System.out.println("|_ End Update ---");
         }
     }
@@ -55,10 +55,18 @@ public class PhysicEngine implements Service {
         // compute acceleration
         entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));
         entity.setAcceleration(entity.getAcceleration().multiply(
-                (entity.getMaterial() != null ? entity.getMaterial().density : 1.0) * entity.mass));
+                        (entity.getMaterial() != null ? entity.getMaterial().density : 1.0) * entity.mass)
+                .maximize(4.0)
+                .thresholdToZero(0.001));
         // compute velocity
         double roughness = (entity.getMaterial() != null) ? entity.getMaterial().roughness : 1.0;
-        entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(elapsed * elapsed * 0.5)).multiply(roughness));
+        entity.setVelocity(
+                entity.getVelocity().add(
+                                entity.getAcceleration()
+                                        .multiply(elapsed * elapsed * 0.5))
+                        .multiply(roughness)
+                        .maximize(24.0)
+                        .thresholdToZero(0.01));
 
         // compute position
         entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));

@@ -143,4 +143,10 @@ public class DemoScene extends AbstractScene {
     public String getName() {
         return null;
     }
+
+    @Override
+    public void reset(App app) {
+        getEntities().clear();
+        create(app);
+    }
 }

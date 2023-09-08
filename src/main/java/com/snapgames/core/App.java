@@ -1,9 +1,5 @@
 package com.snapgames.core;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.loop.GameLoop;
@@ -13,6 +9,10 @@ import com.snapgames.core.scene.SceneManager;
 import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
 import com.snapgames.demo.test001.scenes.DemoScene;
+
+import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * A basic CLI java application.
@@ -241,5 +241,24 @@ public class App {
 
     public boolean isDebugFiltered(String name) {
         return debugFilter.contains(name);
+    }
+
+    public void processOnKeyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE -> {
+                setExit(true);
+            }
+            case KeyEvent.VK_P, KeyEvent.VK_PAUSE -> {
+                setPause(!isPaused());
+            }
+            case KeyEvent.VK_D -> {
+                setDebugLevel(getDebugLevel() + 1 < 10 ? getDebugLevel() + 1 : 0);
+                setDebug(getDebugLevel() != 0);
+            }
+            case KeyEvent.VK_Z -> {
+                getSceneManager().getCurrent().reset(this);
+            }
+        }
+
     }
 }

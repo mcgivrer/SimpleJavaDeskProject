@@ -96,10 +96,12 @@ public class Renderer extends JPanel implements Service {
                 0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
-        g2.drawString(
-                StringUtils.prepareStatsString(stats,
-                        "[ ", " ]", " | "),
-                4, (int) frame.getHeight() - 10);
+        if (app.getDebug()) {
+            g2.drawString(
+                    StringUtils.prepareStatsString(stats,
+                            "[ ", " ]", " | "),
+                    4, (int) frame.getHeight() - 10);
+        }
         frame.getBufferStrategy().show();
         g2.dispose();
     }

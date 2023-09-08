@@ -36,18 +36,7 @@ public class InputHandler implements Service, KeyListener {
         prevKeys[e.getKeyCode()] = keys[e.getKeyCode()];
         keys[e.getKeyCode()] = false;
         ctrlKeyPressed = e.isControlDown();
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE -> {
-                app.setExit(true);
-            }
-            case KeyEvent.VK_P, KeyEvent.VK_PAUSE -> {
-                app.setPause(!app.isPaused());
-            }
-            case KeyEvent.VK_D -> {
-                app.setDebugLevel(app.getDebugLevel() + 1 < 5 ? app.getDebugLevel() + 1 : 0);
-                app.setDebug(app.getDebugLevel() != 0);
-            }
-        }
+        app.processOnKeyReleased(e);
     }
 
     private boolean isKeyReleased(int keyCode) {

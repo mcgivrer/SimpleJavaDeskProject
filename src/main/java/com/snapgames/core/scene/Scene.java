@@ -28,4 +28,7 @@ public interface Scene {
     Entity getEntity(String name);
 
     Camera getCurrentCamera();
+
+    void reset(App app);
+
 }
