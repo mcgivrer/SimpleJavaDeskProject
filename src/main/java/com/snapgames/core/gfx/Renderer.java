@@ -140,10 +140,10 @@ public class Renderer extends JPanel implements Service {
     private void drawEntities(Graphics2D g, Map<String, Object> stats) {
 
         SceneManager sceneManager = app.getSceneManager();
-        Scene scn = sceneManager.getCurrent();
+        Scene scene = sceneManager.getCurrent();
 
-        long count = scn.getEntities().size();
-        long rendererObj = scn.getEntities().stream()
+        long count = scene.getEntities().size();
+        long rendererObj = scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
                 .count();
@@ -152,18 +152,18 @@ public class Renderer extends JPanel implements Service {
 
         Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
 
-        scn.getEntities().stream()
+        scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
                 .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
                     moveToCameraPointOfView(g, currentCamera, -1);
-                    drawEntity(g, e);
+                    drawEntity(g, scene, e);
                     moveToCameraPointOfView(g, currentCamera, 1);
                 });
     }
 
-    private void drawEntity(Graphics2D g, Entity e) {
+    private void drawEntity(Graphics2D g, Scene scene, Entity e) {
         switch (e.getType()) {
             case DOT, RECTANGLE -> {
                 if (e.fillColor != null) {
@@ -192,6 +192,7 @@ public class Renderer extends JPanel implements Service {
                 }
             }
         }
+        e.getBehaviors().stream().forEach(b -> b.draw(this, g, scene, e));
     }
 
     public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,

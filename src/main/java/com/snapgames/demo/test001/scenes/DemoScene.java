@@ -18,6 +18,7 @@ import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
+import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 
 public class DemoScene extends AbstractScene {
 
@@ -66,7 +67,8 @@ public class DemoScene extends AbstractScene {
                     .setSize(8, 8)
                     .setPriority(i + 10)
                     .setMass(Math.random() * maxMass)
-                    .setMaterial(enemyMat);
+                    .setMaterial(enemyMat)
+                    .addBehavior(new EnemyTrackingBehavior(40.0, 0.15));
 
             addEntity(enemy);
         }
