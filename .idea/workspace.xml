@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
+    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file.">
+      <change afterPath="$PROJECT_DIR$/docs/chapter-06-adding_behavior.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/behavior/Behavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/behavior/Behavior.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,6 +37,16 @@
     &quot;assignee&quot;: &quot;mcgivrer&quot;
   }
 }</component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
+        <option name="rewordedMessage" value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="be98d9effe517d12417f2975b6bcde8ea1aa3f8c" />
+  </component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -53,20 +68,20 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feature/add-behavior",
-    "ignore.preview.features.used": "true",
-    "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
-    "last_opened_file_path": "C:/Users/M313104/projects/personnal/java/explorations/SJDP",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/add-behavior&quot;,
+    &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;zulu-20 (2)&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/M313104/projects/personnal/java/explorations/SJDP&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.SDJP (execute)">
     <configuration name="SDJP (execute)" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.snapgames.core.App" />
@@ -144,7 +159,23 @@
       <option name="project" value="LOCAL" />
       <updated>1694178998544</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file.">
+      <option name="closed" value="true" />
+      <created>1694179013244</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1694179013244</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file.">
+      <option name="closed" value="true" />
+      <created>1694179030067</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1694179030067</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -39,8 +39,8 @@ Or if you are under a Linux machine of a git bash session on Windows:
 You will get something like this window :
 
 <figure>
-<img src="docs/images/capture-test-001.png" alt="Executing the App class"/>
-<figcaption>figure 1 - Executing the App class</figcaption>
+  <img src="docs/images/capture-test-001.png" alt="Executing the App class"/>
+  <figcaption>figure 1 - Executing the App class</figcaption>
 </figure>
 
 ## Contribute
@@ -52,16 +52,16 @@ with [Visual Studio Code](https://code.visualstudio.com/download "Download the V
 as a java project
 
 <figure>
-<img src="docs/images/capture-editing-with-vscode.png" alt="Editing your project with Visual Studio Code"/>
-<figcaption>figure 2 - Editing your project with Visual Studio Code</figcaption>
+  <img src="docs/images/capture-editing-with-vscode.png" alt="Editing your project with Visual Studio Code"/>
+  <figcaption>figure 2 - Editing your project with Visual Studio Code</figcaption>
 </figure>
 
 - or with the
   JetBrain [IntelliJ IDEA](https://www.jetbrains.com/idea/download/ "Download IntelliJ for your own preferred OS Platform").
 
 <figure>
-<img src="docs/images/capture-editing-with-intellij.png" alt="Editing your project with Jetbrains IntelliJ IDEA"/>
-<figcaption>figure 3 - Editing your project with Jetbrains IntelliJ IDEA</figcaption>
+  <img src="docs/images/capture-editing-with-intellij.png" alt="Editing your project with Jetbrains IntelliJ IDEA"/>
+  <figcaption>figure 3 - Editing your project with Jetbrains IntelliJ IDEA</figcaption>
 </figure>
 
 McG.
