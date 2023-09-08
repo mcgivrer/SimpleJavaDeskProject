@@ -30,8 +30,8 @@ public class App {
     private boolean exit;
     private boolean testMode;
     // debug mode
-    private Boolean debug;
-    private int debugLevel;
+    private static Boolean debug;
+    private static int debugLevel;
     private String debugFilter;
 
     private boolean pause;
@@ -64,6 +64,10 @@ public class App {
      */
     public App(String configFilePath) {
         initialize(configFilePath);
+    }
+
+    public static boolean isDebugLevelAtLeast(int i) {
+        return debugLevel >= i;
     }
 
     /**
@@ -161,8 +165,8 @@ public class App {
         return version;
     }
 
-    public boolean getDebug() {
-        return this.debug;
+    public static boolean getDebug() {
+        return debug;
     }
 
     public int getDebugLevel() {

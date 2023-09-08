@@ -1,5 +1,6 @@
 package com.snapgames.core.entity;
 
+import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.physic.Material;
 import com.snapgames.core.physic.Vector2D;
 
@@ -46,6 +47,8 @@ public class Entity {
     private Double bbox;
     private boolean stickToCamera;
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private List<Behavior> behaviors = new ArrayList<>();
+    private boolean contact;
 
     private Entity() {
         this.active = true;
@@ -60,6 +63,12 @@ public class Entity {
         this.forces.add(f);
         return this;
     }
+
+    public Entity addBehavior(Behavior e) {
+        this.behaviors.add(e);
+        return this;
+    }
+
 
     public Entity setPosition(double x, double y) {
         this.pos = new Vector2D(x, y);
@@ -226,5 +235,18 @@ public class Entity {
 
     public void updateBBox() {
         bbox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+    }
+
+    public List<Behavior> getBehaviors() {
+        return this.behaviors;
+    }
+
+    public Entity setContact(boolean c) {
+        this.contact = c;
+        return this;
+    }
+
+    public boolean getContact() {
+        return contact;
     }
 }

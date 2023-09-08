@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="feat(VecTor2D): Add Vector2D as Entity attributes&#10;&#10;- replace x,y by pos, w,h by size, dx,dy by vel and add acc + getters/setters&#10;- update PhysicEngine, Renderer,&#10;- add new Configuration entries">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
-    </list>
+    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,6 +13,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -61,18 +53,20 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/update-with-vector2d-type-in-entity&quot;,
-    &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/M313104/projects/personnal/java/explorations/CubeWar/src/main/java/com/snapgames/core/math/physic/PhysicEngine.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "feature/add-behavior",
+    "ignore.preview.features.used": "true",
+    "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
+    "last_opened_file_path": "C:/Users/M313104/projects/personnal/java/explorations/SJDP",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.SDJP (execute)">
     <configuration name="SDJP (execute)" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.snapgames.core.App" />
@@ -112,8 +106,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
         <item itemvalue="JUnit.All in SJDP" />
+        <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
       </list>
     </recent_temporary>
   </component>
@@ -142,7 +136,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694163617484</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file.">
+      <option name="closed" value="true" />
+      <created>1694178998543</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1694178998544</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,14 +162,15 @@
     <MESSAGE value="fix build of javadoc and add source jar generation." />
     <MESSAGE value="feat(Vector2D)" />
     <MESSAGE value="feat(VecTor2D): Add Vector2D as Entity attributes&#10;&#10;- replace x,y by pos, w,h by size, dx,dy by vel and add acc + getters/setters&#10;- update PhysicEngine, Renderer,&#10;- add new Configuration entries" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(VecTor2D): Add Vector2D as Entity attributes&#10;&#10;- replace x,y by pos, w,h by size, dx,dy by vel and add acc + getters/setters&#10;- update PhysicEngine, Renderer,&#10;- add new Configuration entries" />
+    <MESSAGE value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java</url>
-          <line>72</line>
+          <line>74</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
