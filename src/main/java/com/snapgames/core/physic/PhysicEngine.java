@@ -34,7 +34,7 @@ public class PhysicEngine implements Service {
                 .forEach(e -> {
                     if (!(e instanceof Camera) && !e.isStickToCamera()) {
                         applyWorldConstrains(e, time);
-                        updateEntity(e, time);
+                        updateEntity(scene, e, time);
                         constrainsEntityToPlayArea(e);
                     }
                     e.update(elapsed);
@@ -49,8 +49,9 @@ public class PhysicEngine implements Service {
         }
     }
 
-    private void updateEntity(Entity entity, double elapsed) {
+    private void updateEntity(Scene scene, Entity entity, double elapsed) {
         // apply gravity
+        entity.getBehaviors().stream().forEach(b -> b.update(scene, entity, elapsed));
         applyWorldConstrains(entity, elapsed);
         // compute acceleration
         entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));
@@ -70,6 +71,7 @@ public class PhysicEngine implements Service {
 
         // compute position
         entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
+
         entity.getForces().clear();
         entity.updateBBox();
 

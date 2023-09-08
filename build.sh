@@ -4,6 +4,7 @@ cd ./
 
 ENV=build
 
+# Reading of ${ENV}.properties file
 function prop {
   #grep "${1}" env/${ENV}.properties|cut -d'=' -f2
   grep "${1}" ${ENV}.properties | cut -d'=' -f2
