@@ -83,7 +83,7 @@ public class PhysicEngine implements Service {
 
     private void constrainsEntityToPlayArea(Entity e) {
         Rectangle2D playArea = world.getPlayArea();
-        if (Optional.ofNullable(playArea).isPresent() && !playArea.contains(e.getBBox())) {
+        if (Optional.ofNullable(playArea).isPresent() && !playArea.getBounds2D().contains(e.getBBox().getBounds2D())) {
             if (e.getPosition().x < playArea.getMinX() || e.getPosition().x + (int) e.getSize().x > playArea.getMaxX()) {
                 if (e.getPosition().x < playArea.getMinX())
                     e.getPosition().x = playArea.getMinX();

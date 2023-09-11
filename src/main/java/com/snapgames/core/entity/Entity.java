@@ -5,6 +5,7 @@ import com.snapgames.core.physic.Material;
 import com.snapgames.core.physic.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
@@ -44,7 +45,7 @@ public class Entity {
     public Material material;
     public double mass = 1.0;
 
-    private Double bbox;
+    private Shape bbox = new Rectangle2D.Double();
     private boolean stickToCamera;
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
     private List<Behavior> behaviors = new ArrayList<>();
@@ -57,6 +58,10 @@ public class Entity {
     public Entity(String name) {
         this();
         this.name = name;
+    }
+
+    public static int getIndex() {
+        return index;
     }
 
     public Entity addForce(Vector2D f) {
@@ -132,7 +137,7 @@ public class Entity {
         return priority;
     }
 
-    public Rectangle2D getBBox() {
+    public Shape getBBox() {
         return bbox;
     }
 
@@ -234,7 +239,15 @@ public class Entity {
     }
 
     public void updateBBox() {
-        bbox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+        switch (type) {
+            case LINE, RECTANGLE -> {
+                bbox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+            }
+            case DOT, ELLIPSE -> {
+                bbox = new Ellipse2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+
+            }
+        }
     }
 
     public List<Behavior> getBehaviors() {

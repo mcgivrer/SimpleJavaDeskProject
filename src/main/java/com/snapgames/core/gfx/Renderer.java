@@ -66,15 +66,18 @@ public class Renderer extends JPanel implements Service {
         g.fillRect(0, 0, screenBuffer.getWidth(), screenBuffer.getHeight());
 
         // draw play area limit
-        drawPlayAreaLimits(g);
-
+        if (app.isDebugLevelMin(1)) {
+            drawPlayAreaLimits(g);
+        }
         // draw all entities
         drawEntities(g, stats);
 
         // draw camera viewport
-        drawCameraViewport(g);
+        if (app.isDebugLevelMin(2)) {
+            drawCameraViewport(g);
+        }
 
-        // render scene specific things
+        // render scene-specific things
         sceneManager.getCurrent().render(app, g, this, stats);
 
         g.dispose();
@@ -87,16 +90,16 @@ public class Renderer extends JPanel implements Service {
     private void copyBufferToWindow(Map<String, Object> stats) {
         Graphics2D g2 = (Graphics2D) frame.getBufferStrategy().getDrawGraphics();
         this.gr = g2;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-        g2.setColor(Color.ORANGE);
-        g2.setFont(getFont().deriveFont(11.0f));
+        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        //g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
         g2.drawImage(screenBuffer,
                 0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
         if (app.getDebug()) {
+            g2.setColor(Color.ORANGE);
+            g2.setFont(getFont().deriveFont(11.0f));
             g2.drawString(
                     StringUtils.prepareStatsString(stats,
                             "[ ", " ]", " | "),
@@ -155,6 +158,7 @@ public class Renderer extends JPanel implements Service {
         scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
+                .filter(e -> currentCamera.isInViewPort(e))
                 .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
                     moveToCameraPointOfView(g, currentCamera, -1);
