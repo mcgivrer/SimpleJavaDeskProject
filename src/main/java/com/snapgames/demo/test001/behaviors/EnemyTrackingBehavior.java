@@ -27,7 +27,7 @@ public class EnemyTrackingBehavior implements Behavior {
                 e.getPosition().x + e.getSize().x * 0.5 - sensorDiameter * 0.5,
                 e.getPosition().y + e.getSize().y * 0.5 - sensorDiameter * 0.5,
                 sensorDiameter, sensorDiameter);
-        if (player.getBBox().getBounds2D().intersects(sensorArea.getBounds2D())) {
+        if (player.getPosition().add(player.getSize().multiply(0.5)).distance(e.getPosition()) < sensorDiameter) {
             e.addForce(player.getPosition().substract(e.getPosition()).multiply(force));
             sensor = true;
         } else {
@@ -41,9 +41,9 @@ public class EnemyTrackingBehavior implements Behavior {
             Stroke back = g.getStroke();
             g.setStroke(new BasicStroke(0.4f));
             if (sensor) {
-                g.setColor(new Color(0.8f,0.4f,0.0f,0.5f));
+                g.setColor(new Color(0.8f, 0.4f, 0.0f, 0.5f));
             } else {
-                g.setColor(new Color(0.4f,0.4f,0.4f,0.5f));
+                g.setColor(new Color(0.4f, 0.4f, 0.4f, 0.5f));
             }
             g.fillArc(
                     (int) (e.getPosition().x + e.getSize().x * 0.5 - sensorDiameter * 0.5),

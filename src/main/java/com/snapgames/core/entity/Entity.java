@@ -60,6 +60,10 @@ public class Entity {
         this.name = name;
     }
 
+    public static int getIndex() {
+        return index;
+    }
+
     public Entity addForce(Vector2D f) {
         this.forces.add(f);
         return this;

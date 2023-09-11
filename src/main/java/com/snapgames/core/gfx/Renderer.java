@@ -66,13 +66,16 @@ public class Renderer extends JPanel implements Service {
         g.fillRect(0, 0, screenBuffer.getWidth(), screenBuffer.getHeight());
 
         // draw play area limit
-        drawPlayAreaLimits(g);
-
+        if (app.isDebugLevelMin(1)) {
+            drawPlayAreaLimits(g);
+        }
         // draw all entities
         drawEntities(g, stats);
 
         // draw camera viewport
-        drawCameraViewport(g);
+        if (app.isDebugLevelMin(2)) {
+            drawCameraViewport(g);
+        }
 
         // render scene-specific things
         sceneManager.getCurrent().render(app, g, this, stats);
@@ -155,6 +158,7 @@ public class Renderer extends JPanel implements Service {
         scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
+                .filter(e -> currentCamera.isInViewPort(e))
                 .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
                     moveToCameraPointOfView(g, currentCamera, -1);

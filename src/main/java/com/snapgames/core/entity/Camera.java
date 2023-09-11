@@ -48,4 +48,8 @@ public class Camera extends Entity {
     public Shape getViewport() {
         return viewport;
     }
+
+    public boolean isInViewPort(Entity e) {
+        return viewport.intersects(e.getBBox().getBounds2D()) || viewport.contains(e.getBBox().getBounds2D());
+    }
 }
