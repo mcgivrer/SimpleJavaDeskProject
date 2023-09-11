@@ -12,6 +12,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="junit-platform-console-standalone-1.10.01" level="project" />
   </component>
 </module>
