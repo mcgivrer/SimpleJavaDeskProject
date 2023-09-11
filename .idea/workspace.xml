@@ -5,14 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/io/DemoInputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SJDP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SJDP.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Camera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/AbstractScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/AbstractScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feature/enhance-debug-enemy-tracking-behavior",
+    "git-widget-placeholder": "feature/add-input-handler-sublistener",
     "ignore.preview.features.used": "true",
     "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
     "last_opened_file_path": "C:/Users/M313104/projects/personnal/java/explorations/SJDP",
@@ -230,5 +231,16 @@
     <MESSAGE value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
     <MESSAGE value="feat(Behavior): Enhance debugging Behavior&#10;&#10;- update a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update the Entity and the Renderer about Bounding bax according to EntityType" />
     <option name="LAST_COMMIT_MESSAGE" value="feat(Behavior): Enhance debugging Behavior&#10;&#10;- update a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update the Entity and the Renderer about Bounding bax according to EntityType" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/io/DemoInputListener.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

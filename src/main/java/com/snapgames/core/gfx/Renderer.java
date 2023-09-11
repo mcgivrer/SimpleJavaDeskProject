@@ -144,16 +144,18 @@ public class Renderer extends JPanel implements Service {
 
         SceneManager sceneManager = app.getSceneManager();
         Scene scene = sceneManager.getCurrent();
+        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
 
         long count = scene.getEntities().size();
+        stats.put("5_objCount", count);
+
         long rendererObj = scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
+                .filter(e -> currentCamera.isInViewPort(e))
                 .count();
-        stats.put("5_objCount", count);
         stats.put("6_objRendered", rendererObj);
 
-        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
 
         scene.getEntities().stream()
                 .filter(Entity::isActive)

@@ -21,11 +21,16 @@ import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
+import com.snapgames.demo.test001.io.DemoInputListener;
 
 public class DemoScene extends AbstractScene {
 
     int score = 0, lives = 3;
     int energy = 100;
+
+    public DemoScene(App app) {
+        super(app);
+    }
 
     @Override
     public void create(App app) {
@@ -44,17 +49,19 @@ public class DemoScene extends AbstractScene {
 
         addEntity(player);
 
-        addEnemies(app, "enemy", 10, 10.0);
+        addEnemies("enemy", 10, 10.0);
 
         Camera cam01 = new Camera("cam01")
                 .setViewport(new Rectangle2D.Double(0, 0, 300, 200))
                 .setTarget(player)
                 .setTweenFactor(0.02);
         addEntity(cam01);
+
+        app.getInputHandler().add(new DemoInputListener(this));
     }
 
 
-    private void addEnemies(App app, String entityRootName, int nbEnemies, double maxMass) {
+    public void addEnemies(String entityRootName, int nbEnemies, double maxMass) {
         Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
         Material enemyMat = new Material(entityRootName + "_material", 0.5, 0.8, 1.0);
         for (int i = 0; i < nbEnemies; i++) {
@@ -100,16 +107,9 @@ public class DemoScene extends AbstractScene {
             player.getForces().add(new Vector2D(speed, 0));
         }
 
-        if (ih.getKeys(KeyEvent.VK_PAGE_UP)) {
-            addEnemies(app, "enemy", 10, 5.0);
-        }
-
-        if (ih.getKeys(KeyEvent.VK_DELETE)) {
-            removeAllEntity(app, "enemy");
-        }
     }
 
-    private void removeAllEntity(App app, String enemy) {
+    public void removeAllEntity(String enemy) {
         Collection<Entity> tobeDeleted = app.getSceneManager().getCurrent().getEntities().stream().filter(e -> e.getName().contains(enemy)).collect(Collectors.toList());
         app.getSceneManager().getCurrent().getEntities().removeAll(tobeDeleted);
     }

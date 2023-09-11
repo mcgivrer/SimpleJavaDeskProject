@@ -1,17 +1,24 @@
 package com.snapgames.core.scene;
 
+import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractScene implements Scene {
 
+    protected App app;
     private Camera currentCamera;
 
-    private Map<String, Entity> entities = new HashMap<>();
+    private Map<String, Entity> entities = new ConcurrentHashMap<>();
+
+    protected AbstractScene(App app) {
+        this.app = app;
+    }
+
 
     public void addEntity(Entity entity) {
         entities.put(entity.getName(), entity);

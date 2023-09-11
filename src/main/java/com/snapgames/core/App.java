@@ -128,7 +128,7 @@ public class App {
     }
 
     private void createScene() {
-        sceneManager.add(new DemoScene());
+        sceneManager.add(new DemoScene(this));
     }
 
     public void input() {
