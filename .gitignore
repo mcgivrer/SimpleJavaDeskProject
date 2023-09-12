@@ -4,3 +4,5 @@ target/
 ./snyk-linux
 .idea/
 .vscode/
+/.vscode/
+/.idea/
