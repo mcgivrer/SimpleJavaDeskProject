@@ -14,10 +14,12 @@ public class EnemyTrackingBehavior implements Behavior {
     private final double sensorDiameter;
     private final double force;
     private boolean sensor;
+    private Stroke dashed;
 
     public EnemyTrackingBehavior(double sensorDiameter, double force) {
         this.sensorDiameter = sensorDiameter;
         this.force = force;
+        dashed = new BasicStroke(0.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{4, 2}, 0);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class EnemyTrackingBehavior implements Behavior {
     public void draw(Renderer r, Graphics2D g, Scene scene, Entity e) {
         if (App.getDebug() && App.isDebugLevelAtLeast(2)) {
             Stroke back = g.getStroke();
-            g.setStroke(new BasicStroke(0.4f));
+            g.setStroke(dashed);
             if (sensor) {
                 g.setColor(new Color(0.8f, 0.4f, 0.0f, 0.5f));
             } else {

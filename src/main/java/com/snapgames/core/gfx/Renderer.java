@@ -54,7 +54,6 @@ public class Renderer extends JPanel implements Service {
     }
 
     public void draw(App app, Scene scene, Map<String, Object> stats) {
-        SceneManager sceneManager = app.getSceneManager();
 
         Graphics2D g = screenBuffer.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -78,7 +77,7 @@ public class Renderer extends JPanel implements Service {
         }
 
         // render scene-specific things
-        sceneManager.getCurrent().render(app, g, this, stats);
+        scene.render(app, g, this, stats);
 
         g.dispose();
 
