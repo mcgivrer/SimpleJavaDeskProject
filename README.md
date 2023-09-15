@@ -43,10 +43,11 @@ You will get something like this window :
   <figcaption>figure 1 - Executing the App class</figcaption>
 </figure>
 
-<video controls width="640">
-<source src="./docs/images/captures/SJDP-screen-capture-001.mp4" type="video/mp4"/>
-<strong>You browser is not compatible with video tag</strong>
-</video>
+
+
+https://github.com/mcgivrer/SimpleJavaDeskProject/assets/216852/79eb81dc-9987-4146-a1b5-7ee54ccc17b9
+
+
 
 ## Contribute
 
