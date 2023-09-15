@@ -1,6 +1,8 @@
 package com.snapgames.core.physic;
 
 public class Material {
+    public static Material DEFAULT = new Material("default", 1.0, 0.0, 1.0);
+
     String name;
     public double density;
     public double elasticity;

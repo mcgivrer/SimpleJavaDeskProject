@@ -1,8 +1,12 @@
 package com.snapgames.core.gfx;
 
 import com.snapgames.core.App;
+import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.GameObject;
+import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
+import com.snapgames.core.gfx.plugins.TextObjectRendererPlugin;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.scene.Scene;
@@ -16,6 +20,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,8 +35,17 @@ public class Renderer extends JPanel implements Service {
     private Dimension windowSize;
     private Graphics2D gr;
 
+    private Map<Class<? extends Entity>, RendererPlugin<? extends Entity>> plugins = new HashMap<>();
+
     public Renderer(App app) {
         this.app = app;
+        addPlugin(new GameObjectRendererPlugin());
+        addPlugin(new TextObjectRendererPlugin());
+    }
+
+    public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {
+        plugins.put(plugin.getEntityClass(), plugin);
+        return this;
     }
 
 
@@ -54,7 +68,6 @@ public class Renderer extends JPanel implements Service {
     }
 
     public void draw(App app, Scene scene, Map<String, Object> stats) {
-        SceneManager sceneManager = app.getSceneManager();
 
         Graphics2D g = screenBuffer.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -66,16 +79,19 @@ public class Renderer extends JPanel implements Service {
         g.fillRect(0, 0, screenBuffer.getWidth(), screenBuffer.getHeight());
 
         // draw play area limit
-        drawPlayAreaLimits(g);
-
+        if (app.isDebugLevelMin(1)) {
+            drawPlayAreaLimits(g);
+        }
         // draw all entities
         drawEntities(g, stats);
 
         // draw camera viewport
-        drawCameraViewport(g);
+        if (app.isDebugLevelMin(2)) {
+            drawCameraViewport(g);
+        }
 
-        // render scene specific things
-        sceneManager.getCurrent().render(app, g, this, stats);
+        // render scene-specific things
+        scene.render(app, g, this, stats);
 
         g.dispose();
 
@@ -87,16 +103,16 @@ public class Renderer extends JPanel implements Service {
     private void copyBufferToWindow(Map<String, Object> stats) {
         Graphics2D g2 = (Graphics2D) frame.getBufferStrategy().getDrawGraphics();
         this.gr = g2;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-        g2.setColor(Color.ORANGE);
-        g2.setFont(getFont().deriveFont(11.0f));
+        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        //g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
         g2.drawImage(screenBuffer,
                 0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
         if (app.getDebug()) {
+            g2.setColor(Color.ORANGE);
+            g2.setFont(getFont().deriveFont(11.0f));
             g2.drawString(
                     StringUtils.prepareStatsString(stats,
                             "[ ", " ]", " | "),
@@ -141,58 +157,42 @@ public class Renderer extends JPanel implements Service {
 
         SceneManager sceneManager = app.getSceneManager();
         Scene scene = sceneManager.getCurrent();
+        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
 
         long count = scene.getEntities().size();
+        stats.put("5_objCount", count);
+
         long rendererObj = scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
+                .filter(e -> currentCamera.isInViewPort(e))
                 .count();
-        stats.put("5_objCount", count);
         stats.put("6_objRendered", rendererObj);
 
-        Camera currentCamera = sceneManager.getCurrent().getCurrentCamera();
 
         scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
-                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .filter(e -> currentCamera.isInViewPort(e) || e.isStickToCamera())
+                .sorted(Comparator.comparingInt(e -> ((Entity<?>) e).getPriority()).reversed())
                 .forEach(e -> {
-                    moveToCameraPointOfView(g, currentCamera, -1);
+                    if (!e.isStickToCamera()) {
+                        moveToCameraPointOfView(g, currentCamera, -1);
+                    }
                     drawEntity(g, scene, e);
-                    moveToCameraPointOfView(g, currentCamera, 1);
+                    if (!e.isStickToCamera()) {
+                        moveToCameraPointOfView(g, currentCamera, 1);
+                    }
                 });
     }
 
     private void drawEntity(Graphics2D g, Scene scene, Entity e) {
-        switch (e.getType()) {
-            case DOT, RECTANGLE -> {
-                if (e.fillColor != null) {
-                    g.setColor(e.fillColor);
-                    g.fillRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-            }
-            case ELLIPSE -> {
-                if (e.fillColor != null) {
-                    g.setColor(e.fillColor);
-                    g.fillArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
-                }
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
-                }
-            }
-            case LINE -> {
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-            }
+        if (plugins.containsKey(e.getClass())) {
+            RendererPlugin plugin = plugins.get(e.getClass());
+            plugin.draw(this, g, scene, e);
+            e.setRenderedBy(plugin);
         }
-        e.getBehaviors().stream().forEach(b -> b.draw(this, g, scene, e));
+        e.getBehaviors().stream().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
     }
 
     public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
@@ -259,5 +259,9 @@ public class Renderer extends JPanel implements Service {
     public void initialize(Configuration configuration) {
         this.windowSize = configuration.windowSize;
         this.screenResolution = configuration.bufferResolution;
+    }
+
+    public BufferedImage getScreenBuffer() {
+        return screenBuffer;
     }
 }

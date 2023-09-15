@@ -4,5 +4,6 @@ public enum EntityType {
     DOT,
     LINE,
     RECTANGLE,
-    ELLIPSE;
+    ELLIPSE,
+    IMAGE;
 }
