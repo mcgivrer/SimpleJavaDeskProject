@@ -7,6 +7,7 @@ import com.snapgames.core.gfx.RendererPlugin;
 import com.snapgames.core.scene.Scene;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class GameObjectRendererPlugin implements RendererPlugin<GameObject> {
 
@@ -43,6 +44,14 @@ public class GameObjectRendererPlugin implements RendererPlugin<GameObject> {
                 if (e.color != null) {
                     g.setColor(e.color);
                     g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
+                }
+            }
+            case IMAGE->{
+                if(Optional.ofNullable(e.getImage()).isPresent()){
+                    g.drawImage(e.getImage(),
+                            (int) e.getPosition().x, (int) e.getPosition().y,
+                            (int) e.getSize().x, (int) e.getSize().y,
+                            null);
                 }
             }
         }

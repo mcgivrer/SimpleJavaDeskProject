@@ -160,6 +160,8 @@ public class Entity<T> {
 
     public T setImage(BufferedImage img) {
         this.image = img;
+        setSize(img.getWidth(), img.getHeight());
+        setEntityType(EntityType.IMAGE);
         return (T) this;
     }
 
@@ -270,5 +272,9 @@ public class Entity<T> {
 
     public void setRenderedBy(RendererPlugin plugin) {
         this.renderedByPlugin = plugin;
+    }
+
+    public BufferedImage getImage() {
+        return image;
     }
 }

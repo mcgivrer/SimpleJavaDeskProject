@@ -12,6 +12,9 @@ import java.util.Map;
 public interface Scene {
     void create(App app);
 
+    default void load() {
+    }
+
     void dispose(App app);
 
     void input(App app, InputHandler ih);

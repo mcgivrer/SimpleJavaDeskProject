@@ -26,6 +26,7 @@ public class SceneManager implements Service {
     public void add(Scene scene) {
         this.scenes.put(scene.getName(), scene);
         if (Optional.ofNullable(currentScene).isEmpty()) {
+            scene.load();
             this.currentScene = scene;
         }
     }

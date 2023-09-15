@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
+import com.snapgames.core.utils.ResourceManager;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 import com.snapgames.demo.test001.io.DemoInputListener;
 
@@ -29,8 +31,19 @@ public class DemoScene extends AbstractScene {
     double energy = 70;
     double mana = 80;
 
+    Color shadowColor = new Color(0.4f, 0.4f, 0.4f, 0.6f);
+
+    BufferedImage heart;
+    private boolean levelEnd;
+
     public DemoScene(App app) {
         super(app);
+    }
+
+    @Override
+    public void load() {
+        BufferedImage tiles = (BufferedImage) ResourceManager.add("/images/tiles01.png");
+        heart = tiles.getSubimage(0, 6 * 16, 16, 16);
     }
 
     @Override
@@ -50,7 +63,8 @@ public class DemoScene extends AbstractScene {
                 .setMaterial(new Material("body", 1.2, 0.78, 0.97))
                 .addAttribute("speed", 5.0)
                 .addAttribute("energy", maxEnergy)
-                .addAttribute("mana", maxMana);
+                .addAttribute("mana", maxMana)
+                .addAttribute("life", lives);
 
         addEntity(player);
 
@@ -69,18 +83,38 @@ public class DemoScene extends AbstractScene {
                 .withText("%06d")
                 .withFont(scoreFont)
                 .withTextColor(Color.WHITE)
-                .withShadowColor(Color.DARK_GRAY)
-                .stickToCamera(true);
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setPriority(1);
         addEntity(textScore);
 
+        TextObject textGameOver = new TextObject("gameOver")
+                .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() * 0.5, renderer.getScreenBuffer().getHeight() * 0.5))
+                .withText(App.messages.getString("app.message.game.over"))
+                .withFont(scoreFont)
+                .withTextColor(Color.WHITE)
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setActive(false)
+                .setPriority(1);
+        addEntity(textGameOver);
+
+        GameObject imgHeart = new GameObject("heart")
+                .setPosition(new Vector2D(16, 10))
+                .stickToCamera(true)
+                .setImage(heart)
+                .setPriority(2);
+        addEntity(imgHeart);
+
         TextObject textLife = new TextObject("life")
-                .setPosition(new Vector2D(32, 24))
+                .setPosition(new Vector2D(26, 26))
                 .withValue(lives)
                 .withText("%d")
-                .withFont(scoreFont.deriveFont(15.0f))
+                .withFont(scoreFont.deriveFont(Font.PLAIN, 11.0f))
                 .withTextColor(Color.WHITE)
-                .withShadowColor(Color.DARK_GRAY)
-                .stickToCamera(true);
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setPriority(1);
         addEntity(textLife);
 
         app.getInputHandler().add(new DemoInputListener(this));
@@ -113,26 +147,27 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void input(App app, InputHandler ih) {
-        Entity player = getEntity("player");
+        if (!levelEnd) {
+            Entity player = getEntity("player");
 
-        double speed = (double) player.getAttribute("speed", 0.5);
-        if (ih.isControlKeyPressed()) {
-            speed *= 2.0;
-        }
+            double speed = (double) player.getAttribute("speed", 0.5);
+            if (ih.isControlKeyPressed()) {
+                speed *= 2.0;
+            }
 
-        if (ih.getKeys(KeyEvent.VK_UP)) {
-            player.getForces().add(new Vector2D(0, -speed));
+            if (ih.getKeys(KeyEvent.VK_UP)) {
+                player.getForces().add(new Vector2D(0, -speed));
+            }
+            if (ih.getKeys(KeyEvent.VK_DOWN)) {
+                player.getForces().add(new Vector2D(0, speed));
+            }
+            if (ih.getKeys(KeyEvent.VK_LEFT)) {
+                player.getForces().add(new Vector2D(-speed, 0));
+            }
+            if (ih.getKeys(KeyEvent.VK_RIGHT)) {
+                player.getForces().add(new Vector2D(speed, 0));
+            }
         }
-        if (ih.getKeys(KeyEvent.VK_DOWN)) {
-            player.getForces().add(new Vector2D(0, speed));
-        }
-        if (ih.getKeys(KeyEvent.VK_LEFT)) {
-            player.getForces().add(new Vector2D(-speed, 0));
-        }
-        if (ih.getKeys(KeyEvent.VK_RIGHT)) {
-            player.getForces().add(new Vector2D(speed, 0));
-        }
-
     }
 
     public void removeAllEntity(String enemy) {
@@ -142,11 +177,28 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void update(App app, double elapsed, Map<String, Object> stats) {
+        int life = (int) getEntity("player").getAttribute("life", 3);
+
         ((TextObject) getEntity("score")).withValue(score);
-        ((TextObject) getEntity("life")).withValue(lives);
+
+        ((TextObject) getEntity("life")).withValue(life);
 
         mana = (double) getEntity("player").getAttribute("mana", 0.0);
         energy = (double) getEntity("player").getAttribute("energy", 0.0);
+
+        if (energy <= 0.0) {
+            if (life - 1 >= 1) {
+                getEntity("player").addAttribute("life", life - 1);
+                getEntity("player").addAttribute("energy", maxEnergy);
+            } else {
+                levelEnd = true;
+                getEntity("player").setFillColor(Color.RED);
+            }
+        }
+
+        if (levelEnd) {
+            getEntity("gameOver").setActive(true);
+        }
 
     }
 
@@ -155,30 +207,30 @@ public class DemoScene extends AbstractScene {
         // render HUD
         Font pauseFont = g.getFont().deriveFont(Font.BOLD, 16.0f);
 
-        // draw life counter
-        r.drawText(g, pauseFont.deriveFont(20.0f), "❦", 24, 22, Color.RED, Color.RED.darker(), 1);
-
         // draw energy
+        g.setColor(shadowColor);
+        g.fillRect(36 + 2, 12 + 2, 50 + 2, 3);
         g.setColor(Color.BLACK);
-        g.fillRect(14, 26, 50 + 2, 3);
+        g.fillRect(36, 12, 50 + 2, 4);
         g.setColor(Color.RED.darker());
-        g.fillRect(15, 27, (int) maxEnergy / 2, 2);
+        g.fillRect(37, 13, (int) maxEnergy / 2, 2);
         g.setColor(Color.RED);
-        g.fillRect(15, 27, (int) energy / 2, 2);
+        g.fillRect(37, 13, (int) energy / 2, 2);
 
         // draw mana
+        g.setColor(shadowColor);
+        g.fillRect(36 + 2, 17 + 2, 50 + 2, 3);
         g.setColor(Color.BLACK);
-        g.fillRect(14, 30, 50 + 2, 3);
+        g.fillRect(36, 17, 50 + 2, 4);
         g.setColor(Color.BLUE.darker().darker());
-        g.fillRect(15, 31, (int) maxMana / 2, 2);
+        g.fillRect(37, 18, (int) maxMana / 2, 2);
         g.setColor(Color.BLUE);
-        g.fillRect(15, 31, (int) mana / 2, 2);
-
+        g.fillRect(37, 18, (int) mana / 2, 2);
 
         // draw "paused" message if required
         if (app.isPaused()) {
             g.setColor(new Color(0.1f, 0.3f, 0.6f, 0.6f));
-            g.fillRect(0, (int) ((r.screenBuffer.getHeight() - 14) * 0.5), r.screenBuffer.getWidth(), 20);
+            g.fillRect(0, (int) ((r.screenBuffer.getHeight() - 6) * 0.5), r.screenBuffer.getWidth(), 20);
             String pauseText = App.messages.getString("game.pause.text");
             r.drawText(g, pauseFont, pauseText);
         }
@@ -193,5 +245,18 @@ public class DemoScene extends AbstractScene {
     public void reset(App app) {
         getEntities().clear();
         create(app);
+    }
+
+    public void reset() {
+        getEntities().clear();
+        create(app);
+    }
+
+    public boolean isLevelEnded() {
+        return levelEnd;
+    }
+
+    public void setLevelEnded(boolean le) {
+        this.levelEnd = le;
     }
 }

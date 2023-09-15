@@ -6,8 +6,8 @@ import com.snapgames.core.utils.Configuration;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class InputHandler implements Service, KeyListener {
 
@@ -17,7 +17,7 @@ public class InputHandler implements Service, KeyListener {
     boolean[] prevKeys = new boolean[1024];
     private boolean ctrlKeyPressed;
 
-    Collection<InputListener> listeners = new ArrayList<>();
+    Collection<InputListener> listeners = new CopyOnWriteArrayList<>();
 
     public InputHandler(App app) {
         this.app = app;
