@@ -43,8 +43,8 @@ You will get something like this window :
   <figcaption>figure 1 - Executing the App class</figcaption>
 </figure>
 
-<video controls width="640">
-  <source src="docs/images/captures/SJDP-screen-capture-001.mp4" type="video/mp4" />
+<video controls width="640" src="./docs/images/captures/SJDP-screen-capture-001.mp4" type="video/mp4">
+<strong>You browser is not compatible with video tag</strong>
 </video>
 
 ## Contribute
@@ -52,6 +52,7 @@ You will get something like this window :
 Open this project
 
 -
+
 with [Visual Studio Code](https://code.visualstudio.com/download "Download the Visual Studio Code for your preferred OS platform")
 as a java project
 
