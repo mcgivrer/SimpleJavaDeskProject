@@ -13,6 +13,7 @@ import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.entity.EntityType;
+import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.Material;
@@ -37,7 +38,7 @@ public class DemoScene extends AbstractScene {
         PhysicEngine physicEngine = app.getPhysicEngine();
         Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
 
-        Entity player = new Entity("player")
+        GameObject player = (GameObject) new GameObject("player")
                 .setColor(Color.GREEN.darker())
                 .setFillColor(Color.GREEN)
                 .setPosition(playArea.getWidth() * 0.5, playArea.getHeight() * 0.5)
@@ -65,7 +66,7 @@ public class DemoScene extends AbstractScene {
         Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
         Material enemyMat = new Material(entityRootName + "_material", 0.5, 0.8, 1.0);
         for (int i = 0; i < nbEnemies; i++) {
-            Entity enemy = new Entity(entityRootName + "_" + Entity.getIndex())
+            GameObject enemy = new GameObject(entityRootName + "_" + Entity.getIndex())
                     .setEntityType(EntityType.ELLIPSE)
                     .setColor(Color.RED.darker())
                     .setFillColor(Color.RED)
@@ -89,7 +90,7 @@ public class DemoScene extends AbstractScene {
     public void input(App app, InputHandler ih) {
         Entity player = getEntity("player");
 
-        double speed = player.getAttribute("speed", 0.5);
+        double speed = (double) player.getAttribute("speed", 0.5);
         if (ih.isControlKeyPressed()) {
             speed *= 2.0;
         }

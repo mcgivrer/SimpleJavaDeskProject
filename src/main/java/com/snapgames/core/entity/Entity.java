@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Entity {
+public class Entity<T> {
 
     private static int index = 0;
     int id = index++;
@@ -64,55 +64,55 @@ public class Entity {
         return index;
     }
 
-    public Entity addForce(Vector2D f) {
+    public T addForce(Vector2D f) {
         this.forces.add(f);
-        return this;
+        return (T) this;
     }
 
-    public Entity addBehavior(Behavior e) {
+    public T addBehavior(Behavior e) {
         this.behaviors.add(e);
-        return this;
+        return (T) this;
     }
 
 
-    public Entity setPosition(double x, double y) {
+    public T setPosition(double x, double y) {
         this.pos = new Vector2D(x, y);
-        return this;
+        return (T) this;
     }
 
-    public Entity setPosition(Vector2D p) {
+    public T setPosition(Vector2D p) {
         this.pos = p;
-        return this;
+        return (T) this;
     }
 
-    public Entity setSize(int w, int h) {
+    public T setSize(int w, int h) {
         this.size = new Vector2D(w, h);
-        return this;
+        return (T) this;
     }
 
-    public Entity setSpeed(double dx, double dy) {
+    public T setSpeed(double dx, double dy) {
         this.vel = new Vector2D(dx, dy);
-        return this;
+        return (T) this;
     }
 
-    public Entity setAcceleration(double ax, double ay) {
+    public T setAcceleration(double ax, double ay) {
         this.acc = new Vector2D(ax, ay);
-        return this;
+        return (T) this;
     }
 
-    public Entity setAcceleration(Vector2D acc) {
+    public T setAcceleration(Vector2D acc) {
         this.acc = acc;
-        return this;
+        return (T) this;
     }
 
-    public Entity setColor(Color c) {
+    public T setColor(Color c) {
         this.color = c;
-        return this;
+        return (T) this;
     }
 
-    public Entity setFillColor(Color fc) {
+    public T setFillColor(Color fc) {
         this.fillColor = fc;
-        return this;
+        return (T) this;
     }
 
     public String getName() {
@@ -123,14 +123,14 @@ public class Entity {
         return this.active;
     }
 
-    public Entity setActive(boolean a) {
+    public T setActive(boolean a) {
         this.active = a;
-        return this;
+        return (T) this;
     }
 
-    public Entity stickToCamera(boolean sticky) {
+    public T stickToCamera(boolean sticky) {
         this.stickToCamera = sticky;
-        return this;
+        return (T) this;
     }
 
     public int getPriority() {
@@ -151,46 +151,46 @@ public class Entity {
         updateBBox();
     }
 
-    public Entity setMaterial(Material m) {
+    public T setMaterial(Material m) {
         this.material = m;
-        return this;
+        return (T) this;
     }
 
-    public Entity setImage(BufferedImage img) {
+    public T setImage(BufferedImage img) {
         this.image = img;
-        return this;
+        return (T) this;
     }
 
     public boolean isStickToCamera() {
         return stickToCamera;
     }
 
-    public Entity setMass(double mass) {
+    public T setMass(double mass) {
         this.mass = mass;
-        return this;
+        return (T) this;
     }
 
-    public Entity setPriority(int p) {
+    public T setPriority(int p) {
         this.priority = p;
-        return this;
+        return (T) this;
     }
 
-    public <T> Entity addAttribute(String attrName, T attrValue) {
+    public <Y> T addAttribute(String attrName, Y attrValue) {
         attributes.put(attrName, attrValue);
-        return this;
+        return (T) this;
     }
 
-    public <T> T getAttribute(String attrName, T v) {
-        return (T) attributes.get(attrName);
+    public <Y> Y getAttribute(String attrName, Y v) {
+        return (Y) attributes.get(attrName);
     }
 
     public EntityType getType() {
         return this.type;
     }
 
-    public Entity setEntityType(EntityType t) {
+    public T setEntityType(EntityType t) {
         this.type = t;
-        return this;
+        return (T) this;
     }
 
     public Vector2D getVelocity() {
@@ -202,9 +202,9 @@ public class Entity {
         return pos;
     }
 
-    public Entity setVelocity(Vector2D v) {
+    public T setVelocity(Vector2D v) {
         this.vel = v;
-        return this;
+        return (T) this;
     }
 
     public Vector2D getSize() {
@@ -254,9 +254,9 @@ public class Entity {
         return this.behaviors;
     }
 
-    public Entity setContact(boolean c) {
+    public T setContact(boolean c) {
         this.contact = c;
-        return this;
+        return (T) this;
     }
 
     public boolean getContact() {

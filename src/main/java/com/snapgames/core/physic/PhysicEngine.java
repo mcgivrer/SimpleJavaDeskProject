@@ -1,6 +1,7 @@
 package com.snapgames.core.physic;
 
 import com.snapgames.core.App;
+import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.scene.Scene;
@@ -30,7 +31,7 @@ public class PhysicEngine implements Service {
         }
         scene.getEntities().stream()
                 .filter(Entity::isActive)
-                .sorted(Comparator.comparingInt(Entity::getPriority).reversed())
+                .sorted(Comparator.comparingInt(e -> ((Entity) e).getPriority()).reversed())
                 .forEach(e -> {
                     if (!(e instanceof Camera) && !e.isStickToCamera()) {
                         applyWorldConstrains(e, time);
@@ -51,7 +52,7 @@ public class PhysicEngine implements Service {
 
     private void updateEntity(Scene scene, Entity entity, double elapsed) {
         // apply gravity
-        entity.getBehaviors().stream().forEach(b -> b.update(scene, entity, elapsed));
+        entity.getBehaviors().stream().forEach(b -> ((Behavior) b).update(scene, entity, elapsed));
         applyWorldConstrains(entity, elapsed);
         // compute acceleration
         entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));

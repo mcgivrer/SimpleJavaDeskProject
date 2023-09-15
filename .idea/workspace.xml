@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GameObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/RendererPlugin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,20 +72,26 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;zulu-20 (2)&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/M313104/projects/personnal/java/explorations/SJDP&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "feature/add-specialized-object-and-renderer-plugin",
+    "ignore.preview.features.used": "true",
+    "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
+    "last_opened_file_path": "C:/Users/M313104/projects/personnal/java/explorations/SJDP",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.snapgames.core.gfx.plugins" />
+      <recent name="com.snapgames.core.entity" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.SDJP (execute)">
     <configuration name="SDJP (execute)" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.snapgames.core.App" />

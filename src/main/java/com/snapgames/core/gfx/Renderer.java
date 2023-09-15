@@ -1,8 +1,11 @@
 package com.snapgames.core.gfx;
 
 import com.snapgames.core.App;
+import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.GameObject;
+import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.scene.Scene;
@@ -16,6 +19,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,8 +34,16 @@ public class Renderer extends JPanel implements Service {
     private Dimension windowSize;
     private Graphics2D gr;
 
+    private Map<Class<? extends Entity>, RendererPlugin<? extends Entity>> plugins = new HashMap<>();
+
     public Renderer(App app) {
         this.app = app;
+        addPlugin(new GameObjectRendererPlugin());
+    }
+
+    public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {
+        plugins.put(plugin.getEntityClass(), plugin);
+        return this;
     }
 
 
@@ -169,35 +181,10 @@ public class Renderer extends JPanel implements Service {
     }
 
     private void drawEntity(Graphics2D g, Scene scene, Entity e) {
-        switch (e.getType()) {
-            case DOT, RECTANGLE -> {
-                if (e.fillColor != null) {
-                    g.setColor(e.fillColor);
-                    g.fillRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawRect((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-            }
-            case ELLIPSE -> {
-                if (e.fillColor != null) {
-                    g.setColor(e.fillColor);
-                    g.fillArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
-                }
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawArc((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y, 0, 360);
-                }
-            }
-            case LINE -> {
-                if (e.color != null) {
-                    g.setColor(e.color);
-                    g.drawLine((int) e.getPosition().x, (int) e.getPosition().y, (int) e.getSize().x, (int) e.getSize().y);
-                }
-            }
+        if (plugins.containsKey(e.getClass())) {
+            plugins.get(e.getClass()).draw(this, g, e);
         }
-        e.getBehaviors().stream().forEach(b -> b.draw(this, g, scene, e));
+        e.getBehaviors().stream().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
     }
 
     public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
