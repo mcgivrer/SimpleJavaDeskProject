@@ -1,6 +1,7 @@
 package com.snapgames.core.entity;
 
 import com.snapgames.core.behavior.Behavior;
+import com.snapgames.core.gfx.RendererPlugin;
 import com.snapgames.core.physic.Material;
 import com.snapgames.core.physic.Vector2D;
 
@@ -50,6 +51,7 @@ public class Entity<T> {
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
     private List<Behavior> behaviors = new ArrayList<>();
     private boolean contact;
+    private RendererPlugin renderedByPlugin;
 
     private Entity() {
         this.active = true;
@@ -181,6 +183,9 @@ public class Entity<T> {
     }
 
     public <Y> Y getAttribute(String attrName, Y v) {
+        if (!attributes.containsKey(attrName)) {
+            addAttribute(attrName, v);
+        }
         return (Y) attributes.get(attrName);
     }
 
@@ -261,5 +266,9 @@ public class Entity<T> {
 
     public boolean getContact() {
         return contact;
+    }
+
+    public void setRenderedBy(RendererPlugin plugin) {
+        this.renderedByPlugin = plugin;
     }
 }

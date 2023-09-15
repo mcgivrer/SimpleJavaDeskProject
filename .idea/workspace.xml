@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GameObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/RendererPlugin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/TextObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/TextObjectRendererPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/PhysicEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/RendererPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/RendererPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/physic/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,6 +102,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="All in SJDP (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SJDP" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in SJDP (2)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SJDP" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="All in SJDP" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SJDP" />
       <option name="PACKAGE_NAME" value="" />
@@ -126,11 +144,15 @@
     </configuration>
     <list>
       <item itemvalue="Application.SDJP (execute)" />
+      <item itemvalue="JUnit.All in SJDP (1)" />
+      <item itemvalue="JUnit.All in SJDP (2)" />
       <item itemvalue="JUnit.All in SJDP" />
       <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in SJDP (2)" />
+        <item itemvalue="JUnit.All in SJDP (1)" />
         <item itemvalue="JUnit.All in SJDP" />
         <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
       </list>
@@ -241,9 +263,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/io/DemoInputListener.java</url>
-          <line>17</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

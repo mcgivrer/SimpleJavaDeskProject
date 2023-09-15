@@ -4,6 +4,7 @@ import com.snapgames.core.entity.Entity;
 import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.gfx.RendererPlugin;
+import com.snapgames.core.scene.Scene;
 
 import java.awt.*;
 
@@ -15,7 +16,7 @@ public class GameObjectRendererPlugin implements RendererPlugin<GameObject> {
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Entity entity) {
+    public void draw(Renderer r, Graphics2D g, Scene s, Entity entity) {
         GameObject e = (GameObject) entity;
         switch (e.getType()) {
             case DOT, RECTANGLE -> {

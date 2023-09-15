@@ -6,6 +6,7 @@ import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
+import com.snapgames.core.gfx.plugins.TextObjectRendererPlugin;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.scene.Scene;
@@ -39,6 +40,7 @@ public class Renderer extends JPanel implements Service {
     public Renderer(App app) {
         this.app = app;
         addPlugin(new GameObjectRendererPlugin());
+        addPlugin(new TextObjectRendererPlugin());
     }
 
     public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {
@@ -171,18 +173,24 @@ public class Renderer extends JPanel implements Service {
         scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
-                .filter(e -> currentCamera.isInViewPort(e))
-                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .filter(e -> currentCamera.isInViewPort(e) || e.isStickToCamera())
+                .sorted(Comparator.comparingInt(e -> ((Entity<?>) e).getPriority()).reversed())
                 .forEach(e -> {
-                    moveToCameraPointOfView(g, currentCamera, -1);
+                    if (!e.isStickToCamera()) {
+                        moveToCameraPointOfView(g, currentCamera, -1);
+                    }
                     drawEntity(g, scene, e);
-                    moveToCameraPointOfView(g, currentCamera, 1);
+                    if (!e.isStickToCamera()) {
+                        moveToCameraPointOfView(g, currentCamera, 1);
+                    }
                 });
     }
 
     private void drawEntity(Graphics2D g, Scene scene, Entity e) {
         if (plugins.containsKey(e.getClass())) {
-            plugins.get(e.getClass()).draw(this, g, e);
+            RendererPlugin plugin = plugins.get(e.getClass());
+            plugin.draw(this, g, scene, e);
+            e.setRenderedBy(plugin);
         }
         e.getBehaviors().stream().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
     }
@@ -251,5 +259,9 @@ public class Renderer extends JPanel implements Service {
     public void initialize(Configuration configuration) {
         this.windowSize = configuration.windowSize;
         this.screenResolution = configuration.bufferResolution;
+    }
+
+    public BufferedImage getScreenBuffer() {
+        return screenBuffer;
     }
 }
