@@ -5,27 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/utils/ResourceManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/backgrounds/forest.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/backgrounds/jungle.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/backgrounds/ruins.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/backgrounds/volcano.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/sg-logo-image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/sprites01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/tiles01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GaugeObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GaugeObjectRenderingPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SJDP.geany" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/EntityType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/EntityType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GameObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GameObjectRendererPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/io/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/SceneManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/scene/SceneManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/io/DemoInputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/io/DemoInputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/i18n/messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/i18n/messages.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,13 +76,15 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feature/add-specialized-object-and-renderer-plugin",
+    "git-widget-placeholder": "feature/add-gauge-object",
     "ignore.preview.features.used": "true",
+    "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
     "last_opened_file_path": "C:/Users/M313104/projects/personnal/java/explorations/SJDP/src/main/resources",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -113,8 +101,10 @@
   </component>
   <component name="RunManager" selected="Application.SDJP (execute)">
     <configuration name="SDJP (execute)" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="zulu-20.0.2" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.snapgames.core.App" />
-      <module name="SJDP" />
+      <module name="SimpleJavaDeskProject" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -168,10 +158,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
+        <item itemvalue="JUnit.All in SJDP" />
         <item itemvalue="JUnit.All in SJDP (2)" />
         <item itemvalue="JUnit.All in SJDP (1)" />
-        <item itemvalue="JUnit.All in SJDP" />
-        <item itemvalue="JUnit.AppConfigTest.testIfConfigurationDebugLevelSet" />
       </list>
     </recent_temporary>
   </component>

@@ -277,4 +277,8 @@ public class Entity<T> {
     public BufferedImage getImage() {
         return image;
     }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
 }
