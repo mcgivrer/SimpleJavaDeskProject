@@ -2,7 +2,7 @@ target/
 **/*.log
 **/*.class
 ./snyk-linux
-.idea/
+#.idea/
 .vscode/
 /.vscode/
 /.idea/

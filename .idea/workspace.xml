@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/GaugeObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/plugins/GaugeObjectRenderingPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/entity/Entity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/core/gfx/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/behaviors/EnemyTrackingBehavior.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/snapgames/demo/test001/scenes/DemoScene.java" afterDir="false" />
-    </list>
+    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,7 +68,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feature/add-gauge-object",
+    "git-widget-placeholder": "develop",
     "ignore.preview.features.used": "true",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
