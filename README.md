@@ -39,7 +39,7 @@ Or if you are under a Linux machine of a git bash session on Windows:
 You will get something like this window :
 
 <figure>
-  <img src="docs/images/capture-test-001.png" alt="Executing the App class"/>
+  <img src="docs/images/capture-test-003-scoring.png" alt="Executing the App class"/>
   <figcaption>figure 1 - Executing the App class</figcaption>
 </figure>
 
