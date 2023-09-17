@@ -42,7 +42,11 @@ public class Node {
         return name;
     }
 
-    public Collection<Node> getChild() {
-        return children;
+    public <T extends Node> Collection<T> getChild() {
+        return (Collection<T>) children;
+    }
+
+    public <T extends Node> T getChildNode(String name) {
+        return (T) getChild().stream().filter(e -> e.getName().equals(name)).findFirst().get();
     }
 }

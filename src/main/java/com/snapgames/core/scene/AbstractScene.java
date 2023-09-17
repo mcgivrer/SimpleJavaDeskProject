@@ -3,17 +3,17 @@ package com.snapgames.core.scene;
 import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.Node;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractScene implements Scene {
+public abstract class AbstractScene extends Node implements Scene {
 
     protected App app;
     private Camera currentCamera;
-
-    private Map<String, Entity> entities = new ConcurrentHashMap<>();
 
     protected AbstractScene(App app) {
         this.app = app;
@@ -21,7 +21,7 @@ public abstract class AbstractScene implements Scene {
 
 
     public void addEntity(Entity entity) {
-        entities.put(entity.getName(), entity);
+        addChild(entity);
         if (entity instanceof Camera) {
             this.currentCamera = (Camera) entity;
         }
@@ -33,11 +33,11 @@ public abstract class AbstractScene implements Scene {
 
     @Override
     public Collection<Entity> getEntities() {
-        return entities.values();
+        return getChild();
     }
 
     public Entity getEntity(String name) {
-        return entities.get(name);
+        return getChildNode(name);
     }
 
     @Override

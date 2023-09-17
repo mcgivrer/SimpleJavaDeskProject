@@ -8,12 +8,10 @@ import com.snapgames.core.physic.Vector2D;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity<T> extends Node {
@@ -50,6 +48,7 @@ public class Entity<T> extends Node {
      * if {@link Entity#stickToParent} is true, the child objects position is relative to parent.
      */
     private boolean stickToParent;
+    private boolean inheritFromParent;
 
     private Entity() {
         super();
@@ -283,5 +282,15 @@ public class Entity<T> extends Node {
 
     public boolean isStickToParent() {
         return this.stickToParent;
+    }
+
+    public T setInheritGraphicsFromParent(boolean inheritFromParent) {
+        this.inheritFromParent = inheritFromParent;
+        return (T) this;
+    }
+
+
+    public boolean isInheritFromParent() {
+        return this.inheritFromParent;
     }
 }
