@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractScene implements Scene {
+public abstract class AbstractScene extends Node implements Scene {
 
     protected App app;
     private Camera currentCamera;
@@ -24,7 +24,7 @@ public abstract class AbstractScene implements Scene {
 
 
     public void addEntity(Entity entity) {
-        entities.put(entity.getName(), entity);
+        addChild(entity);
         if (entity instanceof Camera) {
             this.currentCamera = (Camera) entity;
         }
@@ -41,11 +41,11 @@ public abstract class AbstractScene implements Scene {
 
     @Override
     public Collection<Entity> getEntities() {
-        return entities.values();
+        return getChild();
     }
 
     public Entity getEntity(String name) {
-        return entities.get(name);
+        return ((Entity) getChild().stream().filter(n -> n.getName().equals(name))).findFirst().get();
     }
 
 
