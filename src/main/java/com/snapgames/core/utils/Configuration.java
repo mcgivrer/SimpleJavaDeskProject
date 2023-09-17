@@ -1,6 +1,7 @@
 package com.snapgames.core.utils;
 
 import com.snapgames.core.App;
+import com.snapgames.core.physic.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -17,13 +18,16 @@ public class Configuration {
     public int debugLevel;
     public String debugFilter = "";
     public boolean testMode;
+    public boolean noInitialization;
     public Dimension windowSize;
     public Rectangle2D bufferResolution;
     public Rectangle2D playArea;
 
-    public Configuration(App app, String configFilePath) {
+    public Vector2D gravity;
+
+    public Configuration(String configFilePath) {
         try {
-            config.load(App.class.getResourceAsStream(configFilePath));
+            config.load(Configuration.class.getResourceAsStream(configFilePath));
             config.entrySet().stream()
                     .filter(e -> e.getKey() != null)
                     .forEach(e -> setConfigValueFrom((String) e.getKey(), (String) e.getValue()));
@@ -74,7 +78,7 @@ public class Configuration {
                         Double.parseDouble(dim[1]));
                 System.out.printf(">> <#> configuration Screen Resolution set to %.2fx%.2f%n", bufferResolution.getWidth(), bufferResolution.getHeight());
             }
-            case "app.physic.play.area" -> {
+            case "app.physic.play.area", "pa", "playArea" -> {
                 String[] dim = value.split("x");
                 this.playArea = new Rectangle2D.Double(
                         0, 0,
@@ -82,10 +86,22 @@ public class Configuration {
                         Double.parseDouble(dim[1]));
                 System.out.printf(">> <#> configuration Play Area set to %.2fx%2f%n", playArea.getWidth(), playArea.getHeight());
             }
+            case "app.physic.gravity", "g", "gravity" -> {
+                String[] dim = value.split(",");
+                this.gravity = new Vector2D(
+                        Double.parseDouble(dim[0]),
+                        Double.parseDouble(dim[1]));
+                System.out.printf(">> <#> configuration gravity set to (%.2f,%2f)%n", gravity.x, gravity.y);
+            }
             case "app.test.mode" -> {
                 this.testMode = Boolean.parseBoolean(value);
                 System.out.printf(">> <#> configuration Test Mode set to %s%n",
-                        this.debug ? "true" : "false");
+                        this.testMode ? "true" : "false");
+            }
+            case "app.test.no.initialization" -> {
+                this.noInitialization = Boolean.parseBoolean(value);
+                System.out.printf(">> <#> configuration No Initialization set to %s%n",
+                        this.noInitialization ? "true" : "false");
             }
             default -> System.err.printf("argument/configuration key '%s' unknown%n", key);
         }

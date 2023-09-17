@@ -1,6 +1,7 @@
 package com.snapgames.core.physic;
 
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.Node;
 
 import java.awt.geom.Rectangle2D;
 
@@ -10,22 +11,22 @@ import java.awt.geom.Rectangle2D;
  * @author Frédéric Delorme
  * @since 1.0.0
  */
-public class World {
-    private final double gravity;
+public class World extends Node {
+    private final Vector2D gravity;
 
     public Rectangle2D playArea;
 
     public World(double gravity) {
 
-        this(gravity, new Rectangle2D.Double(0, 0, 320, 200));
+        this(new Vector2D(0.0, gravity), new Rectangle2D.Double(0, 0, 320, 200));
     }
 
-    public World(double gravity, Rectangle2D playArea) {
+    public World(Vector2D gravity, Rectangle2D playArea) {
         this.gravity = gravity;
         this.playArea = playArea;
     }
 
-    public double getGravity() {
+    public Vector2D getGravity() {
         return this.gravity;
     }
 

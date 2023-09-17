@@ -56,6 +56,7 @@ public class DemoScene extends AbstractScene {
         PhysicEngine physicEngine = app.getPhysicEngine();
         Renderer renderer = app.getRenderer();
 
+        setWorld(new World(app.getConfiguration().gravity,app.getConfiguration().playArea));
         Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
         score = 0;
         lives = 3;

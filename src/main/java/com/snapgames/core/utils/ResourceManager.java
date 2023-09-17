@@ -30,8 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ResourceManager {
     private static final Map<String, Object> resources = new ConcurrentHashMap<>();
 
-    public static void add(String path, Object img) {
-        resources.put(path, img);
+    public static void add(String path, Object obj) {
+        resources.put(path, obj);
     }
 
     public static <T> T get(String path) {

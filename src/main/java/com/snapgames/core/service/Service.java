@@ -4,8 +4,8 @@ import com.snapgames.core.App;
 import com.snapgames.core.utils.Configuration;
 
 public interface Service {
-    default String getName() {
-        return this.getClass().getName();
+    default Class<? extends Service> getServiceName() {
+        return this.getClass();
     }
 
     void initialize(Configuration app);

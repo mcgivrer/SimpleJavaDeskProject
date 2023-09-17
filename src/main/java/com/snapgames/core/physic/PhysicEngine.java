@@ -20,11 +20,14 @@ public class PhysicEngine implements Service {
 
     public PhysicEngine(App app) {
         this.app = app;
-        this.world = new World(-0.981, new Rectangle2D.Double(0, 0, 600, 600));
+        this.world = new World(new Vector2D(0.0, -0.981), new Rectangle2D.Double(0, 0, 600, 600));
     }
 
     public void update(App app, Scene scene, double elapsed, Map<String, Object> stats) {
         double time = elapsed * 0.025;
+        if (Optional.ofNullable(scene.getWorld()).isPresent()) {
+            this.world = scene.getWorld();
+        }
 
         if (app.isDebugLevelMin(9)) {
             System.out.printf("=> Start Update --- %n = Elapsed: %fs%n", time);
@@ -79,7 +82,7 @@ public class PhysicEngine implements Service {
     }
 
     private void applyWorldConstrains(Entity e, double elapsed) {
-        e.addForce(new Vector2D(0, -world.getGravity()));
+        e.addForce(world.getGravity());
     }
 
     private void constrainsEntityToPlayArea(Entity e) {

@@ -255,7 +255,9 @@ public class Renderer extends JPanel implements Service {
     }
 
     public void dispose() {
-        frame.dispose();
+        if (Optional.ofNullable(frame).isPresent()) {
+            frame.dispose();
+        }
     }
 
     public void initialize(Configuration configuration) {

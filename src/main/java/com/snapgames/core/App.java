@@ -76,26 +76,32 @@ public class App {
      * @param configurationFilepath path to the configuration file to be loaded.
      */
     private void initialize(String configurationFilepath) {
-        // create services
-        gameLoop = new StandardGameLoop();
-        sceneManager = new SceneManager(this);
-        inputHandler = new InputHandler(this);
-        physicEngine = new PhysicEngine(this);
-        renderer = new Renderer(this);
-
-        ServiceManager.get()
-                .add(sceneManager)
-                .add(renderer)
-                .add(physicEngine)
-                .add(inputHandler);
 
         // load configuration
-        configuration = new Configuration(this, configurationFilepath);
-        // initialize service against configuration
-        ServiceManager.get().initialize(configuration);
+        configuration = new Configuration(configurationFilepath);
+        if (!configuration.noInitialization) {
+            // create services
+            gameLoop = new StandardGameLoop();
+            sceneManager = new SceneManager(this);
+            inputHandler = new InputHandler(this);
+            physicEngine = new PhysicEngine(this);
+            renderer = new Renderer(this);
 
-        System.out.printf(">> Window %s%n", messages.getString("app.title"));
-        System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
+            ServiceManager.get()
+                    .add(sceneManager)
+                    .add(renderer)
+                    .add(physicEngine)
+                    .add(inputHandler);
+
+            // initialize service against configuration
+            ServiceManager.get().initialize(configuration);
+
+            System.out.printf(">> Window %s%n", messages.getString("app.title"));
+            System.out.printf(">> Running on JRE %s%n", System.getProperty("java.version"));
+
+        } else {
+            System.out.printf(">> No Initialization, Running on JRE %s%n", System.getProperty("java.version"));
+        }
     }
 
 
@@ -266,5 +272,9 @@ public class App {
             }
         }
 
+    }
+
+    public Configuration getConfiguration() {
+        return this.configuration;
     }
 }

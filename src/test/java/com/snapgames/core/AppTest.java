@@ -1,8 +1,9 @@
-package com.snapgames.demo.test001;
+package com.snapgames.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.snapgames.core.App;
+import com.snapgames.core.service.ServiceManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ public class AppTest {
 
     @AfterEach
     public void ending() {
+
         app = null;
+        ServiceManager.get().dispose();
     }
 
     @Test

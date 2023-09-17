@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceManager {
-    private final Map<String, Service> services;
+    private final Map<Class<? extends Service>, Service> services;
     private static ServiceManager instance;
 
     private ServiceManager() {
@@ -22,7 +22,7 @@ public class ServiceManager {
     }
 
     public ServiceManager add(Service service) {
-        services.put(service.getName(), service);
+        services.put(service.getServiceName(), service);
         return this;
     }
 
@@ -40,4 +40,7 @@ public class ServiceManager {
     }
 
 
+    public <T extends Service> T find(Class<? extends Service> className) {
+        return (T) services.get(className);
+    }
 }
