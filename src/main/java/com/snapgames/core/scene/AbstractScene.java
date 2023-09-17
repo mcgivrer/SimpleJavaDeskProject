@@ -3,6 +3,8 @@ package com.snapgames.core.scene;
 import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.Node;
+import com.snapgames.core.physic.World;
 
 import java.util.Collection;
 import java.util.Map;
@@ -13,9 +15,10 @@ public abstract class AbstractScene implements Scene {
     protected App app;
     private Camera currentCamera;
 
-    private Map<String, Entity> entities = new ConcurrentHashMap<>();
+    private World world;
 
-    protected AbstractScene(App app) {
+    protected AbstractScene(App app, String name) {
+        super(name);
         this.app = app;
     }
 
@@ -32,6 +35,11 @@ public abstract class AbstractScene implements Scene {
     }
 
     @Override
+    public Camera getCurrentCamera() {
+        return currentCamera;
+    }
+
+    @Override
     public Collection<Entity> getEntities() {
         return entities.values();
     }
@@ -40,8 +48,12 @@ public abstract class AbstractScene implements Scene {
         return entities.get(name);
     }
 
-    @Override
-    public Camera getCurrentCamera() {
-        return currentCamera;
+
+    public void setWorld(World w) {
+        this.world = w;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 }
