@@ -1,6 +1,7 @@
 package com.snapgames.core.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Node {
@@ -24,7 +25,7 @@ public class Node {
         this.name = name;
     }
 
-    public void addChild(Node child){
+    public void addChild(Node child) {
         children.add(child);
         child.setParent(this);
     }
@@ -39,5 +40,9 @@ public class Node {
 
     public String getName() {
         return name;
+    }
+
+    public Collection<Node> getChild() {
+        return children;
     }
 }
