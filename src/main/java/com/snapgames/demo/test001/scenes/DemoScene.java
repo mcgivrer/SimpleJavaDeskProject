@@ -25,13 +25,14 @@ import com.snapgames.demo.test001.io.DemoInputListener;
 
 public class DemoScene extends AbstractScene {
 
-    int score = 0, lives = 3;
+    int score = 0;
+    int lives = 3;
     double maxEnergy = 100;
     double maxMana = 100;
     double energy = 70;
     double mana = 80;
 
-    Color shadowColor = new Color(0.4f, 0.4f, 0.4f, 0.6f);
+    Color shadowColor = new Color(0.2f, 0.2f, 0.2f, 0.7f);
 
     BufferedImage heart;
     private boolean levelEnd;
@@ -52,6 +53,8 @@ public class DemoScene extends AbstractScene {
         Renderer renderer = app.getRenderer();
 
         Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
+        score = 0;
+        lives = 3;
 
         GameObject player = (GameObject) new GameObject("player")
                 .setColor(Color.GREEN.darker())
@@ -117,6 +120,32 @@ public class DemoScene extends AbstractScene {
                 .setPriority(1);
         addEntity(textLife);
 
+        GaugeObject gaugeEnergy = new GaugeObject("energy")
+                .setPosition(36, 12)
+                .setSize(50, 6)
+                .withGaugeColor(Color.RED)
+                .withMaxValue(100)
+                .withMinValue(0)
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setPriority(0)
+                .setFillColor(Color.BLACK)
+                .withCurrentValue(energy);
+        addEntity(gaugeEnergy);
+
+        GaugeObject gaugeMana = new GaugeObject("mana")
+                .setPosition(36, 20)
+                .setSize(50, 6)
+                .withGaugeColor(Color.BLUE)
+                .withMaxValue(100)
+                .withMinValue(0)
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setPriority(0)
+                .setFillColor(Color.BLACK)
+                .withCurrentValue(mana);
+        addEntity(gaugeMana);
+
         app.getInputHandler().add(new DemoInputListener(this));
     }
 
@@ -179,6 +208,7 @@ public class DemoScene extends AbstractScene {
     public void update(App app, double elapsed, Map<String, Object> stats) {
         int life = (int) getEntity("player").getAttribute("life", 3);
 
+        score = (int) getEntity("player").getAttribute("score", score);
         ((TextObject) getEntity("score")).withValue(score);
 
         ((TextObject) getEntity("life")).withValue(life);
@@ -195,7 +225,8 @@ public class DemoScene extends AbstractScene {
                 getEntity("player").setFillColor(Color.RED);
             }
         }
-
+        ((GaugeObject) getEntity("energy")).setCurrentValue(energy);
+        ((GaugeObject) getEntity("mana")).setCurrentValue(mana);
         if (levelEnd) {
             getEntity("gameOver").setActive(true);
         }
@@ -206,27 +237,6 @@ public class DemoScene extends AbstractScene {
     public void render(App app, Graphics2D g, Renderer r, Map<String, Object> stats) {
         // render HUD
         Font pauseFont = g.getFont().deriveFont(Font.BOLD, 16.0f);
-
-        // draw energy
-        g.setColor(shadowColor);
-        g.fillRect(36 + 2, 12 + 2, 50 + 2, 3);
-        g.setColor(Color.BLACK);
-        g.fillRect(36, 12, 50 + 2, 4);
-        g.setColor(Color.RED.darker());
-        g.fillRect(37, 13, (int) maxEnergy / 2, 2);
-        g.setColor(Color.RED);
-        g.fillRect(37, 13, (int) energy / 2, 2);
-
-        // draw mana
-        g.setColor(shadowColor);
-        g.fillRect(36 + 2, 17 + 2, 50 + 2, 3);
-        g.setColor(Color.BLACK);
-        g.fillRect(36, 17, 50 + 2, 4);
-        g.setColor(Color.BLUE.darker().darker());
-        g.fillRect(37, 18, (int) maxMana / 2, 2);
-        g.setColor(Color.BLUE);
-        g.fillRect(37, 18, (int) mana / 2, 2);
-
         // draw "paused" message if required
         if (app.isPaused()) {
             g.setColor(new Color(0.1f, 0.3f, 0.6f, 0.6f));

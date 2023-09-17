@@ -6,6 +6,7 @@ import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
+import com.snapgames.core.gfx.plugins.GaugeObjectRenderingPlugin;
 import com.snapgames.core.gfx.plugins.TextObjectRendererPlugin;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.PhysicEngine;
@@ -41,6 +42,7 @@ public class Renderer extends JPanel implements Service {
         this.app = app;
         addPlugin(new GameObjectRendererPlugin());
         addPlugin(new TextObjectRendererPlugin());
+        addPlugin(new GaugeObjectRenderingPlugin());
     }
 
     public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {

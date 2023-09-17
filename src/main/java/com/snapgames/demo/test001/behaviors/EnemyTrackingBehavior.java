@@ -39,10 +39,9 @@ public class EnemyTrackingBehavior implements Behavior {
             double energy = (double) player.getAttribute("energy", 0.0);
             player.addAttribute("energy", energy - 0.1);
 
-            if (nrj < 0) {
+            if (nrj <= 0) {
                 e.setActive(false);
                 player.addAttribute("score", (int) player.getAttribute("score", 0) + 10);
-
             }
         } else {
             sensor = false;
