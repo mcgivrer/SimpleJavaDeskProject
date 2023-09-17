@@ -3,6 +3,8 @@ package com.snapgames.core.scene;
 import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
+import com.snapgames.core.entity.Node;
+import com.snapgames.core.physic.World;
 
 import java.util.Collection;
 import java.util.List;

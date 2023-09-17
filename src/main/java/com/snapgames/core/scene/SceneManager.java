@@ -62,5 +62,10 @@ public class SceneManager implements Service {
         for (Scene scn : scenes.values()) {
             scn.dispose(app);
         }
+        scenes.clear();
+    }
+
+    public Scene getScene(String sceneName) {
+        return scenes.get(sceneName);
     }
 }
