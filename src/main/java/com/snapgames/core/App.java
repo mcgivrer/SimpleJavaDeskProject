@@ -111,6 +111,8 @@ public class App {
         this.debugLevel = configuration.debugLevel;
         this.testMode = configuration.testMode;
         this.debugFilter = configuration.debugFilter;
+        this.name = configuration.name;
+        this.version = configuration.version;
 
         // create window to display game
         renderer.createWindow(this, inputHandler);

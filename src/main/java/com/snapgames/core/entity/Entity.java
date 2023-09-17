@@ -281,4 +281,8 @@ public class Entity<T> {
     public Color getFillColor() {
         return fillColor;
     }
+
+    public Color getColor() {
+        return color;
+    }
 }
