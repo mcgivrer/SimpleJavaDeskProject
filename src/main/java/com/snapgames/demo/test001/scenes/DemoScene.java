@@ -36,6 +36,7 @@ public class DemoScene extends AbstractScene {
 
     BufferedImage heart;
     private boolean levelEnd;
+    Font scoreFont;
 
     public DemoScene(App app) {
         super(app);
@@ -45,6 +46,9 @@ public class DemoScene extends AbstractScene {
     public void load() {
         BufferedImage tiles = (BufferedImage) ResourceManager.add("/images/tiles01.png");
         heart = tiles.getSubimage(0, 6 * 16, 16, 16);
+
+        Font textFont = (Font) ResourceManager.add("/fonts/tino/Tinos for Powerline.ttf");
+        scoreFont = textFont.deriveFont(Font.BOLD, 22.0f);
     }
 
     @Override
@@ -79,14 +83,16 @@ public class DemoScene extends AbstractScene {
                 .setTweenFactor(0.02);
         addEntity(cam01);
 
-        Font scoreFont = renderer.getFont().deriveFont(Font.BOLD, 18.0f);
         TextObject textScore = new TextObject("score")
-                .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() - 80, 20))
+                .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() - 10, 20))
                 .withValue(score)
                 .withText("%06d")
                 .withFont(scoreFont)
                 .withTextColor(Color.WHITE)
                 .withShadowColor(shadowColor)
+                .withTextAlign(TextAlign.RIGHT)
+                .withBorderColor(Color.BLACK)
+                .withBorderWidth(1)
                 .stickToCamera(true)
                 .setPriority(1);
         addEntity(textScore);
@@ -96,10 +102,12 @@ public class DemoScene extends AbstractScene {
                 .withText(App.messages.getString("app.message.game.over"))
                 .withFont(scoreFont)
                 .withTextColor(Color.WHITE)
+                .withTextAlign(TextAlign.CENTER)
                 .withShadowColor(shadowColor)
                 .stickToCamera(true)
                 .setActive(false)
-                .setPriority(1);
+                .setPriority(1)
+                .withBorderWidth(2);
         addEntity(textGameOver);
 
         GameObject imgHeart = new GameObject("heart")
@@ -113,9 +121,11 @@ public class DemoScene extends AbstractScene {
                 .setPosition(new Vector2D(26, 26))
                 .withValue(lives)
                 .withText("%d")
-                .withFont(scoreFont.deriveFont(Font.PLAIN, 11.0f))
+                .withFont(scoreFont.deriveFont(Font.BOLD, 12.0f))
                 .withTextColor(Color.WHITE)
                 .withShadowColor(shadowColor)
+                .withBorderColor(Color.BLACK)
+                .withBorderWidth(1)
                 .stickToCamera(true)
                 .setPriority(1);
         addEntity(textLife);
