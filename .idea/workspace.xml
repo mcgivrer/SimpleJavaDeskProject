@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="" />
+    <list default="true" id="3f8dfc73-9459-4440-9b0b-1ea4ce473742" name="Changes" comment="feat(GaugeObject): Add a GaugeObject to replace HUD&#10;&#10;- fix small issue on version and workspace.xml&#10;&#10;fixes #10" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +68,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feature/add-gauge-object",
     "ignore.preview.features.used": "true",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "zulu-20 (2)",
@@ -214,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694428291666</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat(GaugeObject): Add a GaugeObject to replace HUD&#10;&#10;- fix small issue on version and workspace.xml&#10;&#10;fixes #10">
+      <option name="closed" value="true" />
+      <created>1694883266194</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1694883266194</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -256,6 +264,7 @@
     <MESSAGE value="feat(VecTor2D): Add Vector2D as Entity attributes&#10;&#10;- replace x,y by pos, w,h by size, dx,dy by vel and add acc + getters/setters&#10;- update PhysicEngine, Renderer,&#10;- add new Configuration entries" />
     <MESSAGE value="feat(Behavior): Add Behavior on Entity&#10;&#10;- create the `Behavior` interface to enhance dynamically drawing and updating process,&#10;- add new attribute/methods to the `Entity` to support a collection of `Behavior`,&#10;- Update `Renderer` and `PhysicEngine` to process Entity's Behaviors list when it is existing,&#10;- implement a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update `DemoScene` to assign this new `EnemyTrackingBehavior` to the enemy's `Entity`.&#10;- add build documentation and rework the corresponding README file." />
     <MESSAGE value="feat(Behavior): Enhance debugging Behavior&#10;&#10;- update a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update the Entity and the Renderer about Bounding bax according to EntityType" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Behavior): Enhance debugging Behavior&#10;&#10;- update a new `Behavior` for enemies `EnemyTrackingBehavior`,&#10;- update the Entity and the Renderer about Bounding bax according to EntityType" />
+    <MESSAGE value="feat(GaugeObject): Add a GaugeObject to replace HUD&#10;&#10;- fix small issue on version and workspace.xml&#10;&#10;fixes #10" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(GaugeObject): Add a GaugeObject to replace HUD&#10;&#10;- fix small issue on version and workspace.xml&#10;&#10;fixes #10" />
   </component>
 </project>
