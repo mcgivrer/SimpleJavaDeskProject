@@ -4,6 +4,7 @@ import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.io.InputHandler;
+import com.snapgames.core.physic.World;
 
 import java.awt.*;
 import java.util.Collection;
@@ -32,4 +33,8 @@ public interface Scene {
     Camera getCurrentCamera();
 
     void reset(App app);
+
+    String treeToString();
+
+    World getWorld();
 }
