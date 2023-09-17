@@ -67,7 +67,7 @@ public class PhysicEngine implements Service {
                                 entity.getAcceleration()
                                         .multiply(elapsed * elapsed * 0.5))
                         .multiply(roughness)
-                        .maximize(24.0)
+                        .maximize(30.0)
                         .thresholdToZero(0.01));
 
         // compute position

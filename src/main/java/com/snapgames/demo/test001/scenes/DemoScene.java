@@ -39,7 +39,7 @@ public class DemoScene extends AbstractScene {
     Font scoreFont;
 
     public DemoScene(App app) {
-        super(app);
+        super(app, "Demonstration Scene");
     }
 
     @Override
@@ -191,7 +191,7 @@ public class DemoScene extends AbstractScene {
 
             double speed = (double) player.getAttribute("speed", 0.5);
             if (ih.isControlKeyPressed()) {
-                speed *= 2.0;
+                speed *= 4.0;
             }
 
             if (ih.getKeys(KeyEvent.VK_UP)) {

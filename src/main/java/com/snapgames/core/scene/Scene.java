@@ -32,4 +32,6 @@ public interface Scene {
     Camera getCurrentCamera();
 
     void reset(App app);
+
+    String treeToString();
 }

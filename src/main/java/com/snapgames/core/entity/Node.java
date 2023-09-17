@@ -38,6 +38,10 @@ public class Node {
         return index;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -48,5 +52,14 @@ public class Node {
 
     public <T extends Node> T getChildNode(String name) {
         return (T) getChild().stream().filter(e -> e.getName().equals(name)).findFirst().get();
+    }
+
+    public String treeToString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getName() + "\n");
+        for (Node n : getChild()) {
+            sb.append("\t|_" + n.treeToString() + "\n");
+        }
+        return sb.toString();
     }
 }

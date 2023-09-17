@@ -15,7 +15,8 @@ public abstract class AbstractScene extends Node implements Scene {
     protected App app;
     private Camera currentCamera;
 
-    protected AbstractScene(App app) {
+    protected AbstractScene(App app, String name) {
+        super(name);
         this.app = app;
     }
 
