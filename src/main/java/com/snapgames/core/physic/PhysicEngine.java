@@ -82,7 +82,7 @@ public class PhysicEngine implements Service {
     }
 
     private void applyWorldConstrains(Entity e, double elapsed) {
-        e.addForce(world.getGravity());
+        e.addForce(world.getGravity().negate());
     }
 
     private void constrainsEntityToPlayArea(Entity e) {
