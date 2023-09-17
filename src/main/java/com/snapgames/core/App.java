@@ -132,11 +132,14 @@ public class App {
     private void loop() {
         createScene();
         sceneManager.activate();
+
+        System.out.printf(sceneManager.getCurrent().treeToString());
         gameLoop.loop(this);
     }
 
     private void createScene() {
-        sceneManager.add(new DemoScene(this));
+        DemoScene scene = new DemoScene(this);
+        sceneManager.add(scene);
     }
 
     public void input() {

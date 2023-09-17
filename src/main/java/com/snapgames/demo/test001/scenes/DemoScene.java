@@ -26,7 +26,7 @@ import com.snapgames.demo.test001.io.DemoInputListener;
 public class DemoScene extends AbstractScene {
 
     int score = 0;
-    int lives = 3;
+    int lives = 2;
     double maxEnergy = 100;
     double maxMana = 100;
     double energy = 70;
@@ -39,7 +39,7 @@ public class DemoScene extends AbstractScene {
     Font scoreFont;
 
     public DemoScene(App app) {
-        super(app);
+        super(app, "Demonstration Scene");
     }
 
     @Override
@@ -59,7 +59,7 @@ public class DemoScene extends AbstractScene {
         setWorld(new World(app.getConfiguration().gravity,app.getConfiguration().playArea));
         Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
         score = 0;
-        lives = 3;
+        lives = 2;
 
         GameObject player = (GameObject) new GameObject("player")
                 .setColor(Color.GREEN.darker())
@@ -192,7 +192,7 @@ public class DemoScene extends AbstractScene {
 
             double speed = (double) player.getAttribute("speed", 0.5);
             if (ih.isControlKeyPressed()) {
-                speed *= 2.0;
+                speed *= 4.0;
             }
 
             if (ih.getKeys(KeyEvent.VK_UP)) {
@@ -228,7 +228,7 @@ public class DemoScene extends AbstractScene {
         energy = (double) getEntity("player").getAttribute("energy", 0.0);
 
         if (energy <= 0.0) {
-            if (life - 1 >= 1) {
+            if (life - 1 >= 0) {
                 getEntity("player").addAttribute("life", life - 1);
                 getEntity("player").addAttribute("energy", maxEnergy);
             } else {
