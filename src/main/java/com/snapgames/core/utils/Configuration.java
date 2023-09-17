@@ -9,12 +9,13 @@ import java.util.Properties;
 
 public class Configuration {
 
-    private String name;
-    private String version;
     private Properties config = new Properties();
+
+    public String name;
+    public String version;
     public boolean debug;
     public int debugLevel;
-    public String debugFilter="";
+    public String debugFilter = "";
     public boolean testMode;
     public Dimension windowSize;
     public Rectangle2D bufferResolution;
