@@ -16,12 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Entity<T> {
-
-    private static int index = 0;
-    int id = index++;
-
-    private String name = "entity_" + id;
+public class Entity<T> extends Node {
 
     private EntityType type = EntityType.RECTANGLE;
 
@@ -35,8 +30,6 @@ public class Entity<T> {
     public Color color;
     public Color fillColor;
     public BufferedImage image;
-
-    public boolean active;
 
     public int priority;
 
@@ -53,17 +46,17 @@ public class Entity<T> {
     private boolean contact;
     private RendererPlugin renderedByPlugin;
 
+    /**
+     * if {@link Entity#stickToParent} is true, the child objects position is relative to parent.
+     */
+    private boolean stickToParent;
+
     private Entity() {
-        this.active = true;
+        super();
     }
 
     public Entity(String name) {
-        this();
-        this.name = name;
-    }
-
-    public static int getIndex() {
-        return index;
+        super(name);
     }
 
     public T addForce(Vector2D f) {
@@ -117,9 +110,6 @@ public class Entity<T> {
         return (T) this;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public boolean isActive() {
         return this.active;
@@ -222,7 +212,7 @@ public class Entity<T> {
     public String toString() {
         return "Entity{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + getName() + '\'' +
                 ", pos=" + pos +
                 ", vel=" + vel +
                 ", acc=" + acc +
@@ -284,5 +274,14 @@ public class Entity<T> {
 
     public Color getColor() {
         return color;
+    }
+
+    public T setStickToParent(boolean stp) {
+        this.stickToParent = stp;
+        return (T) this;
+    }
+
+    public boolean isStickToParent() {
+        return this.stickToParent;
     }
 }

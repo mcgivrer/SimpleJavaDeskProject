@@ -20,6 +20,9 @@ public class GameObjectRendererPlugin implements RendererPlugin<GameObject> {
     public void draw(Renderer r, Graphics2D g, Scene s, Entity entity) {
         GameObject e = (GameObject) entity;
         switch (e.getType()) {
+            case NONE->{
+                // nothing to do, this is an invisible object
+            }
             case DOT, RECTANGLE -> {
                 if (e.fillColor != null) {
                     g.setColor(e.fillColor);
