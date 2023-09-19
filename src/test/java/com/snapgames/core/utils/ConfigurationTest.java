@@ -53,4 +53,15 @@ public class ConfigurationTest {
     public void testIfConfigurationPlayAreaSet() {
         assertEquals(new Rectangle2D.Double(0, 0, 320, 200), config.playArea);
     }
+
+    @Test
+    public void testIfConfigurationSpaceMaxEntitySet() {
+        assertEquals(10, config.maxEntitiesInSpace);
+    }
+
+    @Test
+    public void testIfConfigurationSpaceDepthSet() {
+        assertEquals(5, config.maxDepthLevelInSpace);
+    }
+
 }

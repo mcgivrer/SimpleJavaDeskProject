@@ -5,6 +5,7 @@ import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.loop.GameLoop;
 import com.snapgames.core.loop.StandardGameLoop;
 import com.snapgames.core.physic.PhysicEngine;
+import com.snapgames.core.physic.SpacePartition;
 import com.snapgames.core.scene.SceneManager;
 import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
@@ -48,6 +49,8 @@ public class App {
     private PhysicEngine physicEngine;
     // input manager (Keyboard & more to come)
     private InputHandler inputHandler;
+    // manage play area as partitioned spaces to spread Entity through.
+    private SpacePartition spacePartitioning;
 
     /**
      * This is the {@link App} class.
@@ -85,13 +88,15 @@ public class App {
             sceneManager = new SceneManager(this);
             inputHandler = new InputHandler(this);
             physicEngine = new PhysicEngine(this);
+            spacePartitioning = new SpacePartition(this);
             renderer = new Renderer(this);
 
             ServiceManager.get()
                     .add(sceneManager)
                     .add(renderer)
                     .add(physicEngine)
-                    .add(inputHandler);
+                    .add(inputHandler)
+                    .add(spacePartitioning);
 
             // initialize service against configuration
             ServiceManager.get().initialize(configuration);
@@ -148,6 +153,8 @@ public class App {
 
     public void update(long elapsed, Map<String, Object> stats) {
         physicEngine.update(this, sceneManager.getCurrent(), elapsed, stats);
+        spacePartitioning.update(this, sceneManager.getCurrent(), elapsed, stats);
+
     }
 
     public void render(Map<String, Object> stats) {

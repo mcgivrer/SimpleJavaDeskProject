@@ -20,6 +20,7 @@ import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
 import com.snapgames.core.utils.ResourceManager;
+import com.snapgames.demo.test001.behaviors.EnemyCollisionResponse;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 import com.snapgames.demo.test001.io.DemoInputListener;
 
@@ -53,10 +54,11 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void create(App app) {
+        app.setPause(false);
         PhysicEngine physicEngine = app.getPhysicEngine();
         Renderer renderer = app.getRenderer();
 
-        setWorld(new World(app.getConfiguration().gravity,app.getConfiguration().playArea));
+        setWorld(new World(app.getConfiguration().gravity, app.getConfiguration().playArea));
         Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
         score = 0;
         lives = 2;
@@ -68,7 +70,7 @@ public class DemoScene extends AbstractScene {
                 .setSize(16, 16)
                 .setPriority(1)
                 .setMass(1.0)
-                .setMaterial(new Material("body", 1.2, 0.78, 0.97))
+                .setMaterial(new Material("body", 1.2, 0.78, 0.01))
                 .addAttribute("speed", 5.0)
                 .addAttribute("energy", maxEnergy)
                 .addAttribute("mana", maxMana)
@@ -163,7 +165,7 @@ public class DemoScene extends AbstractScene {
 
     public void addEnemies(String entityRootName, int nbEnemies, double maxMass) {
         Rectangle2D playArea = app.getPhysicEngine().getWorld().getPlayArea();
-        Material enemyMat = new Material(entityRootName + "_material", 0.5, 0.8, 1.0);
+        Material enemyMat = new Material(entityRootName + "_material", 0.5, 0.8, 0.005);
         for (int i = 0; i < nbEnemies; i++) {
             GameObject enemy = new GameObject(entityRootName + "_" + Entity.getIndex())
                     .setEntityType(EntityType.ELLIPSE)
@@ -174,7 +176,8 @@ public class DemoScene extends AbstractScene {
                     .setPriority(i + 10)
                     .setMass(Math.random() * maxMass)
                     .setMaterial(enemyMat)
-                    .addBehavior(new EnemyTrackingBehavior(40.0, 0.15));
+                    .addBehavior(new EnemyTrackingBehavior(40.0, 0.15))
+                    .addBehavior(new EnemyCollisionResponse());
 
             addEntity(enemy);
         }
@@ -233,6 +236,7 @@ public class DemoScene extends AbstractScene {
                 getEntity("player").addAttribute("energy", maxEnergy);
             } else {
                 levelEnd = true;
+                app.setPause(true);
                 getEntity("player").setFillColor(Color.RED);
             }
         }
@@ -246,10 +250,11 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void render(App app, Graphics2D g, Renderer r, Map<String, Object> stats) {
+        super.render(app, g, r, stats);
         // render HUD
         Font pauseFont = g.getFont().deriveFont(Font.BOLD, 16.0f);
         // draw "paused" message if required
-        if (app.isPaused()) {
+        if (app.isPaused() && !levelEnd) {
             g.setColor(new Color(0.1f, 0.3f, 0.6f, 0.6f));
             g.fillRect(0, (int) ((r.screenBuffer.getHeight() - 6) * 0.5), r.screenBuffer.getWidth(), 20);
             String pauseText = App.messages.getString("game.pause.text");

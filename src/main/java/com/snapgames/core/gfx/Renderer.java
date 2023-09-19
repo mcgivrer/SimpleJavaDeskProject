@@ -230,7 +230,7 @@ public class Renderer extends JPanel implements Service {
                 Color.BLACK, 2);
     }
 
-    private void moveToCameraPointOfView(Graphics2D g, Entity cam, double i) {
+    public void moveToCameraPointOfView(Graphics2D g, Entity cam, double i) {
         g.translate(cam.getPosition().x * i, cam.getPosition().y * i);
     }
 
