@@ -17,7 +17,7 @@ public class GameObjectRendererPlugin implements RendererPlugin<GameObject> {
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Scene s, Entity entity) {
+    public void draw(Renderer r, Graphics2D g, Scene s, Entity<?> entity) {
         GameObject e = (GameObject) entity;
         switch (e.getType()) {
             case NONE->{

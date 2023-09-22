@@ -23,8 +23,8 @@ public class EnemyTrackingBehavior implements Behavior {
     }
 
     @Override
-    public void update(Scene scene, Entity e, double elapsed) {
-        Entity player = scene.getEntity("player");
+    public void update(Scene scene, Entity<?> e, double elapsed) {
+        Entity<?> player = scene.getEntity("player");
         Ellipse2D sensorArea = new Ellipse2D.Double(
                 e.getPosition().x + e.getSize().x * 0.5 - sensorDiameter * 0.5,
                 e.getPosition().y + e.getSize().y * 0.5 - sensorDiameter * 0.5,
@@ -39,7 +39,7 @@ public class EnemyTrackingBehavior implements Behavior {
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Scene scene, Entity e) {
+    public void draw(Renderer r, Graphics2D g, Scene scene, Entity<?> e) {
         if (App.getDebug() && App.isDebugLevelAtLeast(2)) {
             Stroke back = g.getStroke();
             g.setStroke(dashed);

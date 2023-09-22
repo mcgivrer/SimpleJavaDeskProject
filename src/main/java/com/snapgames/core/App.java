@@ -118,14 +118,14 @@ public class App {
     public void run(String[] args) {
         configuration.parseCLIArguments(args);
         // retrieve App attributes value from Configuration.
-        this.debug = configuration.debug;
-        this.debugLevel = configuration.debugLevel;
+        debug = configuration.debug;
+        debugLevel = configuration.debugLevel;
         this.testMode = configuration.testMode;
         this.debugFilter = configuration.debugFilter;
         this.name = configuration.name;
         this.version = configuration.version;
 
-        // create window to display game
+        // create a window to display game
         renderer.createWindow(this, inputHandler);
         // start loop until exit request
         loop();
@@ -188,7 +188,7 @@ public class App {
     }
 
     public int getDebugLevel() {
-        return this.debugLevel;
+        return debugLevel;
     }
 
     public void setExit(boolean e) {
@@ -246,11 +246,11 @@ public class App {
     }
 
     public void setDebugLevel(int dl) {
-        this.debugLevel = dl;
+        debugLevel = dl;
     }
 
     public void setDebug(boolean d) {
-        this.debug = d;
+        debug = d;
     }
 
     public InputHandler getInputHandler() {

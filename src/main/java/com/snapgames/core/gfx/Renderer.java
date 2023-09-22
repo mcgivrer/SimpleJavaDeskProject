@@ -4,7 +4,6 @@ import com.snapgames.core.App;
 import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
-import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
 import com.snapgames.core.gfx.plugins.GaugeObjectRenderingPlugin;
 import com.snapgames.core.gfx.plugins.TextObjectRendererPlugin;
@@ -36,7 +35,7 @@ public class Renderer extends JPanel implements Service {
     private Dimension windowSize;
     private Graphics2D gr;
 
-    private Map<Class<? extends Entity>, RendererPlugin<? extends Entity>> plugins = new HashMap<>();
+    private final Map<Class<? extends Entity<?>>, RendererPlugin<? extends Entity<?>>> plugins = new HashMap<>();
 
     public Renderer(App app) {
         this.app = app;
@@ -45,7 +44,7 @@ public class Renderer extends JPanel implements Service {
         addPlugin(new GaugeObjectRenderingPlugin());
     }
 
-    public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {
+    public Renderer addPlugin(RendererPlugin<? extends Entity<?>> plugin) {
         plugins.put(plugin.getEntityClass(), plugin);
         return this;
     }
@@ -112,7 +111,7 @@ public class Renderer extends JPanel implements Service {
                 0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
-        if (app.getDebug()) {
+        if (App.getDebug()) {
             g2.setColor(Color.ORANGE);
             g2.setFont(getFont().deriveFont(11.0f));
             g2.drawString(
@@ -167,7 +166,7 @@ public class Renderer extends JPanel implements Service {
         long rendererObj = scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
-                .filter(e -> currentCamera.isInViewPort(e))
+                .filter(currentCamera::isInViewPort)
                 .count();
         stats.put("6_objRendered", rendererObj);
 
@@ -188,13 +187,13 @@ public class Renderer extends JPanel implements Service {
                 });
     }
 
-    private void drawEntity(Graphics2D g, Scene scene, Entity e) {
+    private void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         if (plugins.containsKey(e.getClass())) {
-            RendererPlugin plugin = plugins.get(e.getClass());
+            RendererPlugin<?> plugin = plugins.get(e.getClass());
             plugin.draw(this, g, scene, e);
             e.setRenderedBy(plugin);
         }
-        e.getBehaviors().stream().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
+        e.getBehaviors().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
     }
 
     public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
@@ -230,7 +229,7 @@ public class Renderer extends JPanel implements Service {
                 Color.BLACK, 2);
     }
 
-    public void moveToCameraPointOfView(Graphics2D g, Entity cam, double i) {
+    public void moveToCameraPointOfView(Graphics2D g, Entity<?> cam, double i) {
         g.translate(cam.getPosition().x * i, cam.getPosition().y * i);
     }
 

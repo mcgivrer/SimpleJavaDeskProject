@@ -6,9 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.snapgames.core.App;
 import com.snapgames.core.entity.*;
@@ -45,10 +44,12 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void load() {
-        BufferedImage tiles = (BufferedImage) ResourceManager.add("/images/tiles01.png");
+        BufferedImage tiles = ResourceManager.add("/images/tiles01.png");
+        assert tiles != null;
         heart = tiles.getSubimage(0, 6 * 16, 16, 16);
 
-        Font textFont = (Font) ResourceManager.add("/fonts/tino/Tinos for Powerline.ttf");
+        Font textFont = ResourceManager.add("/fonts/tino/Tinos for Powerline.ttf");
+        assert textFont != null;
         scoreFont = textFont.deriveFont(Font.BOLD, 22.0f);
     }
 
@@ -63,7 +64,7 @@ public class DemoScene extends AbstractScene {
         score = 0;
         lives = 2;
 
-        GameObject player = (GameObject) new GameObject("player")
+        GameObject player = new GameObject("player")
                 .setColor(Color.GREEN.darker())
                 .setFillColor(Color.GREEN)
                 .setPosition(playArea.getWidth() * 0.5, playArea.getHeight() * 0.5)
@@ -191,9 +192,9 @@ public class DemoScene extends AbstractScene {
     @Override
     public void input(App app, InputHandler ih) {
         if (!levelEnd) {
-            Entity player = getEntity("player");
+            Entity<?> player = getEntity("player");
 
-            double speed = (double) player.getAttribute("speed", 0.5);
+            double speed = player.getAttribute("speed", 0.5);
             if (ih.isControlKeyPressed()) {
                 speed *= 4.0;
             }
@@ -214,7 +215,7 @@ public class DemoScene extends AbstractScene {
     }
 
     public void removeAllEntity(String enemy) {
-        Collection<Entity> tobeDeleted = app.getSceneManager().getCurrent().getEntities().stream().filter(e -> e.getName().contains(enemy)).collect(Collectors.toList());
+        List<Entity> tobeDeleted = app.getSceneManager().getCurrent().getEntities().stream().filter(e -> e.getName().contains(enemy)).toList();
         app.getSceneManager().getCurrent().getEntities().removeAll(tobeDeleted);
     }
 

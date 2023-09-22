@@ -15,7 +15,7 @@ public class GaugeObjectRenderingPlugin implements RendererPlugin<GaugeObject> {
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Scene s, Entity e) {
+    public void draw(Renderer r, Graphics2D g, Scene s, Entity<?> e) {
         GaugeObject go = (GaugeObject) e;
         // draw shadow
         g.setColor(go.getShadowColor());
