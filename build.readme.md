@@ -117,7 +117,7 @@ where :
 
 #### `project.author.name`
 
-- **Value**: `Frédéric Delorme`
+- **Value**: `Firstname Lastname`
 - **Description**: The name of the primary author or maintainer of the project.
 
 #### `project.author.email`
