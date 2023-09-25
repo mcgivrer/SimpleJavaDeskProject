@@ -122,7 +122,7 @@ where :
 
 #### `project.author.email`
 
-- **Value**: `frederic.delorme@gmail.com`
+- **Value**: `firstnameDOTlastnameATmailDOTcom`
 - **Description**: The email address of the primary author or maintainer of the project, for contact purposes.
 
 #### `project.build.jdk.version`
