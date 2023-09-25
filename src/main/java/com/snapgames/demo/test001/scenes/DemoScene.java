@@ -18,6 +18,7 @@ import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
+import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.ResourceManager;
 import com.snapgames.demo.test001.behaviors.EnemyCollisionResponse;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
@@ -55,12 +56,13 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void create(App app) {
+        // set pause off (for restarting Scene)
         app.setPause(false);
-        PhysicEngine physicEngine = app.getPhysicEngine();
-        Renderer renderer = app.getRenderer();
+
 
         setWorld(new World(app.getConfiguration().gravity, app.getConfiguration().playArea));
-        Rectangle2D playArea = physicEngine.getWorld().getPlayArea();
+        Rectangle2D playArea = getWorld().getPlayArea();
+
         score = 0;
         lives = 2;
 
@@ -88,6 +90,9 @@ public class DemoScene extends AbstractScene {
                 .setTweenFactor(0.02);
         addEntity(cam01);
 
+
+        // create HUD
+        Renderer renderer = ServiceManager.get().find(Renderer.class);
         TextObject textScore = new TextObject("score")
                 .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() - 10, 20))
                 .withValue(score)
@@ -101,19 +106,6 @@ public class DemoScene extends AbstractScene {
                 .stickToCamera(true)
                 .setPriority(1);
         addEntity(textScore);
-
-        TextObject textGameOver = new TextObject("gameOver")
-                .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() * 0.5, renderer.getScreenBuffer().getHeight() * 0.5))
-                .withText(App.messages.getString("app.message.game.over"))
-                .withFont(scoreFont)
-                .withTextColor(Color.WHITE)
-                .withTextAlign(TextAlign.CENTER)
-                .withShadowColor(shadowColor)
-                .stickToCamera(true)
-                .setActive(false)
-                .setPriority(1)
-                .withBorderWidth(2);
-        addEntity(textGameOver);
 
         GameObject imgHeart = new GameObject("heart")
                 .setPosition(new Vector2D(16, 10))
@@ -161,6 +153,21 @@ public class DemoScene extends AbstractScene {
                 .withCurrentValue(mana);
         addEntity(gaugeMana);
 
+        // prepare a "Game Over" text element as pre-deactivated one.
+        TextObject textGameOver = new TextObject("gameOver")
+                .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() * 0.5, renderer.getScreenBuffer().getHeight() * 0.5))
+                .withText(App.messages.getString("app.message.game.over"))
+                .withFont(scoreFont)
+                .withTextColor(Color.WHITE)
+                .withTextAlign(TextAlign.CENTER)
+                .withShadowColor(shadowColor)
+                .stickToCamera(true)
+                .setActive(false)
+                .setPriority(1)
+                .withBorderWidth(2);
+        addEntity(textGameOver);
+
+        // set the Keys handling listener for this demo.
         app.getInputHandler().add(new DemoInputListener(this));
     }
 
