@@ -1,6 +1,7 @@
 package com.snapgames.core;
 
 import com.snapgames.core.gfx.Renderer;
+import com.snapgames.core.io.AppInputListener;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.loop.GameLoop;
 import com.snapgames.core.loop.StandardGameLoop;
@@ -97,6 +98,8 @@ public class App {
                     .add(physicEngine)
                     .add(inputHandler)
                     .add(spacePartitioning);
+
+            inputHandler.add(new AppInputListener(this));
 
             // initialize service against configuration
             ServiceManager.get().initialize(configuration);
@@ -263,25 +266,6 @@ public class App {
 
     public boolean isDebugFiltered(String name) {
         return debugFilter.contains(name);
-    }
-
-    public void processOnKeyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE -> {
-                setExit(true);
-            }
-            case KeyEvent.VK_P, KeyEvent.VK_PAUSE -> {
-                setPause(!isPaused());
-            }
-            case KeyEvent.VK_D -> {
-                setDebugLevel(getDebugLevel() + 1 < 10 ? getDebugLevel() + 1 : 0);
-                setDebug(getDebugLevel() != 0);
-            }
-            case KeyEvent.VK_Z -> {
-                getSceneManager().getCurrent().reset(this);
-            }
-        }
-
     }
 
     public Configuration getConfiguration() {

@@ -46,7 +46,6 @@ public class InputHandler implements Service, KeyListener {
         keys[e.getKeyCode()] = false;
         ctrlKeyPressed = e.isControlDown();
         listeners.forEach(il -> il.onKeyReleased(e));
-        app.processOnKeyReleased(e);
     }
 
     private boolean isKeyReleased(int keyCode) {

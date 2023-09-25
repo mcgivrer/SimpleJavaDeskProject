@@ -69,6 +69,7 @@ public class DemoScene extends AbstractScene {
                 .setFillColor(Color.GREEN)
                 .setPosition(playArea.getWidth() * 0.5, playArea.getHeight() * 0.5)
                 .setSize(16, 16)
+                .setEntityType(EntityType.ELLIPSE)
                 .setPriority(1)
                 .setMass(1.0)
                 .setMaterial(new Material("body", 1.2, 0.78, 0.01))
