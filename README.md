@@ -11,7 +11,7 @@ build.sh a
 ```
 
 > [!NOTE]
-> See [README build script](build.readme.md) for more details.
+> See [README build script](./build.readme.md) for more details.
 
 ## Execute
 
