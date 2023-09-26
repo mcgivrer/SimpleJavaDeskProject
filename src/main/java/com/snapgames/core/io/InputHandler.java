@@ -9,6 +9,13 @@ import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * This {@link InputHandler} service provides an action manager when any key is pressed/released,
+ * and is based on the Java {@link KeyListener}.
+ *
+ * @author Frédéric Delorme
+ * @since 1.0.0
+ */
 public class InputHandler implements Service, KeyListener {
 
     private final App app;
@@ -19,10 +26,20 @@ public class InputHandler implements Service, KeyListener {
 
     Collection<InputListener> listeners = new CopyOnWriteArrayList<>();
 
+    /**
+     * Create the {@link InputHandler} service attached to the parent {@link App} instance.
+     *
+     * @param app
+     */
     public InputHandler(App app) {
         this.app = app;
     }
 
+    /**
+     * Add a new {@link InputListener} implementation to the InputHandler manager.
+     *
+     * @param il the InputListener to be added to the InputHandler internal list.
+     */
     public void add(InputListener il) {
         listeners.add(il);
     }
@@ -48,28 +65,21 @@ public class InputHandler implements Service, KeyListener {
         listeners.forEach(il -> il.onKeyReleased(e));
     }
 
-    private boolean isKeyReleased(int keyCode) {
-        return prevKeys[keyCode] && !keys[keyCode];
-    }
-
-    private boolean isKeyPressed(int keyCode) {
-        return !prevKeys[keyCode] && keys[keyCode];
-    }
-
+    /**
+     * Retrieve the current state of a key according to its internal {@link KeyEvent} code.
+     *
+     * @param keyCode the code of the key to check status.
+     * @return true if pressed, else false.
+     */
     public boolean getKeys(int keyCode) {
         return keys[keyCode];
     }
 
-    @Override
-    public void initialize(Configuration app) {
-        // nothing to initialize (maybe later a Key mapping)
-    }
-
-    @Override
-    public void dispose() {
-        // nothing to release.
-    }
-
+    /**
+     * Return status of the CTRL key.
+     *
+     * @return true if pressed, else false.
+     */
     public boolean isControlKeyPressed() {
         return this.ctrlKeyPressed;
     }

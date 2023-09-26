@@ -56,10 +56,6 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public void create(App app) {
-        // set pause off (for restarting Scene)
-        app.setPause(false);
-
-
         setWorld(new World(app.getConfiguration().gravity, app.getConfiguration().playArea));
         Rectangle2D playArea = getWorld().getPlayArea();
 
@@ -92,6 +88,14 @@ public class DemoScene extends AbstractScene {
 
 
         // create HUD
+        createHUD();
+
+
+        // set the Keys handling listener for this demo.
+        app.getInputHandler().add(new DemoInputListener(this));
+    }
+
+    private void createHUD() {
         Renderer renderer = ServiceManager.get().find(Renderer.class);
         TextObject textScore = new TextObject("score")
                 .setPosition(new Vector2D(renderer.getScreenBuffer().getWidth() - 10, 20))
@@ -166,9 +170,6 @@ public class DemoScene extends AbstractScene {
                 .setPriority(1)
                 .withBorderWidth(2);
         addEntity(textGameOver);
-
-        // set the Keys handling listener for this demo.
-        app.getInputHandler().add(new DemoInputListener(this));
     }
 
 

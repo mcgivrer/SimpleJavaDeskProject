@@ -13,16 +13,49 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The {@link PhysicEngine} service provides basic animation capabilities to all {@link Entity}'s in a {@link Scene}.
+ * <p>
+ * It contains a {@link World} contextual object defining some area and gravity.
+ * The main entry point is the {@link PhysicEngine#update(App, Scene, double, Map)}, processing all the {@link Scene} entities.
+ * It also maintains some stats about the processed entities.
+ *
+ * @author Frédéric Delorme
+ * @since 1.0.0
+ */
 public class PhysicEngine implements Service {
+    /**
+     * internal Contextual object.
+     */
     public World world;
 
+    /**
+     * internal collision counters
+     */
     private int collisionNb;
+    /**
+     * internal collision detection counters
+     */
     private int detectionNb;
 
+    /**
+     * Create the {@link PhysicEngine} service, attached to the parent {@link App} instance.
+     * Every active {@link Entity} in the current managed {@link App}'s {@link Scene} will be processed.
+     *
+     * @param app the parent App instance.
+     */
     public PhysicEngine(App app) {
         this.world = new World(new Vector2D(0.0, -0.981), new Rectangle2D.Double(0, 0, 600, 600));
     }
 
+    /**
+     * Request a global {@link Scene} update according to elapsed time since previous call.
+     *
+     * @param app     parent {@link App} instance
+     * @param scene   current active {@link Scene} to be updated
+     * @param elapsed the elapsed time since previous call.
+     * @param stats   statistical map to be updated by this service.
+     */
     public void update(App app, Scene scene, double elapsed, Map<String, Object> stats) {
         double time = elapsed * 0.025;
         collisionNb = 0;
@@ -169,8 +202,4 @@ public class PhysicEngine implements Service {
         world.setPlayArea(configuration.playArea);
     }
 
-    @Override
-    public void dispose() {
-
-    }
 }
