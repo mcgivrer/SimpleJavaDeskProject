@@ -4,10 +4,42 @@ As proposed in the introduction, the main processing of a game is a loop.
 
 The `App` class is the container of such loop.
 
+```plantuml
+@startuml "StandardGameLoop"
+!theme plain
+
+hide App attributes
+class App {
+  + run(String[] args):void
+  - initialize():void
+  - create():void
+  - loop():void 
+  - input():void
+  - update(elapsed:long,stats:Map):void
+  - render(stats:Map):void
+  - dispose():void
+}
+
+hide GameLoop attributes
+interface GameLoop{
+  +loop():void
+}
+
+hide StandardGameLoop attributes
+hide StandardGameLoop methods
+class StandardGameLoop implements GameLoop{
+}
+
+App -> GameLoop:gameLoop 
+@enduml
+```
+
+
+A proposal around the UML sequence diagram for Application class.
+
 <figure>
-<img src="http://www.plantuml.com/plantuml/png/VOynRiOm28Ltdu9koT0BPAZIew0OjKWO8nihLKzVbAc9VddnW3_UzzYxO_DH9BtvDnK24sHD9Hvu_u1FC-43dQjke7IcVuF7Doixe_0lBUiD2-wAs-0BGy0QIZtejQCDdJYEHkYKf5Q3eSu2zCEU06QrRFYo1eFYeDN1S7JACRYjFPiCow6w5adpLD42e1ReDF14zc22dHoOkLlj5DmUu2Zo1m00" alt=""figure 5 - The App Loop"/>
-<figCaption>The main application loop and its decorating functions</figCaption>
-</figure>
+<img src="//www.plantuml.com/plantuml/png/VOynRiOm28Ltdu9koT0BPAZIew0OjKWO8nihLKzVbAc9VddnW3_UzzYxO_DH9BtvDnK24sHD9Hvu_u1FC-43dQjke7IcVuF7Doixe_0lBUiD2-wAs-0BGy0QIZtejQCDdJYEHkYKf5Q3eSu2zCEU06QrRFYo1eFYeDN1S7JACRYjFPiCow6w5adpLD42e1ReDF14zc22dHoOkLlj5DmUu2Zo1m00"
+<figcaption></figcaption></figure>
 
 It will decorate this loop with some important functions:
 
