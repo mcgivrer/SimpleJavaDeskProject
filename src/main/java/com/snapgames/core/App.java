@@ -12,7 +12,6 @@ import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
 import com.snapgames.demo.test001.scenes.DemoScene;
 
-import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -180,7 +179,7 @@ public class App {
     /**
      * Retrieve the {@link App} version.
      *
-     * @return a String with the {@link App} verison.
+     * @return a String with the {@link App} version.
      */
     public String getVersion() {
         return version;
@@ -196,10 +195,6 @@ public class App {
 
     public void setExit(boolean e) {
         this.exit = e;
-    }
-
-    private boolean isExited() {
-        return this.exit;
     }
 
     public void setPause(boolean p) {
