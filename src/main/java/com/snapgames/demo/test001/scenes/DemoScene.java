@@ -8,11 +8,15 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.snapgames.core.App;
 import com.snapgames.core.entity.*;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
+import com.snapgames.core.io.action.ACTION;
+import com.snapgames.core.io.action.ACTION_DIRECTION;
+import com.snapgames.core.io.action.ActionHandler;
 import com.snapgames.core.physic.Material;
 import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.Vector2D;
@@ -23,6 +27,8 @@ import com.snapgames.core.utils.ResourceManager;
 import com.snapgames.demo.test001.behaviors.EnemyCollisionResponse;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 import com.snapgames.demo.test001.io.DemoInputListener;
+
+import javax.swing.*;
 
 public class DemoScene extends AbstractScene {
 
@@ -77,6 +83,38 @@ public class DemoScene extends AbstractScene {
                 .addAttribute("life", lives);
 
         addEntity(player);
+        double speed = player.getAttribute("speed", 0.5)*2.0;
+
+        ActionHandler ah = ServiceManager.get().find(ActionHandler.class);
+        ah.register(player, ACTION.DOWN, ACTION_DIRECTION.PRESSED, new Function() {
+            @Override
+            public Object apply(Object o) {
+                player.getForces().add(new Vector2D(0, speed));
+                return player;
+            }
+        });
+        ah.register(player, ACTION.UP, ACTION_DIRECTION.PRESSED, new Function() {
+            @Override
+            public Object apply(Object o) {
+                player.getForces().add(new Vector2D(0, -speed));
+                return player;
+            }
+        });
+        ah.register(player, ACTION.LEFT, ACTION_DIRECTION.PRESSED, new Function() {
+            @Override
+            public Object apply(Object o) {
+                player.getForces().add(new Vector2D(-speed, 0));
+                return player;
+            }
+        });
+        ah.register(player, ACTION.RIGHT, ACTION_DIRECTION.PRESSED, new Function() {
+            @Override
+            public Object apply(Object o) {
+                player.getForces().add(new Vector2D(speed, 0));
+                return player;
+            }
+        });
+
 
         addEnemies("enemy", 10, 10.0);
 

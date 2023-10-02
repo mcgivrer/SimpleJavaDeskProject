@@ -3,6 +3,7 @@ package com.snapgames.core;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.AppInputListener;
 import com.snapgames.core.io.InputHandler;
+import com.snapgames.core.io.action.ActionHandler;
 import com.snapgames.core.loop.GameLoop;
 import com.snapgames.core.loop.StandardGameLoop;
 import com.snapgames.core.physic.PhysicEngine;
@@ -50,6 +51,8 @@ public class App {
     private PhysicEngine physicEngine;
     // input manager (Keyboard & more to come)
     private InputHandler inputHandler;
+    // Action handler
+    private ActionHandler actionHandler;
     // manage play area as partitioned spaces to spread Entity through.
     private SpacePartition spacePartitioning;
 
@@ -88,8 +91,10 @@ public class App {
             gameLoop = new StandardGameLoop();
             sceneManager = new SceneManager(this);
             inputHandler = new InputHandler(this);
+            actionHandler = new ActionHandler(this);
             physicEngine = new PhysicEngine(this);
             spacePartitioning = new SpacePartition(this);
+
             renderer = new Renderer(this);
 
             ServiceManager.get()
@@ -97,7 +102,8 @@ public class App {
                     .add(renderer)
                     .add(physicEngine)
                     .add(inputHandler)
-                    .add(spacePartitioning);
+                    .add(spacePartitioning)
+                    .add(actionHandler);
 
             inputHandler.add(new AppInputListener(this));
 
@@ -151,6 +157,7 @@ public class App {
     }
 
     public void input() {
+        actionHandler.update(this, 0);
         sceneManager.getCurrent().input(this, inputHandler);
     }
 

@@ -26,34 +26,40 @@ public class Node {
         this.name = name;
     }
 
+    public static int getIndex() {
+        return index;
+    }
+
     public void addChild(Node child) {
         children.add((Node) child);
         child.setParent(this);
     }
 
+
     public void setParent(Node node) {
         this.parent = parent;
     }
 
-    public static int getIndex() {
-        return index;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
+
     public String getName() {
         return name;
     }
+
 
     public <T extends Node> Collection<T> getChild() {
         return (Collection<T>) children;
     }
 
+
     public <T extends Node> T getChildNode(String name) {
         return (T) getChild().stream().filter(e -> e.getName().equals(name)).findFirst().get();
     }
+
 
     public String treeToString() {
         StringBuilder sb = new StringBuilder();
@@ -63,6 +69,7 @@ public class Node {
         }
         return sb.toString();
     }
+
 
     public int getId() {
         return id;
