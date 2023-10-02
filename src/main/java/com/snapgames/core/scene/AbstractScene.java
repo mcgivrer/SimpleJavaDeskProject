@@ -49,8 +49,8 @@ public abstract class AbstractScene extends Node implements Scene {
         return getChild();
     }
 
-    public Entity getEntity(String name) {
-        return getChildNode(name);
+    public Entity<?> getEntity(String name) {
+        return (Entity<?>) getChildNode(name);
     }
 
 

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Entity<T> extends Node {
+public class Entity<T> extends Node<T> {
 
     private EntityType type = EntityType.RECTANGLE;
 
@@ -23,13 +23,12 @@ public class Entity<T> extends Node {
 
     private Vector2D vel = new Vector2D();
     private Vector2D acc = new Vector2D();
-    List<Vector2D> forces = new ArrayList<>();
+    private final List<Vector2D> forces = new ArrayList<>();
 
     public Color color;
     public Color fillColor;
     public BufferedImage image;
 
-    public int priority;
 
     public double life;
     public long duration = -1;
@@ -37,12 +36,12 @@ public class Entity<T> extends Node {
     public Material material;
     public double mass = 1.0;
 
-    private Shape bbox = new Rectangle2D.Double();
+    private Shape bBox = new Rectangle2D.Double();
     private boolean stickToCamera;
-    private Map<String, Object> attributes = new ConcurrentHashMap<>();
-    private List<Behavior> behaviors = new ArrayList<>();
+    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private final List<Behavior> behaviors = new ArrayList<>();
     private boolean contact;
-    private RendererPlugin renderedByPlugin;
+    private RendererPlugin<?> renderedByPlugin;
 
     /**
      * if {@link Entity#stickToParent} is true, the child objects position is relative to parent.
@@ -124,12 +123,8 @@ public class Entity<T> extends Node {
         return (T) this;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     public Shape getBBox() {
-        return bbox;
+        return bBox;
     }
 
     public void update(double elapsed) {
@@ -163,10 +158,6 @@ public class Entity<T> extends Node {
         return (T) this;
     }
 
-    public T setPriority(int p) {
-        this.priority = p;
-        return (T) this;
-    }
 
     public <Y> T addAttribute(String attrName, Y attrValue) {
         attributes.put(attrName, attrValue);
@@ -237,10 +228,10 @@ public class Entity<T> extends Node {
     public void updateBBox() {
         switch (type) {
             case LINE, RECTANGLE -> {
-                bbox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+                bBox = new Rectangle2D.Double(pos.x, pos.y, this.size.x, this.size.y);
             }
             case DOT, ELLIPSE -> {
-                bbox = new Ellipse2D.Double(pos.x, pos.y, this.size.x, this.size.y);
+                bBox = new Ellipse2D.Double(pos.x, pos.y, this.size.x, this.size.y);
 
             }
         }

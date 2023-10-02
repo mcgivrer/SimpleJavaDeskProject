@@ -1,20 +1,10 @@
 package com.snapgames.demo.test001.scenes;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Map;
-
 import com.snapgames.core.App;
 import com.snapgames.core.entity.*;
 import com.snapgames.core.gfx.Renderer;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.physic.Material;
-import com.snapgames.core.physic.PhysicEngine;
 import com.snapgames.core.physic.Vector2D;
 import com.snapgames.core.physic.World;
 import com.snapgames.core.scene.AbstractScene;
@@ -23,6 +13,13 @@ import com.snapgames.core.utils.ResourceManager;
 import com.snapgames.demo.test001.behaviors.EnemyCollisionResponse;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 import com.snapgames.demo.test001.io.DemoInputListener;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
 
 public class DemoScene extends AbstractScene {
 
