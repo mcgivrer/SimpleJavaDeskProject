@@ -36,7 +36,7 @@ public class Vector2D {
         return new Vector2D(x + v.x, y + v.y);
     }
 
-    public Vector2D substract(Vector2D v1) {
+    public Vector2D subtract(Vector2D v1) {
         return new Vector2D(x - v1.x, y - v1.y);
     }
 
@@ -54,7 +54,7 @@ public class Vector2D {
     }
 
     public double distance(Vector2D v1) {
-        return substract(v1).length();
+        return subtract(v1).length();
     }
 
     public Vector2D divide(double f) {
@@ -137,5 +137,9 @@ public class Vector2D {
         this.x = 0.0;
         this.y = 0.0;
         return this;
+    }
+
+    public boolean notEquals(double nx, double ny) {
+        return x != nx && y != ny;
     }
 }

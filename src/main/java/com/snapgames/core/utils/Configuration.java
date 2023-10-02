@@ -1,6 +1,5 @@
 package com.snapgames.core.utils;
 
-import com.snapgames.core.App;
 import com.snapgames.core.physic.Vector2D;
 
 import java.awt.*;
@@ -22,6 +21,9 @@ public class Configuration {
     public Dimension windowSize;
     public Rectangle2D bufferResolution;
     public Rectangle2D playArea;
+
+    public int maxEntitiesInSpace;
+    public int maxDepthLevelInSpace;
 
     public Vector2D gravity;
 
@@ -92,6 +94,15 @@ public class Configuration {
                         Double.parseDouble(dim[0]),
                         Double.parseDouble(dim[1]));
                 System.out.printf(">> <#> configuration gravity set to (%.2f,%2f)%n", gravity.x, gravity.y);
+            }
+            case "app.physic.space.max.entities" -> {
+                this.maxEntitiesInSpace = Integer.parseInt(value);
+                System.out.printf(">> <#> configuration maximum space partitioning entities per cell  set to %d%n", maxEntitiesInSpace);
+            }
+            case "app.physic.space.max.depth" -> {
+                this.maxDepthLevelInSpace = Integer.parseInt(value);
+                System.out.printf(">> <#> configuration maximum space partitioning cells depth set to %d%n", maxDepthLevelInSpace);
+
             }
             case "app.test.mode" -> {
                 this.testMode = Boolean.parseBoolean(value);

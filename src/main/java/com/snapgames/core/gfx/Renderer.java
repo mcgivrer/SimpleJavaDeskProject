@@ -4,7 +4,6 @@ import com.snapgames.core.App;
 import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
-import com.snapgames.core.entity.GameObject;
 import com.snapgames.core.gfx.plugins.GameObjectRendererPlugin;
 import com.snapgames.core.gfx.plugins.GaugeObjectRenderingPlugin;
 import com.snapgames.core.gfx.plugins.TextObjectRendererPlugin;
@@ -25,6 +24,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The {@link Renderer} service implementation provides the {@link Scene}
+ * draw capability to feed the game window with fancy graphics.
+ * <p>
+ * It provides a {@link Renderer#draw(App, Scene, Map)}
+ * method to draw the current active {@link Scene} from the parent {@link App}.
+ * It draws everything in a three frame screen buffer strategy (by default).
+ * It also instantiates the App window (as a JFrame) to draw rendered buffer in.
+ *
+ * @author Frédéric Delorme
+ * @since 1.0.0
+ */
 public class Renderer extends JPanel implements Service {
 
     private final App app;
@@ -36,8 +47,20 @@ public class Renderer extends JPanel implements Service {
     private Dimension windowSize;
     private Graphics2D gr;
 
-    private Map<Class<? extends Entity>, RendererPlugin<? extends Entity>> plugins = new HashMap<>();
+    private final Map<Class<? extends Entity<?>>, RendererPlugin<? extends Entity<?>>> plugins = new HashMap<>();
 
+    /**
+     * Create the {@link Renderer} services for the {@link App} instance.
+     * <p>
+     * It defines the basic rendering plugins for the 3 basic Entity implementations:
+     * <ul>
+     *     <li>{@link com.snapgames.core.entity.GameObject}: the {@link GameObjectRendererPlugin},</li>
+     *     <li>{@link com.snapgames.core.entity.TextObject}: the {@link TextObjectRendererPlugin},</li>
+     *     <li>and {@link com.snapgames.core.entity.GaugeObject}: the {@link GaugeObjectRenderingPlugin}.</li>
+     *     </ul>
+     *
+     * @param app the parent {@link App} instance.
+     */
     public Renderer(App app) {
         this.app = app;
         addPlugin(new GameObjectRendererPlugin());
@@ -45,12 +68,24 @@ public class Renderer extends JPanel implements Service {
         addPlugin(new GaugeObjectRenderingPlugin());
     }
 
-    public Renderer addPlugin(RendererPlugin<? extends Entity> plugin) {
+    /**
+     * add a new {@link RendererPlugin} implementation for a customized {@link Entity}.
+     *
+     * @param plugin the new {@link RendererPlugin} implementation.
+     * @return the updated Renderer (fluent API).
+     */
+    public Renderer addPlugin(RendererPlugin<? extends Entity<?>> plugin) {
         plugins.put(plugin.getEntityClass(), plugin);
         return this;
     }
 
 
+    /**
+     * Create the {@link App} window and attach the {@link InputHandler} service instance to.
+     *
+     * @param app          the parent {@link App} instance.
+     * @param inputHandler the {@link InputHandler} management service instance to be linked to Window.
+     */
     public void createWindow(App app, InputHandler inputHandler) {
 
         frame = new JFrame(String.format("%s(%s) - %s", app.name, app.version, App.messages.getString("app.title")));
@@ -69,6 +104,13 @@ public class Renderer extends JPanel implements Service {
                 BufferedImage.TYPE_INT_ARGB);
     }
 
+    /**
+     * Request to draw the {@link Scene} with all its active {@link Entity}.
+     *
+     * @param app   the parent {@link App} instance.
+     * @param scene the {@link Scene} instance to be drawn
+     * @param stats the data statistical map fed and maintained by the services.
+     */
     public void draw(App app, Scene scene, Map<String, Object> stats) {
 
         Graphics2D g = screenBuffer.createGraphics();
@@ -112,7 +154,7 @@ public class Renderer extends JPanel implements Service {
                 0, frame.getInsets().top, frame.getWidth(), frame.getHeight(),
                 0, 0, screenBuffer.getWidth(), screenBuffer.getHeight(),
                 null);
-        if (app.getDebug()) {
+        if (App.getDebug()) {
             g2.setColor(Color.ORANGE);
             g2.setFont(getFont().deriveFont(11.0f));
             g2.drawString(
@@ -167,7 +209,7 @@ public class Renderer extends JPanel implements Service {
         long rendererObj = scene.getEntities().stream()
                 .filter(Entity::isActive)
                 .filter(e -> !(e instanceof Camera))
-                .filter(e -> currentCamera.isInViewPort(e))
+                .filter(currentCamera::isInViewPort)
                 .count();
         stats.put("6_objRendered", rendererObj);
 
@@ -188,13 +230,13 @@ public class Renderer extends JPanel implements Service {
                 });
     }
 
-    private void drawEntity(Graphics2D g, Scene scene, Entity e) {
+    private void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         if (plugins.containsKey(e.getClass())) {
-            RendererPlugin plugin = plugins.get(e.getClass());
+            RendererPlugin<?> plugin = plugins.get(e.getClass());
             plugin.draw(this, g, scene, e);
             e.setRenderedBy(plugin);
         }
-        e.getBehaviors().stream().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
+        e.getBehaviors().forEach(b -> ((Behavior) b).draw(this, g, scene, e));
     }
 
     public void drawText(Graphics2D g, Font pauseFont, String pauseText, int x, int y, Color textColor,
@@ -230,7 +272,7 @@ public class Renderer extends JPanel implements Service {
                 Color.BLACK, 2);
     }
 
-    private void moveToCameraPointOfView(Graphics2D g, Entity cam, double i) {
+    public void moveToCameraPointOfView(Graphics2D g, Entity<?> cam, double i) {
         g.translate(cam.getPosition().x * i, cam.getPosition().y * i);
     }
 

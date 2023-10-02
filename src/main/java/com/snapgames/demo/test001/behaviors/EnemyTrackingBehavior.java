@@ -23,33 +23,23 @@ public class EnemyTrackingBehavior implements Behavior {
     }
 
     @Override
-    public void update(Scene scene, Entity e, double elapsed) {
-        Entity player = scene.getEntity("player");
+    public void update(Scene scene, Entity<?> e, double elapsed) {
+        Entity<?> player = scene.getEntity("player");
         Ellipse2D sensorArea = new Ellipse2D.Double(
                 e.getPosition().x + e.getSize().x * 0.5 - sensorDiameter * 0.5,
                 e.getPosition().y + e.getSize().y * 0.5 - sensorDiameter * 0.5,
                 sensorDiameter, sensorDiameter);
         if (player.getPosition().add(player.getSize().multiply(0.5)).distance(e.getPosition()) < sensorDiameter) {
-            e.addForce(player.getPosition().substract(e.getPosition()).multiply(force));
+            e.addForce(player.getPosition().subtract(e.getPosition()).multiply(force));
             sensor = true;
-            double nrj = (double) e.getAttribute("energy", 100.0);
-            nrj -= 1;
-            e.addAttribute("energy", nrj);
 
-            double energy = (double) player.getAttribute("energy", 0.0);
-            player.addAttribute("energy", energy - 0.1);
-
-            if (nrj <= 0) {
-                e.setActive(false);
-                player.addAttribute("score", (int) player.getAttribute("score", 0) + 10);
-            }
         } else {
             sensor = false;
         }
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Scene scene, Entity e) {
+    public void draw(Renderer r, Graphics2D g, Scene scene, Entity<?> e) {
         if (App.getDebug() && App.isDebugLevelAtLeast(2)) {
             Stroke back = g.getStroke();
             g.setStroke(dashed);

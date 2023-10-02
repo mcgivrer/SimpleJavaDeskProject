@@ -4,8 +4,12 @@ import com.snapgames.core.App;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.entity.Node;
+import com.snapgames.core.gfx.Renderer;
+import com.snapgames.core.physic.SpacePartition;
 import com.snapgames.core.physic.World;
+import com.snapgames.core.service.ServiceManager;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,7 @@ public abstract class AbstractScene extends Node implements Scene {
     private Camera currentCamera;
 
     private World world;
+
     protected AbstractScene(App app, String name) {
         super(name);
         this.app = app;
@@ -56,4 +61,15 @@ public abstract class AbstractScene extends Node implements Scene {
     public World getWorld() {
         return this.world;
     }
+
+    @Override
+    public void render(App app, Graphics2D g, Renderer r, Map<String, Object> stats) {
+        SpacePartition sp = ServiceManager.get().find(SpacePartition.class);
+        if (app.isDebugLevelMin(2)) {
+            r.moveToCameraPointOfView(g, getCamera(), -1);
+            sp.draw(r, g, this);
+            r.moveToCameraPointOfView(g, getCamera(), 1);
+        }
+    }
+
 }
