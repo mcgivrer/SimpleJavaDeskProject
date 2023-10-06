@@ -104,7 +104,10 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
 
 
     public void update(App a, long e) {
-        node = (Node) a.getSceneManager().getCurrent();
+        readControllersStates();
+    }
+
+    private void readControllersStates() {
         for (int i = 0; i < controllers.length; i++) {
             /* Remember to poll each one */
             controllers[i].poll();
@@ -117,6 +120,7 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                 /* Get event component */
                 Component comp = event.getComponent();
                 float value = event.getValue();
+                String nature = comp.getName();
                 String action = comp.getIdentifier().getName();
                 switch (action.strip().toLowerCase()) {
                     case "x" -> {
@@ -153,7 +157,8 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                             execute(ACTION.DOWN, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.DOWN.ordinal()] = true;
                         } else if (value == 1.0f) {
-                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);                            actionsEnabled[ACTION.LEFT.ordinal()] = true;
+                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);
+                            actionsEnabled[ACTION.LEFT.ordinal()] = true;
                         } else if (value == 0.50f) {
                             execute(ACTION.RIGHT, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.RIGHT.ordinal()] = true;
@@ -163,7 +168,7 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                         // nothing
                     }
                 }
-                System.out.printf("action:%s = %f%n", action, value);
+                System.out.printf("%s : action:%s = %f%n", nature, action, value);
             }
         }
     }

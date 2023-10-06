@@ -75,8 +75,8 @@ echo "> Encoding     : $SOURCE_ENCODING"
 echo "> Prepare environement (if .sdkmanrc file exists)"
 if [ -f .sdkmanrc ]; then
   echo " |_ file sdkmanrc detected"
-  sdk env install
-  sdk env use
+  . sdk env install
+  . sdk env use
 fi
 # prepare target
 echo "> Clear build workspace"
@@ -86,13 +86,13 @@ mkdir -p ${CLASSES}
 function manifest() {
   # build manifest
   echo "|_ 1. Create Manifest file '${TARGET}/MANIFEST.MF'"
-  echo "Manifest-Version: ${PROGRAM_NAME}" >${TARGET}/MANIFEST.MF
-  echo "Main-Class: ${MAIN_CLASS}" >>${TARGET}/MANIFEST.MF
-  echo "Created-By: ${JAVA_BUILD}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Title: ${PROGRAM_NAME}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Vendor: ${VENDOR_NAME}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Author: ${AUTHOR_NAME}" >>${TARGET}/MANIFEST.MF
+  echo """Manifest-Version: ${PROGRAM_NAME}
+Main-Class: ${MAIN_CLASS}
+Created-By: ${JAVA_BUILD}
+Implementation-Title: ${PROGRAM_NAME}
+Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}
+Implementation-Vendor: ${VENDOR_NAME}
+Implementation-Author: ${AUTHOR_NAME}""" >>${TARGET}/MANIFEST.MF
   echo "   |_ done"
 }
 #
@@ -138,14 +138,14 @@ function generatedoc() {
   mkdir -p $SRC/main/javadoc
   # Compile class files
   rm -Rf $TARGET/javadoc/*
-  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$TARGET/javadoc/overview.html
+  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$SRC/javadoc/overview.html
   javadoc $JAR_OPTS -source $SOURCE_VERSION \
     -author -use -version \
     -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
     -overview $TARGET/javadoc/overview.html \
     $JAVADOC_GROUPS \
-    -sourcepath $SRC/main/java \
+    -sourcepath $SRC/main/java:$SRC/main/javadoc \
     -subpackages $JAVADOC_CLASSPATH
   cd $TARGET/javadoc
   jar cvf ../$JAR_JAVADOC_NAME *
@@ -205,7 +205,7 @@ function executeJar() {
   compile
   createJar
   echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
-  java $JAR_OPTS -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
+  java $JAR_OPTS -cp ".;$ETERNAL_JAR" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
 }
 #
 function generateEpub() {
