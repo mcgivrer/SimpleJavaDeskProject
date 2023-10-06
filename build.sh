@@ -75,8 +75,9 @@ echo "> Encoding     : $SOURCE_ENCODING"
 echo "> Prepare environement (if .sdkmanrc file exists)"
 if [ -f .sdkmanrc ]; then
   echo " |_ file sdkmanrc detected"
-  . sdk env install
-  . sdk env use
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+  sdk env install
+  sdk env use
 fi
 # prepare target
 echo "> Clear build workspace"
