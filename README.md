@@ -1,5 +1,7 @@
 # README
 
+ [![GitHub Build Status](https://github.com/mcgivrer/SimpleJavaDeskProject/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Smcgivrer/SimpleJavaDeskProject/actions/workflows/build.yml)
+
 This is a Simple java Application for test purposes.
 
 ## Build
