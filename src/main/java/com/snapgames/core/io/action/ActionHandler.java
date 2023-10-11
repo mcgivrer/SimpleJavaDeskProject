@@ -21,6 +21,8 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
     private Map<ACTION, Function> actionsReleased = new HashMap<>();
     private Map<ACTION, List<Node>> actionOnNode = new HashMap<>();
 
+    private List<InputActionListener> actionListeners = new ArrayList<>();
+
     private boolean[] actionsEnabled = new boolean[3000];
 
     private Node node;
@@ -168,7 +170,9 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                         // nothing
                     }
                 }
-                System.out.printf("%s : action:%s = %f%n", nature, action, value);
+                if (app.isDebugLevelMin(8)) {
+                    System.out.printf(">> ActionHandler : %s : action:%s = %f%n", nature, action, value);
+                }
             }
         }
     }

@@ -64,7 +64,7 @@ export COMPILATION_OPTS="--enable-preview"
 #export COMPILATION_OPTS="--enable-preview -Xlint:preview"
 #export COMPILATION_OPTS="--enable-preview -Xlint:unchecked -Xlint:preview"
 # ---- to execute JAR one JDK preview, add the same attribute on JAR execution command line
-export JAR_OPTS=--enable-preview
+export JAR_OPTS="--enable-preview -Djava.library.path=$PWD/lib/dep"
 # ---- define the checkstyle rule set file
 export CHECK_RULES_FILE=$LIBS/tools/rules/${CHECK_RULES}_checks.xml
 #
@@ -93,7 +93,9 @@ Created-By: ${JAVA_BUILD}
 Implementation-Title: ${PROGRAM_NAME}
 Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}
 Implementation-Vendor: ${VENDOR_NAME}
-Implementation-Author: ${AUTHOR_NAME}""" >>${TARGET}/MANIFEST.MF
+Implementation-Author: ${AUTHOR_NAME}
+Class-Path: ${EXTERNAL_JARS}
+""" >>${TARGET}/MANIFEST.MF
   echo "   |_ done"
 }
 #
@@ -101,7 +103,7 @@ function compile() {
   echo "|_ 2. Compile sources from '$SRC/main' ..."
   echo "> from : ${SRC}"
   echo "> to   : ${CLASSES}"
-  echo "> with : ${EXTERNALJARS}"
+  echo "> with : ${EXTERNAL_JARS}"
   # prepare target
   mkdir -p $CLASSES
   # Compile class files
@@ -114,7 +116,6 @@ function compile() {
     -source $SOURCE_VERSION \
     -target $SOURCE_VERSION \
     -cp ".;${EXTERNAL_JARS};${CLASSES}" @$TARGET/sources.lst
-
 
   echo "   done."
 }
@@ -140,7 +141,7 @@ function generatedoc() {
   # Compile class files
   rm -Rf $TARGET/javadoc/*
   java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$SRC/javadoc/overview.html
-  javadoc $JAR_OPTS -source $SOURCE_VERSION \
+  javadoc -source $SOURCE_VERSION \
     -author -use -version \
     -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
@@ -176,7 +177,7 @@ function executeTests() {
   find $SRC/test -name '*.java' >$TARGET/test-sources.lst
   javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".;$LIB_TEST;${EXTERNAL_JARS}" -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
   echo "execute tests through JUnit"
-  java $JAR_OPTS -jar $LIB_TEST --cp "$CLASSES;$TESTCLASSES;." --scan-class-path
+  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS};${CLASSES};${TESTCLASSES};." --scan-class-path
   echo "done."
 }
 #
