@@ -16,10 +16,10 @@ import java.util.function.Function;
 
 public class ActionHandler implements Service, KeyListener, MouseListener {
     private final App app;
-    private Map<Integer, ACTION> keys = new HashMap<>();
-    private Map<ACTION, Function> actionsPressed = new HashMap<>();
-    private Map<ACTION, Function> actionsReleased = new HashMap<>();
-    private Map<ACTION, List<Node>> actionOnNode = new HashMap<>();
+    private final Map<Integer, ACTION> keys = new HashMap<>();
+    private final Map<ACTION, Function> actionsPressed = new HashMap<>();
+    private final Map<ACTION, Function> actionsReleased = new HashMap<>();
+    private final Map<ACTION, List<Node>> actionOnNode = new HashMap<>();
 
     private List<InputActionListener> actionListeners = new ArrayList<>();
 
@@ -65,8 +65,6 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
         // mapping Controller (id+2000)
         // TODO implement the controller management.
         controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
-
-
     }
 
     public ActionHandler register(Node n, ACTION a, ACTION_DIRECTION ad, Function f) {
@@ -110,20 +108,20 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
     }
 
     private void readControllersStates() {
-        for (int i = 0; i < controllers.length; i++) {
+        for (var i = 0; i < controllers.length; i++) {
             /* Remember to poll each one */
             controllers[i].poll();
 
             /* Get the controllers event queue */
-            EventQueue queue = controllers[i].getEventQueue();
-            Event event = new Event();
+            var queue = controllers[i].getEventQueue();
+            var event = new Event();
             /* For each object in the queue */
             while (queue.getNextEvent(event)) {
-                /* Get event component */
+                /* Get an event component */
                 Component comp = event.getComponent();
-                float value = event.getValue();
-                String nature = comp.getName();
-                String action = comp.getIdentifier().getName();
+                var value = event.getValue();
+                var nature = comp.getName();
+                var action = comp.getIdentifier().getName();
                 switch (action.strip().toLowerCase()) {
                     case "x" -> {
                         if (value > 0) {
@@ -185,7 +183,6 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
     @Override
     public void keyTyped(KeyEvent e) {
 
-
     }
 
     @Override
@@ -235,5 +232,17 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         this.cursorEndPosition = new Vector2D(e.getPoint().x, e.getPoint().y);
+    }
+
+    public Vector2D getCursorStartPosition() {
+        return cursorStartPosition;
+    }
+
+    public Vector2D getCursorEndPosition() {
+        return cursorEndPosition;
+    }
+
+    public Vector2D getCurrentCursorPosition() {
+        return cursorPosition;
     }
 }

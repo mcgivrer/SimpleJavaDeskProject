@@ -224,7 +224,7 @@ public class DemoScene extends AbstractScene {
                     .setPriority(i + 10)
                     .setMass(Math.random() * maxMass)
                     .setMaterial(enemyMat)
-                    .addBehavior(new EnemyTrackingBehavior(40.0, 0.15))
+                    //.addBehavior(new EnemyTrackingBehavior(40.0, 0.15))
                     .addBehavior(new EnemyCollisionResponse());
 
             addEntity(enemy);
