@@ -19,6 +19,7 @@ export JAVADOC_GROUPS=$(prop project.javadoc.packages)
 export VENDOR_NAME=$(prop project.author.name)
 export AUTHOR_NAME=$(prop project.author.email)
 export JAVA_VERSION=$(prop project.build.jdk.version)
+export EXTERNAL_JARS=$(prop project.build.jars)
 
 # A dirty list of package to be build (TODO add automation on package detection)
 #export JAVADOC_CLASSPATH="$PACKAGES_LIST"
@@ -63,36 +64,46 @@ export COMPILATION_OPTS="--enable-preview"
 #export COMPILATION_OPTS="--enable-preview -Xlint:preview"
 #export COMPILATION_OPTS="--enable-preview -Xlint:unchecked -Xlint:preview"
 # ---- to execute JAR one JDK preview, add the same attribute on JAR execution command line
-export JAR_OPTS=--enable-preview
+export JAR_OPTS="--enable-preview -Djava.library.path=$PWD/lib/dep"
 # ---- define the checkstyle rule set file
 export CHECK_RULES_FILE=$LIBS/tools/rules/${CHECK_RULES}_checks.xml
 #
+echo "> Java version : $JAVA_BUILD"
+echo "> Git   commit : $GIT_COMMIT_ID"
+echo "> Encoding     : $SOURCE_ENCODING"
+#
+echo "> Prepare environement (if .sdkmanrc file exists)"
+if [ -f .sdkmanrc ]; then
+  echo " |_ file sdkmanrc detected"
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+  sdk env install
+  sdk env use
+fi
 # prepare target
+echo "> Clear build workspace"
 rm -rf ${TARGET}
 mkdir -p ${CLASSES}
 #
-echo "Java Version"
-java -version
-#
 function manifest() {
   # build manifest
-  echo "Build of program '${PROGRAM_NAME}-${PROGRAM_VERSION}' ..."
-  echo "-----------"
   echo "|_ 1. Create Manifest file '${TARGET}/MANIFEST.MF'"
-  echo "Manifest-Version: ${PROGRAM_NAME}" >${TARGET}/MANIFEST.MF
-  echo "Main-Class: ${MAIN_CLASS}" >>${TARGET}/MANIFEST.MF
-  echo "Created-By: ${JAVA_BUILD}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Title: ${PROGRAM_NAME}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Vendor: ${VENDOR_NAME}" >>${TARGET}/MANIFEST.MF
-  echo "Implementation-Author: ${AUTHOR_NAME}" >>${TARGET}/MANIFEST.MF
+  echo """Manifest-Version: ${PROGRAM_NAME}
+Main-Class: ${MAIN_CLASS}
+Created-By: ${JAVA_BUILD}
+Implementation-Title: ${PROGRAM_NAME}
+Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}
+Implementation-Vendor: ${VENDOR_NAME}
+Implementation-Author: ${AUTHOR_NAME}
+Class-Path: ${EXTERNAL_JARS}
+""" >>${TARGET}/MANIFEST.MF
   echo "   |_ done"
 }
 #
 function compile() {
   echo "|_ 2. Compile sources from '$SRC/main' ..."
-  echo "> from : $SRC"
-  echo "> to   : $CLASSES"
+  echo "> from : ${SRC}"
+  echo "> to   : ${CLASSES}"
+  echo "> with : ${EXTERNAL_JARS}"
   # prepare target
   mkdir -p $CLASSES
   # Compile class files
@@ -104,14 +115,15 @@ function compile() {
     -g:source,lines,vars \
     -source $SOURCE_VERSION \
     -target $SOURCE_VERSION \
-    -classpath $CLASSES @$TARGET/sources.lst -cp $CLASSES
+    -cp ".;${EXTERNAL_JARS};${CLASSES}" @$TARGET/sources.lst
+
   echo "   done."
 }
 function checkCodeStyleQA() {
   echo "|_ 3. Check code quality against rules $CHECK_RULES"
   echo "> explore sources at : $SRC"
   find $SRC/main -name '*.java' >$TARGET/sources.lst
-  java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$CLASSES:." \
+  java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$EXTERNAL_JARS:$CLASSES:." \
     -jar $LIB_CHECKSTYLES \
     -c $CHECK_RULES_FILE \
     -f xml \
@@ -128,14 +140,14 @@ function generatedoc() {
   mkdir -p $SRC/main/javadoc
   # Compile class files
   rm -Rf $TARGET/javadoc/*
-  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$TARGET/javadoc/overview.html
-  javadoc $JAR_OPTS -source $SOURCE_VERSION \
+  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$SRC/javadoc/overview.html
+  javadoc -source $SOURCE_VERSION \
     -author -use -version \
     -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
     -overview $TARGET/javadoc/overview.html \
     $JAVADOC_GROUPS \
-    -sourcepath $SRC/main/java \
+    -sourcepath $SRC/main/java:$SRC/main/javadoc \
     -subpackages $JAVADOC_CLASSPATH
   cd $TARGET/javadoc
   jar cvf ../$JAR_JAVADOC_NAME *
@@ -163,9 +175,9 @@ function executeTests() {
   #list test sources
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   find $SRC/test -name '*.java' >$TARGET/test-sources.lst
-  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp $LIB_TEST -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
+  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".;$LIB_TEST;${EXTERNAL_JARS}" -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
   echo "execute tests through JUnit"
-  java $JAR_OPTS -jar $LIB_TEST --cp "$CLASSES;$TESTCLASSES;." --scan-class-path
+  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS};${CLASSES};${TESTCLASSES};." --scan-class-path
   echo "done."
 }
 #
@@ -195,7 +207,7 @@ function executeJar() {
   compile
   createJar
   echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
-  java $JAR_OPTS -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
+  java $JAR_OPTS -cp ".;$ETERNAL_JAR" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
 }
 #
 function generateEpub() {
