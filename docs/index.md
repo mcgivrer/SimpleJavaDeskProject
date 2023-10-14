@@ -9,3 +9,8 @@ using only (mainly) JDK.
 3. [A Camera like in a movie](chapter-03-a_camera_like_in_a_movie.md)
 4. [Adding some Material](chapter-04-adding_some_material.md)
 5. [Moving in a World](chapter-05-moving_in_a_world.md)
+6. [Adding Behavior](chapter-06-adding_behavior.md)
+7. [Adding a Node structure](chapter-07-adding_node_structure.md)
+8. [Collision and response](chapter-08-collision_and_response.md)
+9. [Action Mapping](chapter-09-action-mapping.md)
+
