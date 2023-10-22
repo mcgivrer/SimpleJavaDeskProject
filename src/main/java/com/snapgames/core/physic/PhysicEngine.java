@@ -16,10 +16,7 @@ import java.util.Optional;
 public class PhysicEngine implements Service {
     public World world;
 
-    private final App app;
-
     public PhysicEngine(App app) {
-        this.app = app;
         this.world = new World(new Vector2D(0.0, -0.981), new Rectangle2D.Double(0, 0, 600, 600));
     }
 
@@ -34,9 +31,11 @@ public class PhysicEngine implements Service {
         }
         scene.getEntities().stream()
                 .filter(Entity::isActive)
-                .sorted(Comparator.comparingInt(e -> ((Entity) e).getPriority()).reversed())
+                .filter(e->!e.getPhysicType().equals(PhysicType.NONE))
+                .sorted(Comparator.comparingInt(e -> ((Entity<?>) e).getPriority()).reversed())
                 .forEach(e -> {
-                    if (!(e instanceof Camera) && !e.isStickToCamera()) {
+                    if (!(e instanceof Camera)
+                            && !e.isStickToCamera()) {
                         applyWorldConstrains(e, time);
                         updateEntity(scene, e, time);
                         constrainsEntityToPlayArea(e);
@@ -53,9 +52,9 @@ public class PhysicEngine implements Service {
         }
     }
 
-    private void updateEntity(Scene scene, Entity entity, double elapsed) {
+    private void updateEntity(Scene scene, Entity<?> entity, double elapsed) {
         // apply gravity
-        entity.getBehaviors().stream().forEach(b -> ((Behavior) b).update(scene, entity, elapsed));
+        entity.getBehaviors().forEach(b -> ((Behavior) b).update(scene, entity, elapsed));
         applyWorldConstrains(entity, elapsed);
         // compute acceleration
         entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));
@@ -72,20 +71,24 @@ public class PhysicEngine implements Service {
                         .multiply(roughness)
                         .maximize(30.0)
                         .thresholdToZero(0.01));
-
-        // compute position
-        entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
-
+        if (checkCollision(scene, entity)) {
+            // compute position
+            entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
+            entity.updateBBox();
+        }
         entity.getForces().clear();
-        entity.updateBBox();
 
     }
 
-    private void applyWorldConstrains(Entity e, double elapsed) {
+    private boolean checkCollision(Scene scene, Entity<?> entity) {
+        return true;
+    }
+
+    private void applyWorldConstrains(Entity<?> e, double elapsed) {
         e.addForce(world.getGravity().negate());
     }
 
-    private void constrainsEntityToPlayArea(Entity e) {
+    private void constrainsEntityToPlayArea(Entity<?> e) {
         Rectangle2D playArea = world.getPlayArea();
         if (Optional.ofNullable(playArea).isPresent() && !playArea.getBounds2D().contains(e.getBBox().getBounds2D())) {
             if (e.getPosition().x < playArea.getMinX() || e.getPosition().x + (int) e.getSize().x > playArea.getMaxX()) {

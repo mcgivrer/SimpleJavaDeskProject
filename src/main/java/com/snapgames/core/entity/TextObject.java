@@ -1,6 +1,7 @@
 package com.snapgames.core.entity;
 
 import com.snapgames.core.physic.Material;
+import com.snapgames.core.physic.PhysicType;
 
 import java.awt.*;
 
@@ -20,6 +21,7 @@ public class TextObject extends Entity<TextObject> {
         setMass(1.0);
         setMaterial(Material.DEFAULT);
         setTextAlign(TextAlign.LEFT);
+        setPhysicType(PhysicType.NONE);
     }
 
     public void setTextAlign(TextAlign textAlign) {

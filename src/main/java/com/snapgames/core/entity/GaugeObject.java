@@ -1,5 +1,7 @@
 package com.snapgames.core.entity;
 
+import com.snapgames.core.physic.PhysicType;
+
 import java.awt.*;
 
 public class GaugeObject extends Entity<GaugeObject> {
@@ -32,6 +34,7 @@ public class GaugeObject extends Entity<GaugeObject> {
 
     public GaugeObject(String name) {
         super(name);
+        setPhysicType(PhysicType.NONE);
     }
 
     public void setShadowColor(Color shadowColor) {
