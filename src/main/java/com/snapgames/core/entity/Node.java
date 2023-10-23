@@ -1,11 +1,10 @@
 package com.snapgames.core.entity;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Node {
+public class Node<T> {
 
     private static int index = 0;
     int id = index++;
@@ -13,9 +12,10 @@ public class Node {
     public boolean active;
     private String name = "node_" + id;
 
-    private Node parent;
+    public int priority;
+    private Node<T> parent;
 
-    private List<Node> children = new CopyOnWriteArrayList<>();
+    private List<Node<T>> children = new CopyOnWriteArrayList<>();
 
     protected Node() {
         this.active = true;
@@ -30,13 +30,13 @@ public class Node {
         return index;
     }
 
-    public void addChild(Node child) {
-        children.add((Node) child);
+    public void addChild(Node<T> child) {
+        children.add((Node<T>) child);
         child.setParent(this);
     }
 
 
-    public void setParent(Node node) {
+    public void setParent(Node<T> node) {
         this.parent = parent;
     }
 
@@ -73,5 +73,16 @@ public class Node {
 
     public int getId() {
         return id;
+    }
+
+
+    public int getPriority() {
+        return priority;
+    }
+
+
+    public T setPriority(int p) {
+        this.priority = p;
+        return (T) this;
     }
 }

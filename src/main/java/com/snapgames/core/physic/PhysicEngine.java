@@ -1,11 +1,11 @@
 package com.snapgames.core.physic;
 
 import com.snapgames.core.App;
+import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.entity.Camera;
 import com.snapgames.core.entity.Entity;
 import com.snapgames.core.scene.Scene;
 import com.snapgames.core.service.Service;
-import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
 
 import java.awt.geom.Rectangle2D;
@@ -13,53 +13,15 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * The {@link PhysicEngine} service provides basic animation capabilities to all {@link Entity}'s in a {@link Scene}.
- * <p>
- * It contains a {@link World} contextual object defining some area and gravity.
- * The main entry point is the {@link PhysicEngine#update(App, Scene, double, Map)}, processing all the {@link Scene} entities.
- * It also maintains some stats about the processed entities.
- *
- * @author Frédéric Delorme
- * @since 1.0.0
- */
 public class PhysicEngine implements Service {
-    /**
-     * internal Contextual object.
-     */
     public World world;
 
-    /**
-     * internal collision counters
-     */
-    private int collisionNb;
-    /**
-     * internal collision detection counters
-     */
-    private int detectionNb;
-
-    /**
-     * Create the {@link PhysicEngine} service, attached to the parent {@link App} instance.
-     * Every active {@link Entity} in the current managed {@link App}'s {@link Scene} will be processed.
-     *
-     * @param app the parent App instance.
-     */
     public PhysicEngine(App app) {
         this.world = new World(new Vector2D(0.0, -0.981), new Rectangle2D.Double(0, 0, 600, 600));
     }
 
-    /**
-     * Request a global {@link Scene} update according to elapsed time since previous call.
-     *
-     * @param app     parent {@link App} instance
-     * @param scene   current active {@link Scene} to be updated
-     * @param elapsed the elapsed time since previous call.
-     * @param stats   statistical map to be updated by this service.
-     */
     public void update(App app, Scene scene, double elapsed, Map<String, Object> stats) {
         double time = elapsed * 0.025;
-        collisionNb = 0;
-        detectionNb = 0;
         if (Optional.ofNullable(scene.getWorld()).isPresent()) {
             this.world = scene.getWorld();
         }
@@ -69,76 +31,30 @@ public class PhysicEngine implements Service {
         }
         scene.getEntities().stream()
                 .filter(Entity::isActive)
+                .filter(e->!e.getPhysicType().equals(PhysicType.NONE))
                 .sorted(Comparator.comparingInt(e -> ((Entity<?>) e).getPriority()).reversed())
                 .forEach(e -> {
-                    if (!(e instanceof Camera) && !e.isStickToCamera()) {
+                    if (!(e instanceof Camera)
+                            && !e.isStickToCamera()) {
                         applyWorldConstrains(e, time);
                         updateEntity(scene, e, time);
-                        detectCollision(scene, e);
                         constrainsEntityToPlayArea(e);
                     }
                     e.update(elapsed);
                     if (app.isDebugLevelMin(9) && app.isDebugFiltered(e.getName())) {
-                        System.out.printf("|  -> entity: %s%n", e);
+                        System.out.printf("|  -> entity: %s%n", e.toString());
                     }
+
                 });
         scene.update(app, time, stats);
         if (app.isDebugLevelMin(9)) {
-            System.out.println("=> End Update ---");
-        }
-        stats.put("6_col", collisionNb);
-        stats.put("6_detect", detectionNb);
-    }
-
-    private void detectCollision(Scene scene, Entity<?> obj1) {
-        SpacePartition sp = ServiceManager.get().find(SpacePartition.class);
-        // TODO The next step is to partition space to reduce the number of collision comparisons. (Space Partitioning)
-
-        obj1.setContact(false);
-        for (Entity<?> obj2 : sp.find(obj1)) {
-            detectionNb++;
-            if (!obj1.isStickToCamera()
-                    && obj2.isActive()
-                    && !obj2.isStickToCamera()
-                    && obj1.getId() != obj2.getId()
-                    && obj1.getBBox().getBounds2D().intersects(obj2.getBBox().getBounds2D())) {
-                if (obj1.getPosition().notEquals(0.0, 0.0) && obj1.getPosition().notEquals(0.0, 0.0)) {
-                    Vector2D centerObj1 = new Vector2D(obj1.getBBox().getBounds2D().getCenterX(), obj1.getBBox().getBounds2D().getCenterY());
-                    Vector2D centerObj2 = new Vector2D(obj2.getBBox().getBounds2D().getCenterX(), obj2.getBBox().getBounds2D().getCenterY());
-
-                    Vector2D collisionNormal = centerObj1.subtract(centerObj2).normalize();
-
-                    obj1.setPosition(obj1.getPosition().add(collisionNormal.multiply(0.1)));
-                    obj2.setPosition(obj2.getPosition().subtract(collisionNormal.multiply(-0.1)));
-
-                    double elasticityObj1 = obj1.getMaterial() != null ? obj1.getMaterial().elasticity : 1.0;
-                    double elasticityObj2 = obj2.getMaterial() != null ? obj2.getMaterial().elasticity : 1.0;
-
-                    obj1.addForce(obj2.getVelocity().multiply(0.5 * obj1.mass * elasticityObj1));
-                    obj2.addForce(obj1.getVelocity().multiply(0.5 * obj2.mass * elasticityObj2));
-
-                    obj1.setContact(true);
-                    obj2.setContact(true);
-
-                    collisionNb++;
-
-                    // apply specific response 'CollisionResponseBehavior' if exists on concerned the Entity's
-                    obj1.getBehaviors().stream()
-                            .filter(b -> b instanceof CollisionResponseBehavior)
-                            .forEach(b -> ((CollisionResponseBehavior) b)
-                                    .response(obj1, obj2, collisionNormal));
-                    obj2.getBehaviors().stream()
-                            .filter(b -> b instanceof CollisionResponseBehavior)
-                            .forEach(b -> ((CollisionResponseBehavior) b)
-                                    .response(obj2, obj1, collisionNormal.negate()));
-                }
-            }
+            System.out.println("|_ End Update ---");
         }
     }
 
     private void updateEntity(Scene scene, Entity<?> entity, double elapsed) {
         // apply gravity
-        entity.getBehaviors().forEach(b -> b.update(scene, entity, elapsed));
+        entity.getBehaviors().forEach(b -> ((Behavior) b).update(scene, entity, elapsed));
         applyWorldConstrains(entity, elapsed);
         // compute acceleration
         entity.setAcceleration(entity.getAcceleration().addAll(entity.getForces()));
@@ -152,16 +68,20 @@ public class PhysicEngine implements Service {
                 entity.getVelocity().add(
                                 entity.getAcceleration()
                                         .multiply(elapsed * elapsed * 0.5))
+                        .multiply(roughness)
                         .maximize(30.0)
                         .thresholdToZero(0.01));
-        Vector2D friction = entity.getVelocity().multiply(-roughness);
-        entity.setVelocity(entity.getVelocity().add(friction));
-        // compute position
-        entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
-
+        if (checkCollision(scene, entity)) {
+            // compute position
+            entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
+            entity.updateBBox();
+        }
         entity.getForces().clear();
-        entity.updateBBox();
 
+    }
+
+    private boolean checkCollision(Scene scene, Entity<?> entity) {
+        return true;
     }
 
     private void applyWorldConstrains(Entity<?> e, double elapsed) {
@@ -202,4 +122,8 @@ public class PhysicEngine implements Service {
         world.setPlayArea(configuration.playArea);
     }
 
+    @Override
+    public void dispose() {
+
+    }
 }

@@ -28,8 +28,6 @@ import com.snapgames.demo.test001.behaviors.EnemyCollisionResponse;
 import com.snapgames.demo.test001.behaviors.EnemyTrackingBehavior;
 import com.snapgames.demo.test001.io.DemoInputListener;
 
-import javax.swing.*;
-
 public class DemoScene extends AbstractScene {
 
     int score = 0;
@@ -224,7 +222,7 @@ public class DemoScene extends AbstractScene {
                     .setPriority(i + 10)
                     .setMass(Math.random() * maxMass)
                     .setMaterial(enemyMat)
-                    //.addBehavior(new EnemyTrackingBehavior(40.0, 0.15))
+                    .addBehavior(new EnemyTrackingBehavior(40.0, 0.15))
                     .addBehavior(new EnemyCollisionResponse());
 
             addEntity(enemy);

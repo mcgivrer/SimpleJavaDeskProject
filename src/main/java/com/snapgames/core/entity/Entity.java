@@ -3,6 +3,7 @@ package com.snapgames.core.entity;
 import com.snapgames.core.behavior.Behavior;
 import com.snapgames.core.gfx.RendererPlugin;
 import com.snapgames.core.physic.Material;
+import com.snapgames.core.physic.PhysicType;
 import com.snapgames.core.physic.Vector2D;
 
 import java.awt.*;
@@ -24,8 +25,8 @@ public class Entity<T> extends Node {
     private Vector2D vel = new Vector2D();
     private Vector2D acc = new Vector2D();
     List<Vector2D> forces = new ArrayList<>();
-
-    public Color color;
+    private PhysicType physicType = PhysicType.DYNAMIC;
+    public Color color; 
     public Color fillColor;
     public BufferedImage image;
 
@@ -39,10 +40,10 @@ public class Entity<T> extends Node {
 
     private Shape bbox = new Rectangle2D.Double();
     private boolean stickToCamera;
-    private Map<String, Object> attributes = new ConcurrentHashMap<>();
-    private List<Behavior> behaviors = new ArrayList<>();
+    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private final List<Behavior> behaviors = new ArrayList<>();
     private boolean contact;
-    private RendererPlugin renderedByPlugin;
+    private RendererPlugin<?> renderedByPlugin;
 
     /**
      * if {@link Entity#stickToParent} is true, the child objects position is relative to parent.
@@ -282,6 +283,16 @@ public class Entity<T> extends Node {
 
     public boolean isStickToParent() {
         return this.stickToParent;
+    }
+
+
+    public PhysicType getPhysicType() {
+        return physicType;
+    }
+
+    public T setPhysicType(PhysicType physicType) {
+        this.physicType = physicType;
+        return (T) this;
     }
 
     public T setInheritGraphicsFromParent(boolean inheritFromParent) {
