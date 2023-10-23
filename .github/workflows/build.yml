@@ -13,7 +13,7 @@ jobs:
           java-version: "20"
       - name: Build project with custom script and Xvfb
         run: |
-          apt-get install xvfb
+          sudo apt install xvfb
           export DISPLAY=":99.0"
           export AUDIODEV=null
           xvfb-run :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
