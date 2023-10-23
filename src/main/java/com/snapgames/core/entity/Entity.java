@@ -26,7 +26,7 @@ public class Entity<T> extends Node {
     private Vector2D acc = new Vector2D();
     List<Vector2D> forces = new ArrayList<>();
     private PhysicType physicType = PhysicType.DYNAMIC;
-    public Color color;
+    public Color color; 
     public Color fillColor;
     public BufferedImage image;
 
