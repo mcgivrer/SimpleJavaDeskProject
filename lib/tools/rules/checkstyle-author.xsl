@@ -18,62 +18,62 @@
     This stylesheet is based on checkstyle-noframes.xsl.
     -->
 
-    <xsl:key name="keyAuthorID" match="//file/error[contains(@message,'@author')]" use="@message" />
-    <xsl:key name="keySeverityID" match="//file/error" use="@severity" />
+    <xsl:key name="keyAuthorID" match="//file/error[contains(@message,'@author')]" use="@message"/>
+    <xsl:key name="keySeverityID" match="//file/error" use="@severity"/>
     <xsl:template match="checkstyle">
         <html>
             <head>
                 <style type="text/css">
-    .bannercell {
-      border: 0px;
-      padding: 0px;
-    }
-    body {
-      margin-left: 10;
-      margin-right: 10;
-      font:normal 68% verdana,arial,helvetica;
-      background-color:#FFFFFF;
-      color:#000000;
-    }
-    .a td {
-      background: #efefef;
-    }
-    .b td {
-      background: #fff;
-    }
-    th, td {
-      text-align: left;
-      vertical-align: top;
-    }
-    th {
-      font-weight:bold;
-      background: #ccc;
-      color: black;
-    }
-    table, th, td {
-      font-size:100%;
-      border: none
-    }
-    table.log tr td, tr th {
+                    .bannercell {
+                    border: 0px;
+                    padding: 0px;
+                    }
+                    body {
+                    margin-left: 10;
+                    margin-right: 10;
+                    font:normal 68% verdana,arial,helvetica;
+                    background-color:#FFFFFF;
+                    color:#000000;
+                    }
+                    .a td {
+                    background: #efefef;
+                    }
+                    .b td {
+                    background: #fff;
+                    }
+                    th, td {
+                    text-align: left;
+                    vertical-align: top;
+                    }
+                    th {
+                    font-weight:bold;
+                    background: #ccc;
+                    color: black;
+                    }
+                    table, th, td {
+                    font-size:100%;
+                    border: none
+                    }
+                    table.log tr td, tr th {
 
-    }
-    h2 {
-      font-weight:bold;
-      font-size:140%;
-      margin-bottom: 5;
-    }
-    h3 {
-      font-size:100%;
-      font-weight:bold;
-      background: #525D76;
-      color: white;
-      text-decoration: none;
-      padding: 5px;
-      margin-right: 2px;
-      margin-left: 2px;
-      margin-bottom: 0;
-    }
-        </style>
+                    }
+                    h2 {
+                    font-weight:bold;
+                    font-size:140%;
+                    margin-bottom: 5;
+                    }
+                    h3 {
+                    font-size:100%;
+                    font-weight:bold;
+                    background: #525D76;
+                    color: white;
+                    text-decoration: none;
+                    padding: 5px;
+                    margin-right: 2px;
+                    margin-left: 2px;
+                    margin-bottom: 0;
+                    }
+                </style>
             </head>
             <body>
                 <a name="#top"/>
@@ -90,7 +90,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-align:right">Designed for use with <a href="https://checkstyle.org/">CheckStyle</a> and <a href="http://jakarta.apache.org">Ant</a>.</td>
+                        <td class="text-align:right">Designed for use with <a href="https://checkstyle.org/">
+                            CheckStyle
+                        </a> and <a href="http://jakarta.apache.org">Ant</a>.
+                        </td>
                     </tr>
                 </table>
                 <hr size="1"/>
@@ -149,41 +152,54 @@
                 <th>Warnings</th>
             </tr>
 
-        <!-- Process each Author -->
-        <xsl:for-each select="file/error[generate-id(.) = generate-id(key('keyAuthorID', @message)[1])]">
-            <xsl:sort select="@message" />
+            <!-- Process each Author -->
+            <xsl:for-each select="file/error[generate-id(.) = generate-id(key('keyAuthorID', @message)[1])]">
+                <xsl:sort select="@message"/>
 
                 <xsl:variable name="authorFull" select="@message"/>
                 <xsl:variable name="author" select="substring-after($authorFull,'@author=')"/>
                 <xsl:variable name="errors" select="count(key('keyAuthorID', @message)/../error[@severity='error'])"/>
-                <xsl:variable name="warnings" select="count(key('keyAuthorID', @message)/../error[@severity='warning'])"/>
-                <xsl:if test = "not ($author='' or ($errors + $warnings = 0))">
+                <xsl:variable name="warnings"
+                              select="count(key('keyAuthorID', @message)/../error[@severity='warning'])"/>
+                <xsl:if test="not ($author='' or ($errors + $warnings = 0))">
                     <tr>
-                    <xsl:call-template name="alternated-row"/>
-                    <td>
-                        <a href="#{$author}">
-                            <xsl:value-of select="$author"/>
-                        </a>
-                    </td>
-                        <td><xsl:value-of select="$errors"/></td>
-                        <td><xsl:value-of select="$warnings"/></td>
+                        <xsl:call-template name="alternated-row"/>
+                        <td>
+                            <a href="#{$author}">
+                                <xsl:value-of select="$author"/>
+                            </a>
+                        </td>
+                        <td>
+                            <xsl:value-of select="$errors"/>
+                        </td>
+                        <td>
+                            <xsl:value-of select="$warnings"/>
+                        </td>
                     </tr>
                 </xsl:if>
-        </xsl:for-each>
+            </xsl:for-each>
 
-    </table>
+        </table>
     </xsl:template>
 
     <xsl:template match="file">
         <xsl:variable name="errorCount" select="count(error[@severity='error']) + count(error[@severity='warning'])"/>
         <xsl:if test="not ($errorCount=0)">
 
-            <xsl:variable name="author" select="substring-after(./error[contains(@message,'@author')]/@message,'@author=')"/>
+            <xsl:variable name="author"
+                          select="substring-after(./error[contains(@message,'@author')]/@message,'@author=')"/>
 
             <a name="#{$author}"/>
-            <h3>File <xsl:value-of select="@name"/>
+            <h3>File
+                <a>
+                    <xsl:attribute name="href">
+                        <xsl:text>files/</xsl:text><xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
+                    </xsl:attribute>
+                    <xsl:value-of select="@name"/>
+                </a>
                 <br/>
-            Author <xsl:value-of select="$author"/>
+                Author
+                <xsl:value-of select="$author"/>
             </h3>
             <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                 <tr>
@@ -191,7 +207,7 @@
                     <th>Line</th>
                 </tr>
                 <xsl:for-each select="error[not(@severity='info')]">
-                <xsl:sort select="@line" data-type="number"/>
+                    <xsl:sort select="@line" data-type="number"/>
                     <tr>
                         <xsl:call-template name="alternated-row"/>
                         <td>
@@ -208,23 +224,26 @@
     </xsl:template>
 
 
-<xsl:template name="basename">
-  <xsl:param name="path"/>
-  <xsl:choose>
-     <xsl:when test="contains($path, '\')">
-        <xsl:call-template name="basename">
-           <xsl:with-param name="path">substring-after($path, '\')</xsl:with-param>
-        </xsl:call-template>
-     </xsl:when>
-     <xsl:otherwise>
-        <xsl:value-of select="$path"/>
-     </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
+    <xsl:template name="basename">
+        <xsl:param name="path"/>
+        <xsl:choose>
+            <xsl:when test="contains($path, '\')">
+                <xsl:call-template name="basename">
+                    <xsl:with-param name="path">substring-after($path, '\')</xsl:with-param>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$path"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
 
     <xsl:template name="alternated-row">
-        <xsl:attribute name="class"><xsl:if test="position() mod 2 = 1">a</xsl:if><xsl:if test="position() mod 2 = 0">b</xsl:if></xsl:attribute>
+        <xsl:attribute name="class">
+            <xsl:if test="position() mod 2 = 1">a</xsl:if>
+            <xsl:if test="position() mod 2 = 0">b</xsl:if>
+        </xsl:attribute>
     </xsl:template>
 
 </xsl:stylesheet>
