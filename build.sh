@@ -61,9 +61,15 @@ export SOURCE_VERSION=${JAVA_VERSION}
 export SOURCE_ENCODING=UTF-8
 
 # ---- CheckStyle Rules
+#
 # Uncomment the one to be used
 export CHECK_RULES=sun
 #export CHECK_RULES=google
+#
+# Uncomment the required HTML report template from the following ones
+export CHECKSTYLE_REPORT_XSL=checkstyle-author.xsl
+#export CHECKSTYLE_REPORT_XSL=checkstyle-simple.xsl
+#export CHECKSTYLE_REPORT_XSL=checkstyle-noframes-sorted.xsl
 
 # ---- JDK and sources versions (mainly for manifest generator)
 export JAVA_BUILD=$(java --version | head -1 | cut -f2 -d' ')
@@ -83,9 +89,9 @@ export LIB_CHECKSTYLES=$LIBS/tools/checkstyle-10.12.3-all.jar
 export TARGET=target
 export BUILD=$TARGET/build
 export CLASSES=$TARGET/classes
-export TESTCLASSES=$TARGET/test-classes
+export TEST_CLASSES=$TARGET/test-classes
 export RESOURCES=$SRC/main/resources
-export TESTRESOURCES=$SRC/test/resources
+export TEST_RESOURCES=$SRC/test/resources
 export JAR_NAME=$PROGRAM_NAME-$PROGRAM_VERSION.jar
 export JAR_JAVADOC_NAME=$PROGRAM_NAME-$PROGRAM_VERSION-javadoc.jar
 # ---- to enforce preview compatibility use the --enable-preview mode,
@@ -154,6 +160,7 @@ function compile() {
 function checkCodeStyleQA() {
   echo "|_ 3. Check code quality against rules $CHECK_RULES"
   echo "> explore sources at : $SRC"
+  mkdir -p $TARGET
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   java $JAR_OPTS -cp "$LIB_CHECKSTYLES${FS}$EXTERNAL_JARS${FS}$CLASSES:." \
     -jar $LIB_CHECKSTYLES \
@@ -161,6 +168,7 @@ function checkCodeStyleQA() {
     -f xml \
     -o $TARGET/checkstyle_errors.xml \
     @$TARGET/sources.lst
+  xsltproc -o $TARGET/checkstyle_report.html $LIBS/tools/rules/$CHECKSTYLE_REPORT_XSL $TARGET/checkstyle_errors.xml
   echo "   done."
   echo "- Check all code with  $CHECK_RULES" >>target/build.log
 }
@@ -205,15 +213,15 @@ function executeTests() {
   echo "> to   : $TARGET/test-classes"
   mkdir -p $TARGET/test-classes
   echo "copy test resources"
-  cp -r ./$RESOURCES/* $TESTCLASSES
-  cp -r ./$TESTRESOURCES/* $TESTCLASSES
+  cp -r ./$RESOURCES/* $TEST_CLASSES
+  cp -r ./$TEST_RESOURCES/* $TEST_CLASSES
   echo "compile test classes"
   #list test sources
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   find $SRC/test -name '*.java' >$TARGET/test-sources.lst
-  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".${FS}$LIB_TEST${FS}${EXTERNAL_JARS}" -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
+  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".${FS}$LIB_TEST${FS}${EXTERNAL_JARS}" -d $TEST_CLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
   echo "execute tests through JUnit"
-  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS}${FS}${CLASSES}${FS}${TESTCLASSES}${FS}." --scan-class-path
+  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS}${FS}${CLASSES}${FS}${TEST_CLASSES}${FS}." --scan-class-path
   echo "done."
   echo "- execute tests through JUnit $SRC/test." >>target/build.log
 }
@@ -226,7 +234,6 @@ function createJar() {
     # Build JAR
     jar -cfmv $TARGET/$JAR_NAME $TARGET/MANIFEST.MF -C $CLASSES . -C $RESOURCES .
   fi
-
   echo "   |_ done."
   echo "- create JAR file '$TARGET/$JAR_NAME'." >>target/build.log
 }
@@ -240,7 +247,6 @@ function wrapJar() {
   cp -r $LIBS/dep $BUILD/lib
   echo "   |_ done."
   echo "- wrap jar to a stub script '$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run'." >>target/build.log
-
 }
 #
 function executeJar() {
@@ -250,6 +256,7 @@ function executeJar() {
   echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
   echo "$JAR_OPTS -cp \".${FS}${EXTERNAL_JARS}\" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar \"$@\""
   java $JAR_OPTS -cp ".${FS}$EXTERNAL_JARS" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
+  echo "- execute jar '$TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar'." >>target/build.log
 }
 #
 function generateEpub() {
@@ -262,6 +269,7 @@ function generateEpub() {
   mv $TARGET/book/book.mdo $TARGET/book/book.md
   pandoc $TARGET/book/book.md --resource-path=./docs -t epub3 -o $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub
   echo "|_ 6. generate ebook to $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub"
+  echo "- generate an EPUB file '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub'." >>target/build.log
 }
 # TODO https://www.toptal.com/docker/pandoc-docker-publication-chain
 function generatePDF() {
@@ -274,6 +282,7 @@ function generatePDF() {
   # see https://stackoverflow.com/questions/29240290/pandoc-for-windows-pdflatex-not-found
   pandoc $TARGET/book/book.md --resource-path=./docs --pdf-engine=xelatex -o $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf
   echo "|_ 6. generate pdf book to $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf"
+  echo "- generate a PDF file '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf'." >>target/build.log
 }
 #
 function sign() {
@@ -283,6 +292,7 @@ function sign() {
 #
 function createZIP() {
   zip $PROGRAM_NAME-$PROGRAM_VERSION.zip -r $BUILD
+  echo "- generate ZIP file '$PROGRAM_NAME-$PROGRAM_VERSION.zip' from '$BUILD' path." >>target/build.log
 }
 #
 function help() {
