@@ -85,14 +85,14 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
             List<Node> nodes = actionOnNode.get(a);
             switch (ad) {
                 case PRESSED -> {
-                    if (!actionsPressed.isEmpty() && Optional.ofNullable(node).isPresent()) {
+                    if (!actionsPressed.isEmpty() && Optional.ofNullable(nodes).isPresent()) {
                         for (Node node : nodes) {
                             actionsPressed.get(a).apply(node);
                         }
                     }
                 }
                 case RELEASED -> {
-                    if (!actionsReleased.isEmpty() && Optional.ofNullable(node).isPresent()) {
+                    if (!actionsReleased.isEmpty() && Optional.ofNullable(nodes).isPresent()) {
                         for (Node node : nodes) {
                             actionsReleased.get(a).apply(node);
                         }
@@ -128,8 +128,8 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                             actionsEnabled[ACTION.UP.ordinal()] = true;
                             execute(ACTION.UP, ACTION_DIRECTION.PRESSED);
                         } else if (value < 0) {
-                            execute(ACTION.DOWN, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.DOWN.ordinal()] = true;
+                            execute(ACTION.DOWN, ACTION_DIRECTION.PRESSED);
                         } else {
                             actionsEnabled[ACTION.UP.ordinal()] = false;
                             actionsEnabled[ACTION.DOWN.ordinal()] = false;
@@ -137,11 +137,11 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                     }
                     case "y" -> {
                         if (value > 0) {
-                            execute(ACTION.RIGHT, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.RIGHT.ordinal()] = true;
+                            execute(ACTION.RIGHT, ACTION_DIRECTION.PRESSED);
                         } else if (value < 0) {
-                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.LEFT.ordinal()] = true;
+                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);
                         } else {
                             actionsEnabled[ACTION.LEFT.ordinal()] = false;
                             actionsEnabled[ACTION.RIGHT.ordinal()] = false;
@@ -151,17 +151,17 @@ public class ActionHandler implements Service, KeyListener, MouseListener {
                         actionsEnabled[ACTION.LEFT.ordinal()] = false;
                         actionsEnabled[ACTION.RIGHT.ordinal()] = false;
                         if (value == 0.25f) {
-                            execute(ACTION.UP, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.UP.ordinal()] = true;
+                            execute(ACTION.UP, ACTION_DIRECTION.PRESSED);
                         } else if (value == 0.75f) {
-                            execute(ACTION.DOWN, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.DOWN.ordinal()] = true;
+                            execute(ACTION.DOWN, ACTION_DIRECTION.PRESSED);
                         } else if (value == 1.0f) {
-                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.LEFT.ordinal()] = true;
+                            execute(ACTION.LEFT, ACTION_DIRECTION.PRESSED);
                         } else if (value == 0.50f) {
-                            execute(ACTION.RIGHT, ACTION_DIRECTION.PRESSED);
                             actionsEnabled[ACTION.RIGHT.ordinal()] = true;
+                            execute(ACTION.RIGHT, ACTION_DIRECTION.PRESSED);
                         }
                     }
                     default -> {
