@@ -15,6 +15,7 @@ import com.snapgames.demo.test001.scenes.DemoScene;
 
 import java.awt.event.KeyEvent;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -147,28 +148,34 @@ public class App {
         createScene();
         sceneManager.activate();
 
-        System.out.printf(sceneManager.getCurrent().treeToString());
-        gameLoop.loop(this);
+        if (Optional.ofNullable(sceneManager.getCurrent()).isPresent()) {
+            System.out.printf(sceneManager.getCurrent().treeToString());
+            gameLoop.loop(this);
+        }
     }
 
-    private void createScene() {
-        DemoScene scene = new DemoScene(this);
-        sceneManager.add(scene);
+    public void createScene() {
+        System.out.printf("No scene defined.");
     }
 
     public void input() {
-        actionHandler.update(this, 0);
-        sceneManager.getCurrent().input(this, inputHandler);
+        if (Optional.ofNullable(sceneManager.getCurrent()).isPresent()) {
+            actionHandler.update(this, 0);
+            sceneManager.getCurrent().input(this, inputHandler);
+        }
     }
 
     public void update(long elapsed, Map<String, Object> stats) {
-        physicEngine.update(this, sceneManager.getCurrent(), elapsed, stats);
-        spacePartitioning.update(this, sceneManager.getCurrent(), elapsed, stats);
-
+        if (Optional.ofNullable(sceneManager.getCurrent()).isPresent()) {
+            physicEngine.update(this, sceneManager.getCurrent(), elapsed, stats);
+            spacePartitioning.update(this, sceneManager.getCurrent(), elapsed, stats);
+        }
     }
 
     public void render(Map<String, Object> stats) {
-        renderer.draw(this, sceneManager.getCurrent(), stats);
+        if (Optional.ofNullable(sceneManager.getCurrent()).isPresent()) {
+            renderer.draw(this, sceneManager.getCurrent(), stats);
+        }
     }
 
     private void dispose() {

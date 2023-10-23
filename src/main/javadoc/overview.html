@@ -1,0 +1,50 @@
+<h1>README</h1>
+<p>This is a Simple java Application for test purposes.</p>
+<h2>Build</h2>
+<pre><code class="language-bash">sdk env install
+sdk env use
+build.sh a
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+See <a href="build.readme.md">README build script</a> for more details.</p>
+</blockquote>
+<h2>Execute</h2>
+<p>Retrieve in the properties file the project name and project version to adapt the command line bellow:</p>
+<pre><code class="language-properties">project.name=sjdp
+project.title=SJDP
+project.version=0.0.1
+...
+</code></pre>
+<p>Execute the simple command line:</p>
+<pre><code class="language-bash">java -jar target/[project.name]-[project.version].jar
+</code></pre>
+<p>Or if you are under a Linux machine of a git bash session on Windows:</p>
+<pre><code class="language-bash">. target/build/[project.name]-[project.version].run
+</code></pre>
+<p>You will get something like this window :</p>
+<figure>
+  <img src="docs/images/capture-test-003-scoring.png" alt="Executing the App class"/>
+  <figcaption>figure 1 - Executing the App class</figcaption>
+</figure>
+<h2>Contribute</h2>
+<p>Open this project</p>
+<ul>
+<li></li>
+</ul>
+<p>with <a href="https://code.visualstudio.com/download" title="Download the Visual Studio Code for your preferred OS platform">Visual Studio Code</a>
+as a java project</p>
+<figure>
+  <img src="docs/images/capture-editing-with-vscode.png" alt="Editing your project with Visual Studio Code"/>
+  <figcaption>figure 2 - Editing your project with Visual Studio Code</figcaption>
+</figure>
+<ul>
+<li>or with the
+JetBrain <a href="https://www.jetbrains.com/idea/download/" title="Download IntelliJ for your own preferred OS Platform">IntelliJ IDEA</a>.</li>
+</ul>
+<figure>
+  <img src="docs/images/capture-editing-with-intellij.png" alt="Editing your project with Jetbrains IntelliJ IDEA"/>
+  <figcaption>figure 3 - Editing your project with Jetbrains IntelliJ IDEA</figcaption>
+</figure>
+<p>McG.</p>
+

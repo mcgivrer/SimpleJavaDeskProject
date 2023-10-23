@@ -83,7 +83,7 @@ public class DemoScene extends AbstractScene {
                 .addAttribute("life", lives);
 
         addEntity(player);
-        double speed = player.getAttribute("speed", 0.5)*2.0;
+        double speed = player.getAttribute("speed", 0.5) * 2.0;
 
         ActionHandler ah = ServiceManager.get().find(ActionHandler.class);
         ah.register(player, ACTION.DOWN, ACTION_DIRECTION.PRESSED, new Function() {
@@ -312,7 +312,7 @@ public class DemoScene extends AbstractScene {
 
     @Override
     public String getName() {
-        return null;
+        return "Demonstration scene";
     }
 
     @Override

@@ -63,9 +63,9 @@ public class Node {
 
     public String treeToString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getName() + "\n");
+        sb.append("name: " + this.getName() + " { " + this.getClass().getSimpleName() + " }\n");
         for (Node n : getChild()) {
-            sb.append("\t|_" + n.treeToString() + "\n");
+            sb.append("\t|_" + n.treeToString());
         }
         return sb.toString();
     }

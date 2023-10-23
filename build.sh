@@ -68,6 +68,12 @@ export CHECK_RULES=sun
 # ---- JDK and sources versions (mainly for manifest generator)
 export JAVA_BUILD=$(java --version | head -1 | cut -f2 -d' ')
 export GIT_COMMIT_ID=$(git rev-parse HEAD)
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  FS=":"
+else
+  FS=";"
+fi
 #
 # Paths
 export SRC=src
@@ -140,7 +146,7 @@ function compile() {
     -g:source,lines,vars \
     -source $SOURCE_VERSION \
     -target $SOURCE_VERSION \
-    -cp ".;${EXTERNAL_JARS};${CLASSES}" @$TARGET/sources.lst
+    -cp ".${FS}${EXTERNAL_JARS}${FS}${CLASSES}" @$TARGET/sources.lst
 
   echo "   done."
   echo "- Compile project from ${SRC} to ${CLASSES} with ${EXTERNAL_JARS}" >>target/build.log
@@ -149,7 +155,7 @@ function checkCodeStyleQA() {
   echo "|_ 3. Check code quality against rules $CHECK_RULES"
   echo "> explore sources at : $SRC"
   find $SRC/main -name '*.java' >$TARGET/sources.lst
-  java $JAR_OPTS -cp "$LIB_CHECKSTYLES:$EXTERNAL_JARS:$CLASSES:." \
+  java $JAR_OPTS -cp "$LIB_CHECKSTYLES${FS}$EXTERNAL_JARS${FS}$CLASSES:." \
     -jar $LIB_CHECKSTYLES \
     -c $CHECK_RULES_FILE \
     -f xml \
@@ -174,7 +180,7 @@ function generateJavadoc() {
     -d $TARGET/javadoc \
     -overview $SRC/main/javadoc/overview.html \
     $JAVADOC_GROUPS \
-    -sourcepath "${SRC}/main/java;${SRC}/main/javadoc" \
+    -sourcepath "${SRC}/main/java${FS}${SRC}/main/javadoc" \
     -subpackages "${JAVADOC_CLASSPATH}" \
     -cp ".;$EXTERNAL_JARS"
   cd $TARGET/javadoc
@@ -205,9 +211,9 @@ function executeTests() {
   #list test sources
   find $SRC/main -name '*.java' >$TARGET/sources.lst
   find $SRC/test -name '*.java' >$TARGET/test-sources.lst
-  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".;$LIB_TEST;${EXTERNAL_JARS}" -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
+  javac -source $SOURCE_VERSION -encoding $SOURCE_ENCODING $COMPILATION_OPTS -cp ".${FS}$LIB_TEST${FS}${EXTERNAL_JARS}" -d $TESTCLASSES @$TARGET/sources.lst @$TARGET/test-sources.lst
   echo "execute tests through JUnit"
-  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS};${CLASSES};${TESTCLASSES};." --scan-class-path
+  java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS}${FS}${CLASSES}${FS}${TESTCLASSES}${FS}." --scan-class-path
   echo "done."
   echo "- execute tests through JUnit $SRC/test." >>target/build.log
 }
@@ -242,8 +248,8 @@ function executeJar() {
   compile
   createJar
   echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
-  echo "$JAR_OPTS -cp \".:${EXTERNAL_JARS}\" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar \"$@\""
-  java $JAR_OPTS -cp ".:$EXTERNAL_JARS" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
+  echo "$JAR_OPTS -cp \".${FS}${EXTERNAL_JARS}\" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar \"$@\""
+  java $JAR_OPTS -cp ".${FS}$EXTERNAL_JARS" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
 }
 #
 function generateEpub() {
