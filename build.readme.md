@@ -30,19 +30,20 @@ File paths for source, libraries, target, and other build directories are define
 
 The script contains multiple functions to perform different tasks:
 
-1. `manifest()`: Creates the Manifest file for the JAR.
-2. `compile()`: Compiles the Java sources.
-3. `checkCodeStyleQA()`: Checks code quality against specified rules.
-4. `generatedoc()`: Generates Javadoc documentation.
-5. `generateSourceJar()`: Creates a JAR of the source files.
-6. `executeTests()`: Compiles and executes JUnit tests.
-7. `createJar()`: Packages the compiled classes into a JAR file.
-8. `wrapJar()`: Wraps the JAR as a shell script.
-9. `executeJar()`: Executes the built JAR file.
-10. `generateEpub()`: Generates documentation in EPUB format.
-11. `generatePDF()`: Generates documentation in PDF format.
-12. `sign()`: Placeholder for a function to sign the JAR (not yet implemented).
-13. `help()`: Displays usage help for the script.
+1. `manifest()`: Creates the Manifest file for the JAR,
+2. `compile()`: Compiles the Java sources,
+3. `checkCodeStyleQA()`: Checks code quality against specified rules,
+4. `generatedoc()`: Generates Javadoc documentation,
+5. `generateSourceJar()`: Creates a JAR of the source files,
+6. `executeTests()`: Compiles and executes JUnit tests,
+7. `createJar()`: Packages the compiled classes into a JAR file,
+8. `wrapJar()`: Wraps the JAR as a shell script,
+9. `executeJar()`: Executes the built JAR file,
+10. `generateEpub()`: Generates documentation in EPUB format,
+11. `generatePDF()`: Generates documentation in PDF format,
+12. `sign()`: Placeholder for a function to sign the JAR (not yet implemented),
+13. `createZIP()`: create a ZIP named '$PROGRAM_NAME-$PROGRAM_VERSION.zip' from the target/build path,
+14. `help()`: Displays usage help for the script.
 
 ### Execution
 
@@ -60,6 +61,7 @@ Available command line options include:
 - `t|T|test`: Execute JUnit tests.
 - `j|J|jar`: Build a JAR with all resources.
 - `w|W|wrap`: Build and wrap the JAR as a shell script.
+- `z|Z|zip`: create a delivery zip for the full application.
 - `p|P|pdf`: Generate a PDF file as documentation.
 - `s|S|sign`: Build and wrap a signed JAR as a shell script (not implemented yet).
 - `r|R|run`: Execute (and build if needed) the created JAR.
@@ -79,8 +81,8 @@ project.javadoc.packages=-group "Core package" com.snapgames.core com.snapgames.
 project.author.name=Frédéric Delorme
 project.author.email=frederic.delorme@gmail.com
 project.build.jdk.version=20
+project.build.jars=lib/dep/jinput-2.0.9.jar
 ```
-
 
 where :
 
@@ -123,12 +125,17 @@ where :
 #### `project.author.email`
 
 - **Value**: `firstnameDOTlastnameATmailDOTcom`
-- **Description**: The email address of the primary author or maintainer of the project, for contact purposes.
+- **Description**: The primary author or maintainer's email address for the project, only for contact purposes.
 
 #### `project.build.jdk.version`
 
 - **Value**: `20`
 - **Description**: Specifies the version of the JDK used for building the project.
+
+#### `project.build.jars`
+
+- **Value**: `lib/dep/jinput-2.0.9.jar`
+- **Description**: List all the JAR dependencies in 'space' separated list.
 
 ---
 

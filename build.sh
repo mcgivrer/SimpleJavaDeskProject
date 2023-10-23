@@ -1,5 +1,29 @@
 #!/bin/bash
 #!/bin/sh
+# Build script for a light Java project
+# version 5.1
+# author Frédéric Delorme fredericDOTdelormeTgmailDOTcom
+# MIT License
+#
+# Copyright (c) 2023 Frederic Delorme
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 cd ./
 
 ENV=build
@@ -72,7 +96,7 @@ echo "> Java version : $JAVA_BUILD"
 echo "> Git   commit : $GIT_COMMIT_ID"
 echo "> Encoding     : $SOURCE_ENCODING"
 #
-echo "> Prepare environement (if .sdkmanrc file exists)"
+echo "> Prepare environment (if ~/.sdkmanrc' file exists)"
 if [ -f .sdkmanrc ]; then
   echo " |_ file sdkmanrc detected"
   source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -89,14 +113,15 @@ function manifest() {
   echo "|_ 1. Create Manifest file '${TARGET}/MANIFEST.MF'"
   echo """Manifest-Version: ${PROGRAM_NAME}
 Main-Class: ${MAIN_CLASS}
+Class-Path: ${EXTERNAL_JARS}
 Created-By: ${JAVA_BUILD}
 Implementation-Title: ${PROGRAM_NAME}
 Implementation-Version: ${PROGRAM_VERSION}-build_${GIT_COMMIT_ID:0:12}
 Implementation-Vendor: ${VENDOR_NAME}
 Implementation-Author: ${AUTHOR_NAME}
-Class-Path: ${EXTERNAL_JARS}
 """ >>${TARGET}/MANIFEST.MF
   echo "   |_ done"
+  echo "- generate MANIFEST file for ${PROGRAM_NAME} version ${PROGRAM_VERSION} on git id ${GIT_COMMIT_ID:0:12}" >>target/build.log
 }
 #
 function compile() {
@@ -118,6 +143,7 @@ function compile() {
     -cp ".;${EXTERNAL_JARS};${CLASSES}" @$TARGET/sources.lst
 
   echo "   done."
+  echo "- Compile project from ${SRC} to ${CLASSES} with ${EXTERNAL_JARS}" >>target/build.log
 }
 function checkCodeStyleQA() {
   echo "|_ 3. Check code quality against rules $CHECK_RULES"
@@ -130,8 +156,9 @@ function checkCodeStyleQA() {
     -o $TARGET/checkstyle_errors.xml \
     @$TARGET/sources.lst
   echo "   done."
+  echo "- Check all code with  $CHECK_RULES" >>target/build.log
 }
-function generatedoc() {
+function generateJavadoc() {
   echo "|_ 4. Generate Javadoc "
   echo "> from : $SRC"
   echo "> to   : $TARGET/javadoc"
@@ -140,19 +167,21 @@ function generatedoc() {
   mkdir -p $SRC/main/javadoc
   # Compile class files
   rm -Rf $TARGET/javadoc/*
-  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$SRC/javadoc/overview.html
+  java -jar ./lib/tools/markdown2html-0.3.1.jar <README.md >$SRC/main/javadoc/overview.html
   javadoc -source $SOURCE_VERSION \
     -author -use -version \
     -doctitle \"$PROGRAM_NAME\" \
     -d $TARGET/javadoc \
-    -overview $TARGET/javadoc/overview.html \
+    -overview $SRC/main/javadoc/overview.html \
     $JAVADOC_GROUPS \
-    -sourcepath $SRC/main/java:$SRC/main/javadoc \
-    -subpackages $JAVADOC_CLASSPATH
+    -sourcepath "${SRC}/main/java;${SRC}/main/javadoc" \
+    -subpackages "${JAVADOC_CLASSPATH}" \
+    -cp ".;$EXTERNAL_JARS"
   cd $TARGET/javadoc
   jar cvf ../$JAR_JAVADOC_NAME *
   cd ../../
-  echo "   done." >>target/build.log
+  echo "   done."
+  echo "- build javadoc $JAR_JAVADOC_NAME" >>target/build.log
 }
 #
 function generateSourceJar() {
@@ -160,7 +189,8 @@ function generateSourceJar() {
   echo "> from : $SRC"
   echo "> to   : $TARGET/"
   jar cvf ${TARGET}/${PROGRAM_NAME}-${PROGRAM_VERSION}-sources.jar -C src .
-  echo "   JAR containing sources generation done." >>target/build.log
+  echo "   done."
+  echo "- create JAR sources ${PROGRAM_NAME}-${PROGRAM_VERSION}-sources.jar" >>target/build.log
 }
 #
 function executeTests() {
@@ -179,11 +209,12 @@ function executeTests() {
   echo "execute tests through JUnit"
   java $JAR_OPTS -jar $LIB_TEST --cp "${EXTERNAL_JARS};${CLASSES};${TESTCLASSES};." --scan-class-path
   echo "done."
+  echo "- execute tests through JUnit $SRC/test." >>target/build.log
 }
 #
 function createJar() {
   echo "|_ 7. package jar file '$TARGET/$JAR_NAME'..."
-  if ([ $(ls $CLASSES | wc -l | grep -w "0") ]); then
+  if ([ "$(ls $CLASSES | wc -l | grep -w "0")" ]); then
     echo 'No compiled class files'
   else
     # Build JAR
@@ -191,15 +222,19 @@ function createJar() {
   fi
 
   echo "   |_ done."
+  echo "- create JAR file '$TARGET/$JAR_NAME'." >>target/build.log
 }
 #
 function wrapJar() {
   # create runnable program
   echo "|_ 8. create run file '$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run'..."
-  mkdir -p $BUILD
+  mkdir -p $BUILD/lib/dep
   cat $LIBS/stub.sh $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar >$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run
   chmod +x $BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run
+  cp -r $LIBS/dep $BUILD/lib
   echo "   |_ done."
+  echo "- wrap jar to a stub script '$BUILD/$PROGRAM_NAME-$PROGRAM_VERSION.run'." >>target/build.log
+
 }
 #
 function executeJar() {
@@ -207,7 +242,8 @@ function executeJar() {
   compile
   createJar
   echo "|_ 99. Execute just created JAR $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar"
-  java $JAR_OPTS -cp ".;$ETERNAL_JAR" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
+  echo "$JAR_OPTS -cp \".:${EXTERNAL_JARS}\" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar \"$@\""
+  java $JAR_OPTS -cp ".:$EXTERNAL_JARS" -jar $TARGET/$PROGRAM_NAME-$PROGRAM_VERSION.jar "$@"
 }
 #
 function generateEpub() {
@@ -239,6 +275,10 @@ function sign() {
   echo "not already implemented... sorry"
 }
 #
+function createZIP() {
+  zip $PROGRAM_NAME-$PROGRAM_VERSION.zip -r $BUILD
+}
+#
 function help() {
   echo "$0 command line usage :"
   echo "---------------------------"
@@ -250,6 +290,7 @@ function help() {
   echo " - t|T|test    : execute JUnit tests"
   echo " - j|J|jar     : build JAR with all resources"
   echo " - w|W|wrap    : Build and wrap jar as a shell script"
+  echo " - z|Z|zip     : create a delivery zip for the full application"
   echo " - p|P|pdf     : generate *.pdf file as docs for project (require pandoc: https://pandoc.org and miktex: https://miktex.org/download)"
   echo " - s|S|sign    : Build and wrap signed jar as a shell script"
   echo " - r|R|run     : execute (and build if needed) the created JAR"
@@ -267,10 +308,11 @@ function run() {
     compile
     checkCodeStyleQA
     executeTests
-    generatedoc
+    generateJavadoc
     generateSourceJar
     createJar
     wrapJar
+    createZIP
     ;;
   c | C | compile)
     manifest
@@ -279,7 +321,7 @@ function run() {
   d | D | doc)
     manifest
     compile
-    generatedoc
+    generateJavadoc
     ;;
   e | E | epub)
     generateEpub
@@ -306,6 +348,11 @@ function run() {
     ;;
   s | S | sources)
     generateSourceJar $2
+    ;;
+  z | Z | zip)
+    createJar
+    wrapJar
+    createZIP
     ;;
   h | H | ? | *)
     help
