@@ -1,10 +1,12 @@
 package com.snapgames.core;
 
 import com.snapgames.core.gfx.Renderer;
+import com.snapgames.core.io.AppInputListener;
 import com.snapgames.core.io.InputHandler;
 import com.snapgames.core.loop.GameLoop;
 import com.snapgames.core.loop.StandardGameLoop;
 import com.snapgames.core.physic.PhysicEngine;
+import com.snapgames.core.physic.SpacePartition;
 import com.snapgames.core.scene.SceneManager;
 import com.snapgames.core.service.ServiceManager;
 import com.snapgames.core.utils.Configuration;
@@ -48,6 +50,8 @@ public class App {
     private PhysicEngine physicEngine;
     // input manager (Keyboard & more to come)
     private InputHandler inputHandler;
+    // manage play area as partitioned spaces to spread Entity through.
+    private SpacePartition spacePartitioning;
 
     /**
      * This is the {@link App} class.
@@ -85,13 +89,17 @@ public class App {
             sceneManager = new SceneManager(this);
             inputHandler = new InputHandler(this);
             physicEngine = new PhysicEngine(this);
+            spacePartitioning = new SpacePartition(this);
             renderer = new Renderer(this);
 
             ServiceManager.get()
                     .add(sceneManager)
                     .add(renderer)
                     .add(physicEngine)
-                    .add(inputHandler);
+                    .add(inputHandler)
+                    .add(spacePartitioning);
+
+            inputHandler.add(new AppInputListener(this));
 
             // initialize service against configuration
             ServiceManager.get().initialize(configuration);
@@ -113,14 +121,14 @@ public class App {
     public void run(String[] args) {
         configuration.parseCLIArguments(args);
         // retrieve App attributes value from Configuration.
-        this.debug = configuration.debug;
-        this.debugLevel = configuration.debugLevel;
+        debug = configuration.debug;
+        debugLevel = configuration.debugLevel;
         this.testMode = configuration.testMode;
         this.debugFilter = configuration.debugFilter;
         this.name = configuration.name;
         this.version = configuration.version;
 
-        // create window to display game
+        // create a window to display game
         renderer.createWindow(this, inputHandler);
         // start loop until exit request
         loop();
@@ -148,6 +156,8 @@ public class App {
 
     public void update(long elapsed, Map<String, Object> stats) {
         physicEngine.update(this, sceneManager.getCurrent(), elapsed, stats);
+        spacePartitioning.update(this, sceneManager.getCurrent(), elapsed, stats);
+
     }
 
     public void render(Map<String, Object> stats) {
@@ -181,7 +191,7 @@ public class App {
     }
 
     public int getDebugLevel() {
-        return this.debugLevel;
+        return debugLevel;
     }
 
     public void setExit(boolean e) {
@@ -239,11 +249,11 @@ public class App {
     }
 
     public void setDebugLevel(int dl) {
-        this.debugLevel = dl;
+        debugLevel = dl;
     }
 
     public void setDebug(boolean d) {
-        this.debug = d;
+        debug = d;
     }
 
     public InputHandler getInputHandler() {
@@ -256,25 +266,6 @@ public class App {
 
     public boolean isDebugFiltered(String name) {
         return debugFilter.contains(name);
-    }
-
-    public void processOnKeyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE -> {
-                setExit(true);
-            }
-            case KeyEvent.VK_P, KeyEvent.VK_PAUSE -> {
-                setPause(!isPaused());
-            }
-            case KeyEvent.VK_D -> {
-                setDebugLevel(getDebugLevel() + 1 < 10 ? getDebugLevel() + 1 : 0);
-                setDebug(getDebugLevel() != 0);
-            }
-            case KeyEvent.VK_Z -> {
-                getSceneManager().getCurrent().reset(this);
-            }
-        }
-
     }
 
     public Configuration getConfiguration() {

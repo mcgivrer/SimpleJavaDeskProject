@@ -16,12 +16,12 @@ public class TextObjectRendererPlugin implements RendererPlugin<TextObject> {
     }
 
     @Override
-    public void draw(Renderer r, Graphics2D g, Scene s, Entity e) {
+    public void draw(Renderer r, Graphics2D g, Scene s, Entity<?> e) {
         TextObject t = (TextObject) e;
         if (Optional.ofNullable(t.getFont()).isPresent()) {
             g.setFont(t.getFont());
         }
-        int offset = 0;
+        int offset;
         switch (t.getTextAlign()) {
             case LEFT -> {
                 offset = 0;
@@ -31,6 +31,9 @@ public class TextObjectRendererPlugin implements RendererPlugin<TextObject> {
             }
             case CENTER -> {
                 offset = -(int) (g.getFontMetrics().stringWidth(t.getText()) * .5);
+            }
+            default -> {
+                offset = 0;
             }
         }
         // draw shadow

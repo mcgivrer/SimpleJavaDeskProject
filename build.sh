@@ -70,6 +70,10 @@ export CHECK_RULES_FILE=$LIBS/tools/rules/${CHECK_RULES}_checks.xml
 # prepare target
 rm -rf ${TARGET}
 mkdir -p ${CLASSES}
+#
+echo "Java Version"
+java -version
+#
 function manifest() {
   # build manifest
   echo "Build of program '${PROGRAM_NAME}-${PROGRAM_VERSION}' ..."

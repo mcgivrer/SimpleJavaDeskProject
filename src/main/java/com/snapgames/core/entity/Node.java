@@ -3,6 +3,7 @@ package com.snapgames.core.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Node {
 
@@ -14,7 +15,7 @@ public class Node {
 
     private Node parent;
 
-    private List<Node> children = new ArrayList<>();
+    private List<Node> children = new CopyOnWriteArrayList<>();
 
     protected Node() {
         this.active = true;
@@ -26,7 +27,7 @@ public class Node {
     }
 
     public void addChild(Node child) {
-        children.add((Node)child);
+        children.add((Node) child);
         child.setParent(this);
     }
 
@@ -61,5 +62,9 @@ public class Node {
             sb.append("\t|_" + n.treeToString() + "\n");
         }
         return sb.toString();
+    }
+
+    public int getId() {
+        return id;
     }
 }
